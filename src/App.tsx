@@ -14,6 +14,7 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { ResumeModal } from './components/ResumeModal';
 import { NotFound } from './components/NotFound';
+import { ThemeTransitionWave } from './components/ThemeTransitionWave';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function App() {
@@ -73,6 +74,7 @@ export default function App() {
   if (is404) {
     return (
       <div className="min-h-screen bg-[#080b0f] text-[#d6d9e0] font-sans antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
+        <ThemeTransitionWave />
         <ScrollProgressBar />
         <NotFound
           currentPath={currentPath}
@@ -114,6 +116,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#090b0e] text-[#d6d9e0] font-sans antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
+      <ThemeTransitionWave />
       {/* Scroll Depth Monospace Progress Bar */}
       <ScrollProgressBar />
 

@@ -5,7 +5,200 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-/* Custom terminal subtle scanline / grid texture */
+/* ==========================================================================
+   Smooth Theme Transition & View Transitions
+   ========================================================================== */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Active during theme switch to smoothly cross-fade all colors & borders */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: background-color 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              fill 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              stroke 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Default Dark Theme Baseline */
+html.dark {
+  color-scheme: dark;
+}
+
+/* ==========================================================================
+   Light Mode Systematic Theme
+   ========================================================================== */
+html.light {
+  color-scheme: light;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+html.light body {
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+/* Canvas & Section Backgrounds in Light Mode */
+html.light .bg-\[\#090b0e\],
+html.light .bg-\[\#080b0f\],
+html.light .bg-\[\#06080b\],
+html.light .bg-\[\#07090d\],
+html.light .bg-\[\#05070a\] {
+  background-color: #f8fafc !important;
+}
+
+html.light .bg-\[\#080a0e\],
+html.light .bg-\[\#090c10\],
+html.light .bg-\[\#0c0e12\],
+html.light .bg-\[\#0c1017\] {
+  background-color: #f1f5f9 !important;
+}
+
+/* Cards, Drawers & Elevated Panels in Light Mode */
+html.light .bg-\[\#0d1017\],
+html.light .bg-\[\#0a0d12\],
+html.light .bg-\[\#0c0f15\],
+html.light .bg-\[\#0c0f16\],
+html.light .bg-\[\#0e1219\],
+html.light .bg-\[\#0d1117\],
+html.light .bg-\[\#0d141e\],
+html.light .bg-\[\#131720\],
+html.light .bg-zinc-900,
+html.light .bg-zinc-950 {
+  background-color: #ffffff !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+}
+
+html.light .bg-zinc-900\/90,
+html.light .bg-zinc-900\/80,
+html.light .bg-zinc-900\/60,
+html.light .bg-zinc-900\/50 {
+  background-color: rgba(255, 255, 255, 0.92) !important;
+}
+
+/* Top Navigation Bar in Light Mode */
+html.light header#main-navbar {
+  background-color: rgba(248, 250, 252, 0.88) !important;
+  backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+/* Text Hierarchy in Light Mode */
+html.light .text-white {
+  color: #0f172a !important;
+}
+
+html.light .text-\[\#d6d9e0\] {
+  color: #334155 !important;
+}
+
+html.light .text-zinc-100,
+html.light .text-zinc-200 {
+  color: #1e293b !important;
+}
+
+html.light .text-zinc-300 {
+  color: #334155 !important;
+}
+
+html.light .text-zinc-400 {
+  color: #475569 !important;
+}
+
+html.light .text-zinc-500 {
+  color: #64748b !important;
+}
+
+html.light .text-zinc-600 {
+  color: #94a3b8 !important;
+}
+
+/* Accents with Optimal Contrast for Light Backgrounds */
+html.light .text-emerald-400,
+html.light .text-emerald-300 {
+  color: #059669 !important;
+}
+
+html.light .text-cyan-400,
+html.light .text-cyan-300 {
+  color: #0284c7 !important;
+}
+
+/* Borders in Light Mode */
+html.light .border-white\/5,
+html.light .border-white\/10,
+html.light .border-white\/15,
+html.light .border-white\/20 {
+  border-color: #e2e8f0 !important;
+}
+
+/* Form Inputs & Code Blocks in Light Mode */
+html.light input,
+html.light textarea,
+html.light select {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Chips & Badges in Light Mode */
+html.light .bg-emerald-500\/10,
+html.light .bg-emerald-500\/5 {
+  background-color: #ecfdf5 !important;
+}
+
+html.light .border-emerald-500\/20,
+html.light .border-emerald-500\/30,
+html.light .border-emerald-500\/40 {
+  border-color: #a7f3d0 !important;
+}
+
+html.light .bg-cyan-500\/10 {
+  background-color: #f0f9ff !important;
+}
+
+html.light .border-cyan-500\/20,
+html.light .border-cyan-500\/30 {
+  border-color: #bae6fd !important;
+}
+
+/* Terminal Styling in Light Mode */
+html.light #terminal,
+html.light #terminal-modal-backdrop .bg-\[\#080b0f\] {
+  background-color: #f8fafc !important;
+}
+
+html.light #terminal-modal-backdrop .bg-\[\#0d1017\],
+html.light #terminal .bg-\[\#0d1017\] {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light #terminal-modal-backdrop .bg-\[\#0a0d12\],
+html.light #terminal .bg-\[\#0a0d12\] {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light #btn-restore-terminal {
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 20px rgba(5, 150, 105, 0.25) !important;
+}
+
+/* Grid & Radial Textures */
 .bg-grid-pattern {
   background-size: 32px 32px;
   background-image: 
@@ -13,11 +206,21 @@
     linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
 }
 
+html.light .bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+}
+
 .bg-radial-fade {
   background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.05), transparent 70%);
 }
 
-/* Custom terminal scrollbar */
+html.light .bg-radial-fade {
+  background: radial-gradient(circle at 50% 0%, rgba(5, 150, 105, 0.06), transparent 70%);
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -27,13 +230,25 @@
   background: #090b0e;
 }
 
+html.light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #1f2937;
   border-radius: 3px;
 }
 
+html.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: #374151;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 /* Blinking terminal cursor animation */
@@ -46,7 +261,7 @@
   animation: blink 1s step-start infinite;
 }
 
-/* Official Google Sign-In Button Styling (Material 3) */
+/* Material 3 Google Sign-In Button Styling */
 .gsi-material-button {
   user-select: none;
   -moz-user-select: none;
@@ -80,6 +295,12 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+html.light .gsi-material-button {
+  background-color: #ffffff;
+  border-color: #747775;
+  color: #1f1f1f;
 }
 
 .gsi-material-button .gsi-material-button-icon {
@@ -147,4 +368,10 @@
   background-color: #1f1f1f;
   border-color: #a8aba9;
 }
+
+html.light .gsi-material-button:not(:disabled):hover {
+  background-color: #f8fafc;
+  border-color: #5e5e5e;
+}
+
 

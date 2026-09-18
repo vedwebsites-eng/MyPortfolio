@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Terminal, Send, CornerDownLeft, Sparkles, X, Maximize2, Minimize2, Trash2, Minus } from 'lucide-react';
 import { PERSONAL_INFO, PROJECTS } from '../data/portfolioData';
+import { useTheme } from '../context/ThemeContext';
 
 interface InteractiveTerminalProps {
   isModal?: boolean;
@@ -21,6 +22,9 @@ const ALL_COMMANDS = [
   'gmail',
   'resume',
   'pgp',
+  'theme',
+  'dark',
+  'light',
   'date',
   'clear',
   '404',
@@ -35,6 +39,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   onOpenResume,
   onNavigate404,
 }) => {
+  const { theme, setTheme, toggleTheme } = useTheme();
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<Array<{ command: string; output: React.ReactNode; isError?: boolean }>>([
     {
@@ -160,7 +165,10 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
     let resultOutput: React.ReactNode = null;
     let isErr = false;
 
-    switch (cmd) {
+    const parts = cmd.split(/\s+/);
+    const mainCommand = parts[0];
+
+    switch (mainCommand) {
       case 'help':
         resultOutput = (
           <div className="space-y-1.5 text-zinc-300">
@@ -175,6 +183,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
               <div><span className="text-cyan-300 font-semibold">contact</span> — Reach out via email/GitHub</div>
               <div><span className="text-cyan-300 font-semibold">gmail</span> — Google Workspace email API</div>
               <div><span className="text-cyan-300 font-semibold">resume</span> — Open full curriculum vitae</div>
+              <div><span className="text-cyan-300 font-semibold">theme</span> — Toggle dark/light mode transition</div>
               <div><span className="text-cyan-300 font-semibold">pgp</span> — View cryptographic key</div>
               <div><span className="text-cyan-300 font-semibold">date</span> — Display local Pune (IST) time</div>
               <div><span className="text-cyan-300 font-semibold">clear</span> — Wipe terminal viewport</div>
@@ -182,6 +191,27 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
           </div>
         );
         break;
+
+      case 'theme':
+      case 'mode':
+      case 'dark':
+      case 'light': {
+        let targetTheme: 'dark' | 'light' = theme === 'dark' ? 'light' : 'dark';
+        if (mainCommand === 'dark' || parts[1] === 'dark') targetTheme = 'dark';
+        if (mainCommand === 'light' || parts[1] === 'light') targetTheme = 'light';
+        setTheme(targetTheme);
+        resultOutput = (
+          <div className="space-y-1 text-zinc-300">
+            <div className="text-emerald-400 font-semibold">
+              ✓ Switched theme to {targetTheme.toUpperCase()} mode.
+            </div>
+            <div className="text-zinc-400 text-[11px]">
+              Smooth transition active across canvas, navigation, code viewers, and controls.
+            </div>
+          </div>
+        );
+        break;
+      }
 
       case 'whoami':
         resultOutput = (
@@ -426,7 +456,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
     }
   };
 
-  const quickChips = ['help', 'whoami', 'projects', 'gmail', 'skills', 'contact', 'resume', 'clear'];
+  const quickChips = ['help', 'whoami', 'projects', 'theme', 'gmail', 'skills', 'contact', 'resume', 'clear'];
 
   // Minimized Floating Circle Widget on the side with CLI Logo
   const minimizedCircleWidget = (

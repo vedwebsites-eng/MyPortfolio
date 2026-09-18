@@ -3,6 +3,7 @@ import { Terminal, FileText, Menu, X, Mail } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { initAuth } from '../services/gmailAuth';
 import { User } from 'firebase/auth';
+import { ThemeToggle } from './ThemeToggle';
 
 interface NavbarProps {
   onOpenResume: () => void;
@@ -167,6 +168,9 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
             <span>resume.pdf</span>
           </button>
 
+          {/* Dark / Light Mode Transition Toggle */}
+          <ThemeToggle id="btn-nav-theme-toggle" />
+
           {/* Mobile menu toggle */}
           <button
             id="btn-mobile-menu-toggle"
@@ -226,11 +230,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
                 setMobileMenuOpen(false);
                 onOpenResume();
               }}
-              className="w-full flex items-center justify-center space-x-2 py-2 rounded bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono"
+              className="flex-1 flex items-center justify-center space-x-2 py-2 rounded bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono"
             >
               <FileText className="w-3.5 h-3.5" />
               <span>View Resume</span>
             </button>
+            <ThemeToggle id="btn-mobile-theme-toggle" showLabel className="py-2" />
           </div>
         </div>
       )}
