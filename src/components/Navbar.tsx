@@ -57,8 +57,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
       id="main-navbar"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
         isScrolled
-          ? 'bg-[#090b0e]/90 backdrop-blur-md border-b border-white/10 shadow-lg shadow-black/40'
-          : 'bg-[#090b0e]/60 backdrop-blur-sm border-b border-white/5'
+          ? 'bg-[#090b0e]/90 backdrop-blur-md shadow-lg shadow-black/40'
+          : 'bg-[#090b0e]/60 backdrop-blur-sm'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -74,7 +74,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
           <span className="text-zinc-400 group-hover:text-zinc-200 transition-colors">pune</span>
           <span className="text-zinc-600">:</span>
           <span className="text-cyan-400 font-mono">~$</span>
-          <span className="hidden md:inline-block text-[11px] px-2 py-0.5 ml-2 rounded border border-emerald-500/20 bg-emerald-500/10 text-emerald-300">
+          <span className="hidden md:inline-block text-xs px-2.5 py-1 ml-2 text-emerald-400/90 font-mono">
             student-builder
           </span>
         </a>
@@ -112,25 +112,25 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
         </nav>
 
         {/* Right: Real-time clock & Action CTAs */}
-        <div className="flex items-center space-x-3">
-          {/* Pune IST Live Clock */}
+        <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* Pune IST Live Clock - Generous padding, no box */}
           <div
             id="pune-live-clock"
-            className="hidden lg:flex items-center space-x-2 text-[11px] font-mono text-zinc-400 bg-zinc-900/80 px-2.5 py-1 rounded border border-white/5"
+            className="hidden lg:flex items-center space-x-2.5 text-xs font-mono text-zinc-300 px-4 py-2"
             title="Current time in Pune, India"
           >
             <span className="text-zinc-500">PUN</span>
-            <span className="text-emerald-400 font-medium">{timeString || '00:00:00 IST'}</span>
+            <span className="text-emerald-400 font-medium tracking-wide">{timeString || '00:00:00 IST'}</span>
           </div>
 
-          {/* Gmail API Trigger / Status */}
+          {/* Gmail API Trigger / Status - Clean unboxed styling with ample padding */}
           <a
             href="#contact"
             id="btn-nav-gmail"
-            className={`inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded text-xs font-mono border transition-all cursor-pointer ${
+            className={`inline-flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-mono transition-colors cursor-pointer ${
               authUser
-                ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300'
-                : 'bg-zinc-900/90 text-zinc-300 border-white/10 hover:border-emerald-500/30'
+                ? 'text-emerald-300 hover:text-emerald-200'
+                : 'text-zinc-300 hover:text-emerald-400'
             }`}
             title={authUser ? `Gmail connected: ${authUser.email}` : 'Gmail API Console'}
           >
@@ -143,25 +143,25 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
             )}
           </a>
 
-          {/* Terminal CLI Quick Trigger */}
+          {/* Terminal CLI Quick Trigger - Clean unboxed styling with ample padding */}
           <button
             id="btn-quick-terminal"
             onClick={onOpenTerminal}
-            className="hidden sm:inline-flex items-center space-x-1.5 px-2.5 py-1.5 rounded text-xs font-mono bg-zinc-900/90 text-zinc-300 border border-white/10 hover:border-emerald-500/40 hover:text-emerald-300 transition-all cursor-pointer"
+            className="hidden sm:inline-flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-mono text-zinc-300 hover:text-emerald-400 transition-colors cursor-pointer"
             title="Open Interactive Terminal Drawer"
           >
             <Terminal className="w-3.5 h-3.5 text-emerald-400" />
             <span>cli</span>
-            <span className="text-[10px] text-zinc-500 px-1 py-0.2 rounded bg-black/40 border border-white/5">
+            <span className="text-[11px] text-zinc-500">
               `
             </span>
           </button>
 
-          {/* Resume Modal Trigger */}
+          {/* Resume Modal Trigger - Clean unboxed styling with ample padding */}
           <button
             id="btn-nav-resume"
             onClick={onOpenResume}
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded text-xs font-mono bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/20 hover:border-emerald-400 transition-all cursor-pointer"
+            className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-md text-xs font-mono text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
           >
             <FileText className="w-3.5 h-3.5" />
             <span>resume.pdf</span>
@@ -171,7 +171,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
           <button
             id="btn-mobile-menu-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-zinc-400 hover:text-white rounded border border-white/10 bg-zinc-900/60"
+            className="md:hidden p-2 text-zinc-400 hover:text-white rounded"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}

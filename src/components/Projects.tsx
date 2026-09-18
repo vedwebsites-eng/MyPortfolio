@@ -110,7 +110,7 @@ export const Projects: React.FC = () => {
               Three signature initiatives blending cybersecurity principles, intelligent agents, and distraction-free software ergonomics.
             </p>
           </div>
-          <div className="font-mono text-xs text-zinc-500 bg-zinc-900/60 px-3 py-1.5 rounded border border-white/5">
+          <div className="font-mono text-xs text-zinc-500 py-1.5">
             FILTER: 3 SIGNATURE WORKS
           </div>
         </div>

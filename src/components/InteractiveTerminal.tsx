@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Terminal, Send, CornerDownLeft, Sparkles, X, Maximize2, Minimize2, Trash2 } from 'lucide-react';
+import { Terminal, Send, CornerDownLeft, Sparkles, X, Maximize2, Minimize2, Trash2, Minus } from 'lucide-react';
 import { PERSONAL_INFO, PROJECTS } from '../data/portfolioData';
 
 interface InteractiveTerminalProps {
@@ -8,6 +8,26 @@ interface InteractiveTerminalProps {
   onOpenResume?: () => void;
   onNavigate404?: () => void;
 }
+
+const ALL_COMMANDS = [
+  'help',
+  'whoami',
+  'projects',
+  'aethos',
+  'rootcause',
+  'inkwell',
+  'skills',
+  'contact',
+  'gmail',
+  'resume',
+  'pgp',
+  'date',
+  'clear',
+  '404',
+  'fullscreen',
+  'minimize',
+  'exit',
+];
 
 export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   isModal = false,
@@ -33,8 +53,97 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
 
   const [historyIndex, setHistoryIndex] = useState(-1);
   const [commandHistory, setCommandHistory] = useState<string[]>(['help']);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+
+  const terminalContainerRef = useRef<HTMLDivElement>(null);
   const terminalEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Sync state with HTML5 Fullscreen API changes (e.g. if user presses Esc)
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isCurrentlyFullscreen = Boolean(
+        document.fullscreenElement ||
+        (document as any).webkitFullscreenElement ||
+        (document as any).mozFullScreenElement ||
+        (document as any).msFullscreenElement
+      );
+      setIsFullscreen(isCurrentlyFullscreen);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+    };
+  }, []);
+
+  const toggleFullscreen = async () => {
+    try {
+      const elem = terminalContainerRef.current;
+      if (!elem) return;
+
+      const isCurrentlyFullscreen = Boolean(
+        document.fullscreenElement ||
+        (document as any).webkitFullscreenElement ||
+        (document as any).mozFullScreenElement ||
+        (document as any).msFullscreenElement
+      );
+
+      if (!isCurrentlyFullscreen) {
+        if (elem.requestFullscreen) {
+          await elem.requestFullscreen();
+        } else if ((elem as any).webkitRequestFullscreen) {
+          await (elem as any).webkitRequestFullscreen();
+        } else if ((elem as any).mozRequestFullScreen) {
+          await (elem as any).mozRequestFullScreen();
+        } else if ((elem as any).msRequestFullscreen) {
+          await (elem as any).msRequestFullscreen();
+        }
+        setIsFullscreen(true);
+      } else {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if ((document as any).webkitExitFullscreen) {
+          await (document as any).webkitExitFullscreen();
+        } else if ((document as any).mozCancelFullScreen) {
+          await (document as any).mozCancelFullScreen();
+        } else if ((document as any).msExitFullscreen) {
+          await (document as any).msExitFullscreen();
+        }
+        setIsFullscreen(false);
+      }
+    } catch (err) {
+      console.error('Fullscreen toggle error:', err);
+    }
+  };
+
+  const handleMinimize = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen?.().catch(() => {});
+      setIsFullscreen(false);
+    }
+    setIsMinimized(true);
+  };
+
+  const handleClose = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen?.().catch(() => {});
+      setIsFullscreen(false);
+    }
+    if (onClose) {
+      onClose();
+    } else {
+      setIsMinimized(true);
+    }
+  };
 
   useEffect(() => {
     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -225,6 +334,24 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
         }
         break;
 
+      case 'fullscreen':
+      case 'fs':
+        toggleFullscreen();
+        resultOutput = <div className="text-emerald-400">Toggling Fullscreen API viewport...</div>;
+        break;
+
+      case 'minimize':
+      case 'min':
+        handleMinimize();
+        resultOutput = <div className="text-zinc-400">Docking terminal into side circle...</div>;
+        break;
+
+      case 'exit':
+      case 'quit':
+        handleClose();
+        resultOutput = <div className="text-zinc-400">Terminal session closed.</div>;
+        break;
+
       case 'date':
         resultOutput = (
           <div className="text-zinc-300">
@@ -271,6 +398,14 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleCommand(input);
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const current = input.trim().toLowerCase();
+      if (!current) return;
+      const match = ALL_COMMANDS.find((c) => c.startsWith(current));
+      if (match) {
+        setInput(match);
+      }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       if (commandHistory.length > 0) {
@@ -293,43 +428,162 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
 
   const quickChips = ['help', 'whoami', 'projects', 'gmail', 'skills', 'contact', 'resume', 'clear'];
 
+  // Minimized Floating Circle Widget on the side with CLI Logo
+  const minimizedCircleWidget = (
+    <div
+      id="terminal-minimized-bubble"
+      className="fixed bottom-6 right-6 z-50 animate-in fade-in zoom-in-95 duration-200"
+    >
+      <button
+        id="btn-restore-terminal"
+        onClick={() => setIsMinimized(false)}
+        className="group relative flex items-center justify-center w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#080b0f] border-2 border-emerald-500/70 hover:border-emerald-400 text-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.4)] hover:shadow-[0_0_40px_rgba(16,185,129,0.7)] hover:scale-105 active:scale-95 transition-all cursor-pointer backdrop-blur-xl"
+        title="Restore Interactive CLI Shell (`)"
+        aria-label="Restore Terminal"
+      >
+        <Terminal className="w-6 h-6 group-hover:rotate-6 transition-transform text-emerald-400" />
+        
+        {/* Pulsing online status indicator */}
+        <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500 border-2 border-[#080b0f]"></span>
+        </span>
+
+        {/* Hover Tooltip Badge */}
+        <div className="absolute right-full mr-3 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-lg bg-[#0d1017] border border-white/15 text-zinc-200 font-mono text-[11px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-2xl flex items-center space-x-2">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          <span>CLI Shell // Click to restore</span>
+          <kbd className="px-1 py-0.5 rounded bg-zinc-800 text-[10px] text-zinc-400 border border-white/10">`</kbd>
+        </div>
+      </button>
+    </div>
+  );
+
+  // If minimized in either modal or embedded mode
+  if (isMinimized) {
+    return (
+      <>
+        {!isModal && (
+          <section id="terminal" className="py-8 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-[#090b0e]">
+            <div className="max-w-2xl mx-auto flex items-center justify-between p-4 rounded-xl bg-[#080b0f] border border-white/10 shadow-lg">
+              <div className="flex items-center space-x-3">
+                <div className="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                  <Terminal className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-white font-mono text-xs font-medium">Interactive CLI Shell (Minimized)</div>
+                  <div className="text-zinc-500 text-[11px] font-mono">Drawn into floating circle dock on the bottom right</div>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsMinimized(false)}
+                className="px-3 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 text-xs font-mono transition-all cursor-pointer"
+              >
+                Restore Shell
+              </button>
+            </div>
+          </section>
+        )}
+        {minimizedCircleWidget}
+      </>
+    );
+  }
+
+  // Interactive Terminal Window Content
   const content = (
-    <div className="flex flex-col h-full bg-[#080b0f] text-zinc-300 font-mono text-xs rounded-xl border border-white/10 shadow-2xl overflow-hidden">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#0d1017] border-b border-white/10 select-none">
+    <div
+      ref={terminalContainerRef}
+      className={`flex flex-col bg-[#080b0f] text-zinc-300 font-mono text-xs shadow-2xl overflow-hidden transition-all duration-150 ${
+        isFullscreen
+          ? 'w-screen h-screen rounded-none border-0'
+          : 'w-full h-full rounded-xl border border-white/10'
+      }`}
+    >
+      {/* Top Bar with Traffic Lights & Action Controls */}
+      <div className="flex items-center justify-between px-3.5 sm:px-4 py-2.5 sm:py-3 bg-[#0d1017] border-b border-white/10 select-none">
         <div className="flex items-center space-x-2">
+          {/* macOS / Unix Traffic Lights */}
           <div className="flex items-center space-x-1.5">
-            <span className="w-3 h-3 rounded-full bg-[#ff5f56]" />
-            <span className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-            <span className="w-3 h-3 rounded-full bg-[#27c93f]" />
+            <button
+              onClick={handleClose}
+              className="w-3 h-3 rounded-full bg-[#ff5f56] hover:brightness-125 cursor-pointer transition-all"
+              title="Close terminal"
+              aria-label="Close"
+            />
+            <button
+              onClick={handleMinimize}
+              className="w-3 h-3 rounded-full bg-[#ffbd2e] hover:brightness-125 cursor-pointer transition-all"
+              title="Minimize terminal to side circle"
+              aria-label="Minimize"
+            />
+            <button
+              onClick={toggleFullscreen}
+              className="w-3 h-3 rounded-full bg-[#27c93f] hover:brightness-125 cursor-pointer transition-all"
+              title={isFullscreen ? "Exit Fullscreen (Esc)" : "Full Screen (Fullscreen API)"}
+              aria-label="Toggle Fullscreen"
+            />
           </div>
-          <span className="text-zinc-400 font-medium ml-2 text-xs">vex@pune:~ (interactive shell)</span>
+          <span className="text-zinc-400 font-medium ml-2 text-xs truncate max-w-[180px] sm:max-w-none">
+            vex@pune:~ {isFullscreen ? '[FULLSCREEN]' : '(interactive shell)'}
+          </span>
         </div>
 
-        <div className="flex items-center space-x-2">
+        {/* Right Action Icons: Minimize, Fullscreen API, Clear, Close */}
+        <div className="flex items-center space-x-1 text-zinc-400">
+          {/* Minimize button */}
+          <button
+            onClick={handleMinimize}
+            className="p-1 rounded hover:bg-white/5 hover:text-zinc-200 transition-colors cursor-pointer"
+            title="Minimize to side circle"
+            aria-label="Minimize"
+          >
+            <Minus className="w-3.5 h-3.5" />
+          </button>
+
+          {/* Full Screen Toggle button via Fullscreen API */}
+          <button
+            onClick={toggleFullscreen}
+            className="p-1 rounded hover:bg-white/5 hover:text-emerald-300 transition-colors cursor-pointer"
+            title={isFullscreen ? "Exit Fullscreen (Esc)" : "Full Screen (Fullscreen API)"}
+            aria-label="Toggle Fullscreen"
+          >
+            {isFullscreen ? (
+              <Minimize2 className="w-3.5 h-3.5 text-emerald-400" />
+            ) : (
+              <Maximize2 className="w-3.5 h-3.5" />
+            )}
+          </button>
+
+          {/* Clear button */}
           <button
             onClick={() => handleCommand('clear')}
-            className="text-zinc-500 hover:text-zinc-300 p-1 transition-colors cursor-pointer"
+            className="p-1 rounded hover:bg-white/5 hover:text-zinc-200 transition-colors cursor-pointer"
             title="Clear terminal"
+            aria-label="Clear terminal"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>
-          {isModal && onClose && (
-            <button
-              onClick={onClose}
-              className="text-zinc-500 hover:text-white p-1 transition-colors cursor-pointer"
-              title="Close terminal"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
+
+          {/* Close button */}
+          <button
+            onClick={handleClose}
+            className="p-1 rounded hover:bg-rose-500/20 hover:text-rose-300 transition-colors cursor-pointer ml-1"
+            title="Close terminal"
+            aria-label="Close"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
       </div>
 
-      {/* Log Output Area */}
+      {/* Log Output Area (Fits screen comfortably) */}
       <div
-        className="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4 font-mono text-xs leading-relaxed"
-        style={{ minHeight: isModal ? '380px' : '280px', maxHeight: isModal ? '550px' : '400px' }}
+        onClick={() => inputRef.current?.focus()}
+        className="flex-1 p-3.5 sm:p-4 overflow-y-auto space-y-3 font-mono text-xs leading-relaxed cursor-text"
+        style={{
+          minHeight: '160px',
+          maxHeight: isFullscreen ? 'calc(100vh - 160px)' : '240px',
+        }}
       >
         {history.map((item, idx) => (
           <div key={idx} className="space-y-1">
@@ -337,7 +591,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
               <span className="text-emerald-400 select-none">vex@pune:~$</span>
               <span className="text-white font-medium">{item.command}</span>
             </div>
-            <div className="pl-4 text-zinc-300 border-l border-white/5 py-0.5">
+            <div className="pl-3.5 text-zinc-300 border-l border-white/5 py-0.5">
               {item.output}
             </div>
           </div>
@@ -346,7 +600,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
       </div>
 
       {/* Quick Clickable Command Chips */}
-      <div className="px-4 py-2 bg-[#0a0d12] border-t border-white/5 flex flex-wrap items-center gap-1.5 select-none">
+      <div className="px-3.5 py-1.5 sm:py-2 bg-[#0a0d12] border-t border-white/5 flex flex-wrap items-center gap-1.5 select-none">
         <span className="text-[10px] text-zinc-500 mr-1">// CHIPS:</span>
         {quickChips.map((chip) => (
           <button
@@ -360,7 +614,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
       </div>
 
       {/* Input Prompt Field */}
-      <div className="flex items-center px-4 py-3 bg-[#0d1017] border-t border-white/10">
+      <div className="flex items-center px-3.5 sm:px-4 py-2.5 sm:py-3 bg-[#0d1017] border-t border-white/10">
         <span className="text-emerald-400 font-semibold select-none mr-2">vex@pune:~$</span>
         <input
           ref={inputRef}
@@ -368,9 +622,9 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Type command ('help', 'projects', 'whoami')..."
+          placeholder="Type command ('help', 'projects', 'whoami', 'fullscreen')..."
           className="flex-1 bg-transparent text-white focus:outline-none text-xs font-mono placeholder:text-zinc-600"
-          autoFocus={isModal}
+          autoFocus
         />
         <button
           onClick={() => handleCommand(input)}
@@ -386,8 +640,19 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   // If used as modal
   if (isModal) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-        <div className="w-full max-w-2xl animate-in fade-in zoom-in-95 duration-200">
+      <div
+        id="terminal-modal-backdrop"
+        className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm transition-all ${
+          isFullscreen ? 'p-0' : ''
+        }`}
+      >
+        <div
+          className={`transition-all duration-200 ${
+            isFullscreen
+              ? 'w-screen h-screen max-w-none max-h-none'
+              : 'w-[92vw] sm:w-[84vw] max-w-[560px] h-[440px] max-h-[76vh]'
+          }`}
+        >
           {content}
         </div>
       </div>
@@ -396,27 +661,29 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
 
   // If embedded in the page
   return (
-    <section id="terminal" className="py-20 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-[#090b0e]">
-      <div className="max-w-5xl mx-auto">
-        <div className="flex items-center space-x-2 font-mono text-xs text-cyan-400 mb-3">
+    <section id="terminal" className="py-16 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-[#090b0e]">
+      <div className="max-w-2xl mx-auto">
+        <div className="flex items-center space-x-2 font-mono text-xs text-cyan-400 mb-2">
           <span className="text-zinc-600">//</span>
           <span>03. INTERACTIVE COMMAND LINE</span>
         </div>
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
           <div>
-            <h2 className="text-3xl sm:text-4xl font-serif text-white font-normal tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-serif text-white font-normal tracking-tight">
               Direct System Shell
             </h2>
-            <p className="text-zinc-400 text-sm mt-1 font-sans font-light">
+            <p className="text-zinc-400 text-xs sm:text-sm mt-0.5 font-sans font-light">
               Explore my background, project telemetry, and security notes directly through the terminal.
             </p>
           </div>
-          <div className="font-mono text-xs text-zinc-500">
+          <div className="font-mono text-[11px] text-zinc-500 hidden sm:block">
             PRESS <span className="text-zinc-300 font-semibold px-1 py-0.5 rounded bg-zinc-800 border border-white/10">ENTER</span> TO EXECUTE
           </div>
         </div>
 
-        {content}
+        <div className="w-full h-[420px] max-h-[74vh]">
+          {content}
+        </div>
       </div>
     </section>
   );

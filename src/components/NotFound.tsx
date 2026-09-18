@@ -93,7 +93,7 @@ export const NotFound: React.FC<NotFoundProps> = ({
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(#1f293d_1px,transparent_1px)] [background-size:24px_24px] opacity-25" />
 
       {/* Top Header Status */}
-      <header className="max-w-5xl w-full mx-auto flex items-center justify-between border-b border-white/10 pb-4 relative z-10 font-mono text-xs">
+      <header className="max-w-5xl w-full mx-auto flex items-center justify-between pb-4 relative z-10 font-mono text-xs">
         <div className="flex items-center space-x-2">
           <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
           <span className="text-rose-400 font-semibold">ERR_404_ROUTE_UNDEFINED</span>
@@ -106,7 +106,7 @@ export const NotFound: React.FC<NotFoundProps> = ({
           <span className="text-emerald-400">{currentTime || '00:00:00 IST'}</span>
           <button
             onClick={onNavigateHome}
-            className="px-2.5 py-1 rounded bg-zinc-900 border border-white/10 hover:border-emerald-500/30 text-zinc-300 hover:text-white flex items-center space-x-1.5 transition-colors cursor-pointer"
+            className="px-3 py-1.5 rounded text-zinc-300 hover:text-white flex items-center space-x-1.5 transition-colors cursor-pointer"
           >
             <Home className="w-3.5 h-3.5 text-emerald-400" />
             <span>Root (/)</span>

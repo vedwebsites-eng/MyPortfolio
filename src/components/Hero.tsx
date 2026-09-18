@@ -56,7 +56,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
         {/* Terminal Header Prompt Bar */}
         <div
           id="hero-terminal-badge"
-          className="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-md bg-zinc-900/90 border border-white/10 font-mono text-xs text-zinc-400 mb-6 shadow-sm"
+          className="inline-flex items-center space-x-2.5 py-1.5 font-mono text-xs text-zinc-400 mb-6"
         >
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           <span className="text-zinc-500">host:</span>
@@ -79,7 +79,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
             </h1>
             <span
               id="hero-moniker-tag"
-              className="font-mono text-sm sm:text-base text-emerald-400/90 px-2.5 py-0.5 rounded border border-emerald-500/20 bg-emerald-500/5"
+              className="font-mono text-sm sm:text-base text-emerald-400/90 px-1 py-0.5"
             >
               &lt;VEX /&gt;
             </span>

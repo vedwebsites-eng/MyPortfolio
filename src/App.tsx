@@ -157,7 +157,7 @@ export default function App() {
       {notification && (
         <div
           role="status"
-          className={`fixed bottom-6 right-6 z-50 px-4 py-3 rounded-xl font-mono text-xs border shadow-2xl flex items-center space-x-3 transition-all animate-bounce ${
+          className={`fixed bottom-6 left-6 sm:left-auto sm:right-24 z-50 px-4 py-3 rounded-xl font-mono text-xs border shadow-2xl flex items-center space-x-3 transition-all animate-bounce ${
             notification.isError
               ? 'bg-rose-950/90 border-rose-500/40 text-rose-200'
               : 'bg-[#0d141e]/95 border-emerald-500/40 text-emerald-300'
