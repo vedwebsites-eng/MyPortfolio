@@ -14,6 +14,7 @@ export const PERSONAL_INFO = {
   role: 'Student-Builder & Security Researcher',
   bioOneLiner: '15-year-old student-builder crafting autonomous AI tooling, researching cybersecurity vulnerabilities, and engineering resilient software from first principles.',
   pgpFingerprint: '9B2F E74A C190 442D 81A3 E518 70B2 3C8F 61D9 4AA1',
+  youtubeUrl: 'https://youtube.com/@RootCauseTech',
 };
 
 export const TERMINAL_ROTATING_TITLES = [
