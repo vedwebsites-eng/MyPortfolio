@@ -131,7 +131,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
                 <div className="flex items-center space-x-2 font-mono text-xs flex-shrink-0">
                   <button
                     onClick={handleCopyPersonalEmail}
-                    className="px-2.5 py-1.5 rounded bg-zinc-800 text-zinc-300 hover:text-white border border-white/10 flex items-center space-x-1.5 transition-colors cursor-pointer"
+                    className="px-2.5 py-1.5 rounded bg-zinc-800 text-zinc-300 hover:text-white flex items-center space-x-1.5 transition-colors cursor-pointer"
                     title="Copy to clipboard"
                   >
                     {copiedPersonalEmail ? (
@@ -144,7 +144,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
 
                   <a
                     href={`mailto:${PERSONAL_INFO.personalEmail}`}
-                    className="px-2.5 py-1.5 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/30 flex items-center space-x-1 transition-colors"
+                    className="px-2.5 py-1.5 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 flex items-center space-x-1 transition-colors"
                   >
                     <span>Write</span>
                     <ExternalLink className="w-3 h-3" />
@@ -182,7 +182,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
                 <div className="flex items-center space-x-2 font-mono text-xs flex-shrink-0">
                   <button
                     onClick={handleCopyWorkEmail}
-                    className="px-2.5 py-1.5 rounded bg-zinc-800 text-zinc-300 hover:text-white border border-white/10 flex items-center space-x-1.5 transition-colors cursor-pointer"
+                    className="px-2.5 py-1.5 rounded bg-zinc-800 text-zinc-300 hover:text-white flex items-center space-x-1.5 transition-colors cursor-pointer"
                     title="Copy to clipboard"
                   >
                     {copiedWorkEmail ? (
@@ -195,7 +195,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
 
                   <a
                     href={`mailto:${PERSONAL_INFO.workEmail}`}
-                    className="px-2.5 py-1.5 rounded bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 border border-cyan-500/30 flex items-center space-x-1 transition-colors"
+                    className="px-2.5 py-1.5 rounded bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 flex items-center space-x-1 transition-colors"
                   >
                     <span>Write</span>
                     <ExternalLink className="w-3 h-3" />
@@ -231,7 +231,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
                   href={PERSONAL_INFO.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 border border-purple-500/30 font-mono text-xs transition-colors self-start sm:self-center"
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 font-mono text-xs transition-colors self-start sm:self-center"
                 >
                   <span>Explore GitHub</span>
                   <ExternalLink className="w-3 h-3" />
@@ -261,7 +261,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
 
                 <button
                   onClick={onOpenResume}
-                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 border border-amber-500/30 font-mono text-xs transition-colors cursor-pointer self-start sm:self-center"
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 font-mono text-xs transition-colors cursor-pointer self-start sm:self-center"
                 >
                   <span>Inspect CV</span>
                   <FileText className="w-3 h-3" />
@@ -284,7 +284,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
                   <span>{copiedPgp ? 'Copied' : 'Copy'}</span>
                 </button>
               </div>
-              <div className="text-[11px] text-zinc-400 bg-zinc-950 p-2 rounded border border-white/5 select-all font-mono tracking-wider break-all">
+              <div className="text-[11px] text-zinc-400 bg-zinc-950 p-2 rounded select-all font-mono tracking-wider break-all">
                 {PERSONAL_INFO.pgpFingerprint}
               </div>
             </div>
@@ -413,7 +413,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
                 </div>
 
                 {dispatchStatus === 'sent' && (
-                  <div className="p-2.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[11px] flex items-center space-x-2">
+                  <div className="p-2.5 rounded bg-emerald-500/10 text-emerald-300 text-[11px] flex items-center space-x-2">
                     <Check className="w-3.5 h-3.5 flex-shrink-0" />
                     <span>Payload prepared and mail client opened. Thank you for reaching out!</span>
                   </div>

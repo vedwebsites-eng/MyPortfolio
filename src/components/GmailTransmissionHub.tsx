@@ -255,13 +255,13 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
       {/* Top Banner: Google Identity & Connection State */}
       <div className="p-4 sm:p-5 bg-gradient-to-r from-emerald-950/40 via-cyan-950/20 to-black/40 border-b border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center space-x-3">
-          <div className="p-2.5 rounded-xl bg-[#131720] border border-white/10 text-emerald-400">
+          <div className="p-2.5 rounded-xl bg-[#131720] text-emerald-400">
             <Mail className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
               <span className="text-white font-semibold text-sm">GMAIL INTEGRATION CONSOLE</span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300">
                 1P Workspace API
               </span>
             </div>
@@ -274,7 +274,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
         {/* Auth status indicator */}
         <div className="flex items-center space-x-2 self-start sm:self-auto">
           {currentUser ? (
-            <div className="flex items-center space-x-2 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-emerald-300">
+            <div className="flex items-center space-x-2 bg-emerald-500/10 px-3 py-1.5 rounded-lg text-emerald-300">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-[11px] max-w-[180px] truncate">{currentUser.email}</span>
               <button
@@ -286,7 +286,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
               </button>
             </div>
           ) : (
-            <div className="flex items-center space-x-1.5 text-zinc-400 bg-zinc-900/80 px-2.5 py-1.5 rounded border border-white/5 text-[11px]">
+            <div className="flex items-center space-x-1.5 text-zinc-400 bg-zinc-900/80 px-2.5 py-1.5 rounded text-[11px]">
               <span className="w-2 h-2 rounded-full bg-zinc-600" />
               <span>Not Connected</span>
             </div>
@@ -299,7 +299,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
         /* Sign-in prompt state */
         <div className="p-6 sm:p-8 text-center space-y-5 bg-[#090c10]">
           <div className="max-w-md mx-auto space-y-3">
-            <div className="inline-flex p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mb-1">
+            <div className="inline-flex p-3 rounded-2xl bg-emerald-500/10 text-emerald-400 mb-1">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <h3 className="text-base font-serif text-white font-medium">
@@ -324,7 +324,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
           </div>
 
           {errorMessage && (
-            <div className="max-w-md mx-auto p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-[11px] flex items-start space-x-2 text-left">
+            <div className="max-w-md mx-auto p-3 rounded-lg bg-red-500/10 text-red-300 text-[11px] flex items-start space-x-2 text-left">
               <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-400" />
               <span>{errorMessage}</span>
             </div>
@@ -332,7 +332,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
 
           {/* Quick info badges */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto pt-4 text-left border-t border-white/5 text-zinc-400">
-            <div className="p-3 rounded-lg bg-[#0d1117] border border-white/5 space-y-1">
+            <div className="p-3 rounded-lg bg-[#0d1117] space-y-1">
               <span className="text-emerald-400 font-semibold block text-[11px]">
                 PERSONAL INBOX
               </span>
@@ -341,7 +341,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                 For vulnerability research, security questions & direct tech chat.
               </p>
             </div>
-            <div className="p-3 rounded-lg bg-[#0d1117] border border-white/5 space-y-1">
+            <div className="p-3 rounded-lg bg-[#0d1117] space-y-1">
               <span className="text-cyan-400 font-semibold block text-[11px]">
                 WORK & COLLAB INBOX
               </span>
@@ -364,7 +364,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                 className={`px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition-colors cursor-pointer text-xs ${
                   activeTab === 'compose'
                     ? 'bg-emerald-500 text-zinc-950 font-semibold'
-                    : 'text-zinc-400 hover:text-white bg-zinc-900/60 border border-white/5'
+                    : 'text-zinc-400 hover:text-white bg-zinc-900/60'
                 }`}
               >
                 <Send className="w-3.5 h-3.5" />
@@ -376,7 +376,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                 className={`px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition-colors cursor-pointer text-xs ${
                   activeTab === 'inbox'
                     ? 'bg-emerald-500 text-zinc-950 font-semibold'
-                    : 'text-zinc-400 hover:text-white bg-zinc-900/60 border border-white/5'
+                    : 'text-zinc-400 hover:text-white bg-zinc-900/60'
                 }`}
               >
                 <Inbox className="w-3.5 h-3.5" />
@@ -397,7 +397,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
 
           {/* Success Banner */}
           {transmissionSuccess && (
-            <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 flex items-start justify-between gap-3 animate-in fade-in">
+            <div className="p-3.5 rounded-xl bg-emerald-500/10 text-emerald-300 flex items-start justify-between gap-3 animate-in fade-in">
               <div className="flex items-start space-x-2.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
                 <div>
@@ -417,7 +417,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                 href="https://mail.google.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 text-[11px] flex items-center space-x-1 border border-emerald-500/40"
+                className="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 text-[11px] flex items-center space-x-1"
               >
                 <span>View in Gmail</span>
                 <ExternalLink className="w-3 h-3" />
@@ -426,7 +426,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
           )}
 
           {errorMessage && (
-            <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs flex items-start space-x-2">
+            <div className="p-3 rounded-lg bg-red-500/10 text-red-300 text-xs flex items-start space-x-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-400" />
               <span>{errorMessage}</span>
             </div>
@@ -445,10 +445,10 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                   <button
                     type="button"
                     onClick={() => applyTemplate('security')}
-                    className={`px-2.5 py-1 rounded border text-[11px] transition-colors cursor-pointer ${
+                    className={`px-2.5 py-1 rounded text-[11px] transition-colors cursor-pointer ${
                       templateSelected === 'security'
-                        ? 'bg-emerald-500/20 border-emerald-500 text-emerald-300'
-                        : 'bg-zinc-900 border-white/5 text-zinc-400 hover:text-zinc-200'
+                        ? 'bg-emerald-500/20 text-emerald-300'
+                        : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200'
                     }`}
                   >
                     Security / Bug Bounty
@@ -456,10 +456,10 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                   <button
                     type="button"
                     onClick={() => applyTemplate('ai_collab')}
-                    className={`px-2.5 py-1 rounded border text-[11px] transition-colors cursor-pointer ${
+                    className={`px-2.5 py-1 rounded text-[11px] transition-colors cursor-pointer ${
                       templateSelected === 'ai_collab'
-                        ? 'bg-cyan-500/20 border-cyan-500 text-cyan-300'
-                        : 'bg-zinc-900 border-white/5 text-zinc-400 hover:text-zinc-200'
+                        ? 'bg-cyan-500/20 text-cyan-300'
+                        : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200'
                     }`}
                   >
                     AI Systems Collab
@@ -467,10 +467,10 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                   <button
                     type="button"
                     onClick={() => applyTemplate('work')}
-                    className={`px-2.5 py-1 rounded border text-[11px] transition-colors cursor-pointer ${
+                    className={`px-2.5 py-1 rounded text-[11px] transition-colors cursor-pointer ${
                       templateSelected === 'work'
-                        ? 'bg-amber-500/20 border-amber-500 text-amber-300'
-                        : 'bg-zinc-900 border-white/5 text-zinc-400 hover:text-zinc-200'
+                        ? 'bg-amber-500/20 text-amber-300'
+                        : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200'
                     }`}
                   >
                     Work & Prime Nation
@@ -485,10 +485,10 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                   <button
                     type="button"
                     onClick={() => setDestinationEmail(PERSONAL_INFO.personalEmail)}
-                    className={`p-2.5 rounded-lg border text-left transition-colors cursor-pointer ${
+                    className={`p-2.5 rounded-lg text-left transition-colors cursor-pointer ${
                       destinationEmail === PERSONAL_INFO.personalEmail
-                        ? 'bg-emerald-500/10 border-emerald-500/50 text-white'
-                        : 'bg-zinc-900/60 border-white/5 text-zinc-400 hover:text-zinc-200'
+                        ? 'bg-emerald-500/10 text-white'
+                        : 'bg-zinc-900/60 text-zinc-400 hover:text-zinc-200'
                     }`}
                   >
                     <div className="flex items-center justify-between text-[11px]">
@@ -503,10 +503,10 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                   <button
                     type="button"
                     onClick={() => setDestinationEmail(PERSONAL_INFO.workEmail)}
-                    className={`p-2.5 rounded-lg border text-left transition-colors cursor-pointer ${
+                    className={`p-2.5 rounded-lg text-left transition-colors cursor-pointer ${
                       destinationEmail === PERSONAL_INFO.workEmail
-                        ? 'bg-cyan-500/10 border-cyan-500/50 text-white'
-                        : 'bg-zinc-900/60 border-white/5 text-zinc-400 hover:text-zinc-200'
+                        ? 'bg-cyan-500/10 text-white'
+                        : 'bg-zinc-900/60 text-zinc-400 hover:text-zinc-200'
                     }`}
                   >
                     <div className="flex items-center justify-between text-[11px]">
@@ -528,7 +528,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="e.g. Vulnerability Disclosure: CVE-xxxx or AI Tooling Question"
-                  className="w-full bg-[#0d1017] border border-white/10 rounded-lg px-3 py-2 text-zinc-200 text-xs focus:outline-none focus:border-emerald-500/50"
+                  className="w-full bg-[#0d1017] rounded-lg px-3 py-2 text-zinc-200 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500/50"
                 />
               </div>
 
@@ -540,7 +540,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                   value={cc}
                   onChange={(e) => setCc(e.target.value)}
                   placeholder="Optional additional recipient"
-                  className="w-full bg-[#0d1017] border border-white/10 rounded-lg px-3 py-2 text-zinc-200 text-xs focus:outline-none focus:border-emerald-500/50"
+                  className="w-full bg-[#0d1017] rounded-lg px-3 py-2 text-zinc-200 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500/50"
                 />
               </div>
 
@@ -552,7 +552,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
                   placeholder="Write your email payload here..."
-                  className="w-full bg-[#0d1017] border border-white/10 rounded-lg px-3 py-2.5 text-zinc-200 text-xs focus:outline-none focus:border-emerald-500/50 resize-none font-mono"
+                  className="w-full bg-[#0d1017] rounded-lg px-3 py-2.5 text-zinc-200 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500/50 resize-none font-mono"
                 />
               </div>
 
@@ -570,7 +570,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                 <button
                   type="button"
                   onClick={() => handleInitiateTransmission('draft')}
-                  className="w-full sm:w-auto py-2.5 px-4 rounded-lg bg-zinc-800 text-zinc-200 hover:text-white hover:bg-zinc-700 flex items-center justify-center space-x-2 transition-colors cursor-pointer text-xs border border-white/10"
+                  className="w-full sm:w-auto py-2.5 px-4 rounded-lg bg-zinc-800 text-zinc-200 hover:text-white hover:bg-zinc-700 flex items-center justify-center space-x-2 transition-colors cursor-pointer text-xs"
                 >
                   <FileEdit className="w-3.5 h-3.5 text-amber-400" />
                   <span>Save as Draft</span>
@@ -606,7 +606,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                   <p>Querying Gmail API...</p>
                 </div>
               ) : messages.length === 0 ? (
-                <div className="p-8 text-center text-zinc-500 bg-[#0d1017] rounded-xl border border-white/5">
+                <div className="p-8 text-center text-zinc-500 bg-[#0d1017] rounded-xl">
                   <Inbox className="w-6 h-6 mx-auto text-zinc-600 mb-2" />
                   <p className="text-zinc-400">No recent messages retrieved or mailbox is empty.</p>
                 </div>
@@ -615,7 +615,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
                   {messages.map((msg) => (
                     <div
                       key={msg.id}
-                      className="p-3 rounded-lg bg-[#0d1017] border border-white/5 hover:border-emerald-500/20 transition-all space-y-1"
+                      className="p-3 rounded-lg bg-[#0d1017] hover:bg-zinc-900 transition-all space-y-1"
                     >
                       <div className="flex items-center justify-between text-[11px]">
                         <span className="text-emerald-400 font-semibold truncate max-w-[200px]">

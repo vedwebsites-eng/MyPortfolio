@@ -33,7 +33,7 @@ export const GmailConfirmModal: React.FC<GmailConfirmModalProps> = ({
         {/* Header */}
         <div className="p-5 bg-gradient-to-r from-amber-500/10 via-emerald-500/5 to-transparent border-b border-white/10 flex items-start justify-between">
           <div className="flex items-center space-x-3">
-            <div className="p-2 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-400">
+            <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400">
               <AlertTriangle className="w-5 h-5" />
             </div>
             <div>
@@ -60,7 +60,7 @@ export const GmailConfirmModal: React.FC<GmailConfirmModalProps> = ({
 
         {/* Payload Review */}
         <div className="p-5 space-y-4 text-xs font-mono">
-          <div className="p-3 rounded-lg bg-black/50 border border-white/5 space-y-2">
+          <div className="p-3 rounded-lg bg-black/50 space-y-2">
             <div className="flex items-center justify-between border-b border-white/5 pb-1.5">
               <span className="text-zinc-500">ACTION:</span>
               <span className="text-amber-300 font-semibold uppercase">
@@ -85,13 +85,13 @@ export const GmailConfirmModal: React.FC<GmailConfirmModalProps> = ({
             </div>
             <div className="pt-1">
               <span className="text-zinc-500 block mb-1">MESSAGE BODY PREVIEW:</span>
-              <div className="p-2.5 rounded bg-zinc-950/80 text-zinc-300 max-h-32 overflow-y-auto whitespace-pre-wrap font-sans text-xs border border-white/5">
+              <div className="p-2.5 rounded bg-zinc-950/80 text-zinc-300 max-h-32 overflow-y-auto whitespace-pre-wrap font-sans text-xs">
                 {params.body}
               </div>
             </div>
           </div>
 
-          <div className="flex items-start space-x-2 text-[11px] text-zinc-400 font-sans bg-amber-500/10 p-3 rounded-lg border border-amber-500/20">
+          <div className="flex items-start space-x-2 text-[11px] text-zinc-400 font-sans bg-amber-500/10 p-3 rounded-lg">
             <ShieldAlert className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
             <span>
               This operation will execute via your authenticated Gmail account and transmit an official

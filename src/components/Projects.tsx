@@ -127,7 +127,7 @@ export const Projects: React.FC = () => {
             {/* Top Badge & Category */}
             <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-6 border-b border-white/5 font-mono text-xs">
               <div className="flex items-center space-x-2">
-                <span className="px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-semibold tracking-wide">
+                <span className="px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 font-semibold tracking-wide">
                   AETHOS
                 </span>
                 <span className="text-zinc-500">•</span>
@@ -169,7 +169,7 @@ export const Projects: React.FC = () => {
                   {['React 19', 'TypeScript', 'Tailwind', 'AI Coach Engine', 'Web Audio Synth'].map((t) => (
                     <span
                       key={t}
-                      className="px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-900 text-zinc-400 border border-white/10"
+                      className="px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-900 text-zinc-400"
                     >
                       {t}
                     </span>
@@ -193,7 +193,7 @@ export const Projects: React.FC = () => {
 
               {/* Right Column: Live Interactive Cyberpunk Simulator */}
               <div className="lg:col-span-6">
-                <div className="rounded-xl bg-[#080a0e] border border-emerald-500/30 p-4 font-mono text-xs space-y-4 shadow-inner">
+                <div className="rounded-xl bg-[#080a0e] p-4 font-mono text-xs space-y-4 shadow-inner">
                   {/* Simulator Header */}
                   <div className="flex items-center justify-between pb-2 border-b border-white/10 text-zinc-400 text-[11px]">
                     <div className="flex items-center space-x-2">
@@ -212,18 +212,18 @@ export const Projects: React.FC = () => {
 
                   {/* Character Stats Bar */}
                   <div className="grid grid-cols-3 gap-2 text-center">
-                    <div className="p-2 rounded bg-zinc-900/80 border border-white/5">
+                    <div className="p-2 rounded bg-zinc-900/80">
                       <span className="text-[10px] text-zinc-500 block uppercase">Level</span>
                       <span className="text-base font-bold text-white">Lv. {aethosLevel}</span>
                     </div>
-                    <div className="p-2 rounded bg-zinc-900/80 border border-white/5">
+                    <div className="p-2 rounded bg-zinc-900/80">
                       <span className="text-[10px] text-zinc-500 block uppercase">Streak</span>
                       <span className="text-base font-bold text-amber-400 flex items-center justify-center space-x-1">
                         <Flame className="w-4 h-4 text-amber-500 fill-amber-500" />
                         <span>{aethosStreak}d</span>
                       </span>
                     </div>
-                    <div className="p-2 rounded bg-zinc-900/80 border border-white/5">
+                    <div className="p-2 rounded bg-zinc-900/80">
                       <span className="text-[10px] text-zinc-500 block uppercase">XP Bar</span>
                       <span className="text-base font-bold text-emerald-400">{aethosXp} / 800</span>
                     </div>
@@ -235,7 +235,7 @@ export const Projects: React.FC = () => {
                       <span>PROGRESSION</span>
                       <span>{Math.round((aethosXp / 800) * 100)}%</span>
                     </div>
-                    <div className="h-2 w-full bg-zinc-900 rounded-full overflow-hidden border border-white/5">
+                    <div className="h-2 w-full bg-zinc-900 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 transition-all duration-500"
                         style={{ width: `${Math.min(100, (aethosXp / 800) * 100)}%` }}
@@ -244,7 +244,7 @@ export const Projects: React.FC = () => {
                   </div>
 
                   {/* Ace AI Coach Dialogue Box */}
-                  <div className="p-3 rounded bg-zinc-900/90 border border-emerald-500/20 space-y-1.5">
+                  <div className="p-3 rounded bg-zinc-900/90 space-y-1.5">
                     <div className="flex items-center space-x-1.5 text-emerald-400 text-[11px] font-semibold">
                       <Cpu className="w-3.5 h-3.5" />
                       <span>ACE [AI COACH]</span>
@@ -261,8 +261,8 @@ export const Projects: React.FC = () => {
                       disabled={aethosQuestDone}
                       className={`w-full py-2.5 px-3 rounded text-xs font-semibold flex items-center justify-center space-x-2 transition-all cursor-pointer ${
                         aethosQuestDone
-                          ? 'bg-zinc-800 text-zinc-500 border border-white/5 cursor-not-allowed'
-                          : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40'
+                          ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
+                          : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300'
                       }`}
                     >
                       <Zap className="w-3.5 h-3.5 text-emerald-400" />
@@ -288,7 +288,7 @@ export const Projects: React.FC = () => {
             {/* Top Badge & Category */}
             <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-6 border-b border-white/5 font-mono text-xs">
               <div className="flex items-center space-x-2">
-                <span className="px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 font-semibold tracking-wide">
+                <span className="px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-400 font-semibold tracking-wide">
                   RootCause
                 </span>
                 <span className="text-zinc-500">•</span>
@@ -330,7 +330,7 @@ export const Projects: React.FC = () => {
                   {['CVE Analysis', 'Burp Suite', 'Ghidra / Disassembly', 'Visual Storytelling', 'Shorts / Video Pipeline'].map((t) => (
                     <span
                       key={t}
-                      className="px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-900 text-zinc-400 border border-white/10"
+                      className="px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-900 text-zinc-400"
                     >
                       {t}
                     </span>
@@ -354,7 +354,7 @@ export const Projects: React.FC = () => {
 
               {/* Right Column: Interactive Episode Reel */}
               <div className="lg:col-span-6">
-                <div className="rounded-xl bg-[#080a0e] border border-cyan-500/30 p-4 font-mono text-xs space-y-4 shadow-inner">
+                <div className="rounded-xl bg-[#080a0e] p-4 font-mono text-xs space-y-4 shadow-inner">
                   <div className="flex items-center justify-between pb-2 border-b border-white/10 text-zinc-400 text-[11px]">
                     <div className="flex items-center space-x-2">
                       <ShieldAlert className="w-3.5 h-3.5 text-cyan-400" />
@@ -371,8 +371,8 @@ export const Projects: React.FC = () => {
                         onClick={() => setActiveEpisode(idx)}
                         className={`p-2 rounded text-left transition-all cursor-pointer ${
                           activeEpisode === idx
-                            ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40'
-                            : 'bg-zinc-900/80 text-zinc-400 hover:text-zinc-200 border border-white/5'
+                            ? 'bg-cyan-500/20 text-cyan-300'
+                            : 'bg-zinc-900/80 text-zinc-400 hover:text-zinc-200'
                         }`}
                       >
                         <div className="text-[10px] text-zinc-500">{ep.cve}</div>
@@ -382,12 +382,12 @@ export const Projects: React.FC = () => {
                   </div>
 
                   {/* Active Episode Card Breakdown */}
-                  <div className="p-3.5 rounded bg-zinc-900/90 border border-white/10 space-y-2.5">
+                  <div className="p-3.5 rounded bg-zinc-900/90 space-y-2.5">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-semibold text-white font-serif">
                         {episodes[activeEpisode].title}
                       </span>
-                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/50 text-cyan-400 border border-cyan-500/20">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/50 text-cyan-400">
                         {episodes[activeEpisode].duration}
                       </span>
                     </div>
@@ -397,7 +397,7 @@ export const Projects: React.FC = () => {
                     </p>
 
                     {/* Exploit Payload / Assembly snippet */}
-                    <div className="bg-[#05070a] p-2.5 rounded border border-white/10 text-[11px] font-mono text-emerald-400 overflow-x-auto">
+                    <div className="bg-[#05070a] p-2.5 rounded text-[11px] font-mono text-emerald-400 overflow-x-auto">
                       <span className="text-zinc-500 select-none mr-2">$</span>
                       {episodes[activeEpisode].terminalCode}
                     </div>
@@ -423,7 +423,7 @@ export const Projects: React.FC = () => {
             {/* Top Badge & Category */}
             <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-6 border-b border-white/5 font-mono text-xs">
               <div className="flex items-center space-x-2">
-                <span className="px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 font-semibold tracking-wide">
+                <span className="px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 font-semibold tracking-wide">
                   Inkwell
                 </span>
                 <span className="text-zinc-500">•</span>
@@ -465,7 +465,7 @@ export const Projects: React.FC = () => {
                   {['React', 'TypeScript', 'Tailwind', 'Markdown Engine', 'Typography Presets', 'LocalStorage'].map((t) => (
                     <span
                       key={t}
-                      className="px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-900 text-zinc-400 border border-white/10"
+                      className="px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-900 text-zinc-400"
                     >
                       {t}
                     </span>
@@ -489,7 +489,7 @@ export const Projects: React.FC = () => {
 
               {/* Right Column: Live Typographic Note Canvas */}
               <div className="lg:col-span-6">
-                <div className="rounded-xl bg-[#080a0e] border border-amber-500/30 p-4 font-mono text-xs space-y-3 shadow-inner">
+                <div className="rounded-xl bg-[#080a0e] p-4 font-mono text-xs space-y-3 shadow-inner">
                   {/* Canvas Header & Font Switcher */}
                   <div className="flex items-center justify-between pb-2 border-b border-white/10 text-zinc-400 text-[11px]">
                     <div className="flex items-center space-x-2">
@@ -497,7 +497,7 @@ export const Projects: React.FC = () => {
                       <span className="text-amber-400 font-semibold">TYPOGRAPHY CANVAS</span>
                     </div>
 
-                    <div className="flex items-center space-x-1 bg-zinc-900 p-0.5 rounded border border-white/10">
+                    <div className="flex items-center space-x-1 bg-zinc-900 p-0.5 rounded">
                       <button
                         onClick={() => setInkwellFont('serif')}
                         className={`px-2 py-0.5 rounded text-[10px] cursor-pointer ${
@@ -527,7 +527,7 @@ export const Projects: React.FC = () => {
 
                   {/* Rendered Note Preview */}
                   <div
-                    className={`p-4 rounded bg-[#0d1017] border border-white/10 min-h-[160px] ${
+                    className={`p-4 rounded bg-[#0d1017] min-h-[160px] ${
                       inkwellFont === 'serif'
                         ? 'font-serif'
                         : inkwellFont === 'mono'
