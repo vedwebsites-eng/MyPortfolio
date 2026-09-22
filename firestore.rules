@@ -1,0 +1,37 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper authorization functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // User profiles: readable by authenticated clients, writable only by owner
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isOwner(userId);
+      allow delete: if false;
+
+      // User's private chat messages: strictly isolated to the user
+      match /chat_messages/{messageId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // Public guestbook & collaboration notes
+    match /guestbook/{entryId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if isAuthenticated() && resource.data.authorId == request.auth.uid;
+    }
+
+    // Health / connection test document
+    match /test/{docId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+  }
+}

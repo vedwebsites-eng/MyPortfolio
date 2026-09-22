@@ -1,0 +1,125 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Authenticated visitor user profile",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "User unique identifier"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User full display name"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User primary email address"
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "User profile photo URL"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp"
+        },
+        "lastLoginAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last sign-in timestamp"
+        }
+      },
+      "required": ["id", "email"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Persisted AI conversation message",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Message unique identifier"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Owner user UID"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["user", "model"],
+          "description": "Message sender role"
+        },
+        "text": {
+          "type": "string",
+          "description": "Message textual payload"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when message was generated"
+        },
+        "chatSessionId": {
+          "type": "string",
+          "description": "Conversation session thread ID"
+        }
+      },
+      "required": ["id", "userId", "role", "text"]
+    },
+    "GuestbookEntry": {
+      "title": "GuestbookEntry",
+      "description": "Visitor endorsement or collaborative note",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Entry unique identifier"
+        },
+        "authorId": {
+          "type": "string",
+          "description": "Author UID"
+        },
+        "authorName": {
+          "type": "string",
+          "description": "Author display name"
+        },
+        "authorEmail": {
+          "type": "string",
+          "format": "email",
+          "description": "Author email"
+        },
+        "authorPhoto": {
+          "type": "string",
+          "description": "Author avatar image URL"
+        },
+        "message": {
+          "type": "string",
+          "description": "Guestbook endorsement text"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Submission timestamp"
+        }
+      },
+      "required": ["id", "authorId", "authorName", "message"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile document accessible by authenticated user"
+    },
+    "/users/{userId}/chat_messages/{messageId}": {
+      "schema": "ChatMessage",
+      "description": "User chat conversation history with portfolio Gemini AI"
+    },
+    "/guestbook/{entryId}": {
+      "schema": "GuestbookEntry",
+      "description": "Public visitor guestbook and collaboration notes"
+    }
+  }
+}

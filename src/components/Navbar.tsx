@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, FileText, Menu, X, Mail } from 'lucide-react';
+import { Terminal, FileText, Menu, X, Mail, Sparkles } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { initAuth } from '../services/gmailAuth';
 import { User } from 'firebase/auth';
@@ -8,9 +8,10 @@ import { ThemeToggle } from './ThemeToggle';
 interface NavbarProps {
   onOpenResume: () => void;
   onOpenTerminal: () => void;
+  onOpenChat?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal, onOpenChat }) => {
   const [timeString, setTimeString] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -143,6 +144,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             )}
           </a>
+
+          {/* Gemini AI Multi-Turn Chat Trigger */}
+          {onOpenChat && (
+            <button
+              id="btn-nav-ai"
+              onClick={onOpenChat}
+              className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-2 rounded-md text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer"
+              title="Ask VEX AI (Powered by Gemini)"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+              <span>ask ai</span>
+            </button>
+          )}
 
           {/* Terminal CLI Quick Trigger - Clean unboxed styling with ample padding */}
           <button

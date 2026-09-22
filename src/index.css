@@ -5,6 +5,38 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
+.font-space {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+}
+
+.font-lora {
+  font-family: "Lora", Georgia, serif;
+}
+
+.font-cormorant {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+.text-glow-orange {
+  text-shadow: 0 0 16px rgba(255, 69, 0, 0.5), 0 0 32px rgba(255, 69, 0, 0.25);
+}
+
+.cyber-grid-texture {
+  background-image: linear-gradient(rgba(255, 69, 0, 0.06) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 69, 0, 0.06) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.scanline-texture {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.18),
+    rgba(0, 0, 0, 0.18) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+}
+
 /* ==========================================================================
    Smooth Theme Transition & View Transitions
    ========================================================================== */
