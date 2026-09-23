@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, FileText, Menu, X, Mail, Sparkles } from 'lucide-react';
+import { Terminal, FileText, Menu, X, Mail } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 import { initAuth } from '../services/gmailAuth';
 import { User } from 'firebase/auth';
@@ -8,10 +8,9 @@ import { ThemeToggle } from './ThemeToggle';
 interface NavbarProps {
   onOpenResume: () => void;
   onOpenTerminal: () => void;
-  onOpenChat?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal, onOpenChat }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) => {
   const [timeString, setTimeString] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -145,30 +144,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal, on
             )}
           </a>
 
-          {/* Gemini AI Multi-Turn Chat Trigger */}
-          {onOpenChat && (
-            <button
-              id="btn-nav-ai"
-              onClick={onOpenChat}
-              className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-2 rounded-md text-xs font-mono text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer"
-              title="Ask VEX AI (Powered by Gemini)"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-              <span>ask ai</span>
-            </button>
-          )}
-
           {/* Terminal CLI Quick Trigger - Clean unboxed styling with ample padding */}
           <button
             id="btn-quick-terminal"
             onClick={onOpenTerminal}
-            className="hidden sm:inline-flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-mono text-zinc-300 hover:text-emerald-400 transition-colors cursor-pointer"
-            title="Open Interactive Terminal Drawer"
+            className="hidden sm:inline-flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-mono text-zinc-300 hover:text-emerald-400 transition-colors cursor-pointer group"
+            title="Open Interactive Terminal Drawer (⌘K or `)"
           >
             <Terminal className="w-3.5 h-3.5 text-emerald-400" />
             <span>cli</span>
-            <span className="text-[11px] text-zinc-500">
-              `
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-zinc-400 group-hover:text-emerald-400 group-hover:border-emerald-500/30 transition-colors">
+              ⌘K
             </span>
           </button>
 

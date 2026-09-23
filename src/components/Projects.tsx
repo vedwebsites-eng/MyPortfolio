@@ -19,6 +19,7 @@ import {
   Video,
 } from 'lucide-react';
 import { PROJECTS, PERSONAL_INFO } from '../data/portfolioData';
+import { GitHubLiveStat } from './GitHubLiveStat';
 
 export const Projects: React.FC = () => {
   // AETHOS Interactive Simulator State
@@ -657,6 +658,9 @@ export const Projects: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Live GitHub Stats Pulse for @vedwebsites-eng */}
+        <GitHubLiveStat />
       </div>
     </section>
   );

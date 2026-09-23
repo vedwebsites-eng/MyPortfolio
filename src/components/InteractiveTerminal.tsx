@@ -8,6 +8,7 @@ interface InteractiveTerminalProps {
   onClose?: () => void;
   onOpenResume?: () => void;
   onNavigate404?: () => void;
+  isKonamiDevMode?: boolean;
 }
 
 const ALL_COMMANDS = [
@@ -27,6 +28,8 @@ const ALL_COMMANDS = [
   'light',
   'date',
   'clear',
+  'konami',
+  'devmode',
   '404',
   'fullscreen',
   'minimize',
@@ -38,6 +41,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   onClose,
   onOpenResume,
   onNavigate404,
+  isKonamiDevMode = false,
 }) => {
   const { theme, setTheme, toggleTheme } = useTheme();
   const [input, setInput] = useState('');
@@ -64,6 +68,36 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   const terminalContainerRef = useRef<HTMLDivElement>(null);
   const terminalEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const konamiInjectedRef = useRef<boolean>(false);
+
+  // Trigger dev mode banner when isKonamiDevMode becomes true
+  useEffect(() => {
+    if (isKonamiDevMode && !konamiInjectedRef.current) {
+      konamiInjectedRef.current = true;
+      setHistory((prev) => [
+        ...prev,
+        {
+          command: 'sudo --override --konami-dev-mode',
+          output: (
+            <div className="space-y-2 text-zinc-200 border-l-2 border-emerald-400 pl-3 py-2 my-1 bg-emerald-950/30 rounded-r font-mono">
+              <div className="text-emerald-400 font-bold flex items-center space-x-2">
+                <span>⚡ [DEV MODE UNLOCKED] KONAMI CODE SEQUENCE RECOGNIZED</span>
+              </div>
+              <div className="text-xs text-zinc-300">
+                Payload verified: <span className="text-cyan-300 font-bold">↑ ↑ ↓ ↓ ← → ← → B A</span>
+              </div>
+              <div className="text-[11px] text-zinc-400 space-y-1">
+                <div>• Clearance: <span className="text-emerald-400 font-semibold">ROOT / 0-DAY ARCHITECT</span></div>
+                <div>• Engineer: <span className="text-white">Vedant Sattegiri Patil (VEX) &bull; Pune Node</span></div>
+                <div>• Private Philosophy: <em className="text-zinc-200">"Read the disassembly before reading the opinion. Keep latency zero."</em></div>
+                <div>• Easter Egg: <span className="text-amber-400 font-bold">30 Extra Lives Granted</span>. Type <span className="text-cyan-300 font-semibold">'skills'</span> or <span className="text-cyan-300 font-semibold">'pgp'</span> for raw intel.</div>
+              </div>
+            </div>
+          ),
+        },
+      ]);
+    }
+  }, [isKonamiDevMode]);
 
   // Sync state with HTML5 Fullscreen API changes (e.g. if user presses Esc)
   useEffect(() => {
@@ -394,6 +428,27 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
         setHistory([]);
         setInput('');
         return;
+
+      case 'konami':
+      case 'devmode':
+      case 'easteregg':
+        resultOutput = (
+          <div className="space-y-2 text-zinc-200 border-l-2 border-emerald-400 pl-3 py-2 my-1 bg-emerald-950/30 rounded-r font-mono">
+            <div className="text-emerald-400 font-bold flex items-center space-x-2">
+              <span>⚡ [DEV MODE UNLOCKED] KONAMI CODE SEQUENCE RECOGNIZED</span>
+            </div>
+            <div className="text-xs text-zinc-300">
+              Payload verified: <span className="text-cyan-300 font-bold">↑ ↑ ↓ ↓ ← → ← → B A</span>
+            </div>
+            <div className="text-[11px] text-zinc-400 space-y-1">
+              <div>• Clearance: <span className="text-emerald-400 font-semibold">ROOT / 0-DAY ARCHITECT</span></div>
+              <div>• Engineer: <span className="text-white">Vedant Sattegiri Patil (VEX) &bull; Pune Node</span></div>
+              <div>• Private Philosophy: <em className="text-zinc-200">"Read the disassembly before reading the opinion. Keep latency zero."</em></div>
+              <div>• Easter Egg: <span className="text-amber-400 font-bold">30 Extra Lives Granted</span>. Type <span className="text-cyan-300 font-semibold">'skills'</span> or <span className="text-cyan-300 font-semibold">'pgp'</span> for raw intel.</div>
+            </div>
+          </div>
+        );
+        break;
 
       case 'sudo':
         resultOutput = (

@@ -16,14 +16,31 @@ import { Footer } from './components/Footer';
 import { ResumeModal } from './components/ResumeModal';
 import { NotFound } from './components/NotFound';
 import { ThemeTransitionWave } from './components/ThemeTransitionWave';
-import { GeminiChatModal } from './components/GeminiChatModal';
-import { CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
+import { TerminalBootScreen } from './components/TerminalBootScreen';
+import { CheckCircle, AlertCircle } from 'lucide-react';
+
+const KONAMI_CODE = [
+  'ArrowUp',
+  'ArrowUp',
+  'ArrowDown',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowLeft',
+  'ArrowRight',
+  'b',
+  'a',
+];
 
 export default function App() {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [isTerminalModalOpen, setIsTerminalModalOpen] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isKonamiDevMode, setIsKonamiDevMode] = useState(false);
+  const [bootReady, setBootReady] = useState(false);
   const [notification, setNotification] = useState<{ message: string; isError?: boolean } | null>(null);
+
+  const konamiBufferRef = React.useRef<string[]>([]);
+  const konamiTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const [currentPath, setCurrentPath] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.location.pathname;
@@ -53,23 +70,68 @@ export default function App() {
     setTimeout(() => setNotification(null), 4000);
   };
 
-  // Global keyboard shortcuts
+  // Global keyboard shortcuts: Cmd+K, Backtick, Escape, and Konami Code
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Cmd/Ctrl+K opens terminal anywhere on the page
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsTerminalModalOpen((prev) => !prev);
+        return;
+      }
+
       // Toggle terminal on backtick (`), except when typing in inputs
       if (e.key === '`' && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) {
         e.preventDefault();
         setIsTerminalModalOpen((prev) => !prev);
+        return;
       }
+
       // Escape closes modals
       if (e.key === 'Escape') {
         setIsResumeOpen(false);
         setIsTerminalModalOpen(false);
+        return;
+      }
+
+      // Konami code sequence check (only when not typing in text fields)
+      if (!(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) {
+        if (konamiTimeoutRef.current) {
+          clearTimeout(konamiTimeoutRef.current);
+        }
+        konamiTimeoutRef.current = setTimeout(() => {
+          konamiBufferRef.current = [];
+        }, 2500);
+
+        const currentKey = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+        const expectedKey = KONAMI_CODE[konamiBufferRef.current.length];
+
+        if (currentKey === expectedKey) {
+          konamiBufferRef.current.push(currentKey);
+          if (konamiBufferRef.current.length === KONAMI_CODE.length) {
+            konamiBufferRef.current = [];
+            setIsKonamiDevMode(true);
+            setIsTerminalModalOpen(true);
+            showNotification('⚡ [ACCESS GRANTED] Konami Dev-Mode Override Activated!');
+          }
+        } else {
+          // If the key is the start of a new sequence (ArrowUp), keep it
+          if (currentKey === KONAMI_CODE[0]) {
+            konamiBufferRef.current = [currentKey];
+          } else {
+            konamiBufferRef.current = [];
+          }
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      if (konamiTimeoutRef.current) {
+        clearTimeout(konamiTimeoutRef.current);
+      }
+    };
   }, []);
 
   const is404 = currentPath !== '/' && currentPath !== '' && currentPath !== '/index.html';
@@ -88,11 +150,15 @@ export default function App() {
         {isTerminalModalOpen && (
           <InteractiveTerminal
             isModal={true}
-            onClose={() => setIsTerminalModalOpen(false)}
+            onClose={() => {
+              setIsTerminalModalOpen(false);
+              setIsKonamiDevMode(false);
+            }}
             onOpenResume={() => {
               setIsTerminalModalOpen(false);
               setIsResumeOpen(true);
             }}
+            isKonamiDevMode={isKonamiDevMode}
           />
         )}
 
@@ -119,6 +185,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#090b0e] text-[#d6d9e0] font-sans antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
+      {/* Monospace Terminal Boot Screen Transition (once per session, skippable) */}
+      <TerminalBootScreen onComplete={() => setBootReady(true)} />
+
       <ThemeTransitionWave />
       {/* Scroll Depth Monospace Progress Bar */}
       <ScrollProgressBar />
@@ -127,7 +196,6 @@ export default function App() {
       <Navbar
         onOpenResume={() => setIsResumeOpen(true)}
         onOpenTerminal={() => setIsTerminalModalOpen(true)}
-        onOpenChat={() => setIsChatOpen(true)}
       />
 
       {/* Main Content Layout */}
@@ -163,26 +231,11 @@ export default function App() {
       {/* Footer */}
       <Footer onNavigate404={() => navigate('/404')} />
 
-      {/* Floating Ask VEX AI Dock Trigger */}
-      <button
-        id="btn-floating-ask-ai"
-        onClick={() => setIsChatOpen(true)}
-        className="fixed bottom-6 right-6 z-40 bg-[#090d14]/95 backdrop-blur-md border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 hover:text-white px-4 py-2.5 rounded-full shadow-[0_0_24px_rgba(6,182,212,0.25)] flex items-center space-x-2 text-xs font-mono transition-all hover:scale-105 cursor-pointer group"
-        title="Open Gemini AI Chat Assistant"
-      >
-        <span className="w-2 h-2 rounded-full bg-cyan-400 group-hover:bg-emerald-400 animate-pulse" />
-        <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-        <span className="font-semibold tracking-wider">ASK VEX AI</span>
-        <span className="hidden sm:inline-block text-[10px] text-zinc-400 px-1.5 py-0.5 rounded bg-white/5 font-mono">
-          GEMINI
-        </span>
-      </button>
-
       {/* Floating System Toast */}
       {notification && (
         <div
           role="status"
-          className={`fixed bottom-6 left-6 sm:left-auto sm:right-36 z-50 px-4 py-3 rounded-xl font-mono text-xs border shadow-2xl flex items-center space-x-3 transition-all animate-bounce ${
+          className={`fixed bottom-6 left-6 sm:left-auto sm:right-24 z-50 px-4 py-3 rounded-xl font-mono text-xs border shadow-2xl flex items-center space-x-3 transition-all animate-bounce ${
             notification.isError
               ? 'bg-rose-950/90 border-rose-500/40 text-rose-200'
               : 'bg-[#0d141e]/95 border-emerald-500/40 text-emerald-300'
@@ -203,20 +256,19 @@ export default function App() {
         onClose={() => setIsResumeOpen(false)}
       />
 
-      <GeminiChatModal
-        isOpen={isChatOpen}
-        onClose={() => setIsChatOpen(false)}
-      />
-
       {isTerminalModalOpen && (
         <InteractiveTerminal
           isModal={true}
-          onClose={() => setIsTerminalModalOpen(false)}
+          onClose={() => {
+            setIsTerminalModalOpen(false);
+            setIsKonamiDevMode(false);
+          }}
           onOpenResume={() => {
             setIsTerminalModalOpen(false);
             setIsResumeOpen(true);
           }}
           onNavigate404={() => navigate('/404')}
+          isKonamiDevMode={isKonamiDevMode}
         />
       )}
     </div>
