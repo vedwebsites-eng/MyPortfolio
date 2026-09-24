@@ -64,8 +64,6 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
           <span className="text-zinc-600">|</span>
           <span className="text-zinc-500">status:</span>
           <span className="text-emerald-400">active_researcher</span>
-          <span className="text-zinc-600 hidden sm:inline">|</span>
-          <span className="text-zinc-400 hidden sm:inline">age: 15</span>
         </div>
 
         {/* Name in elegant Playfair Display + Moniker */}
@@ -91,9 +89,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
               <span>Pune, India</span>
             </span>
             <span className="text-zinc-600">•</span>
-            <span className="text-zinc-400">15-Year-Old Student-Builder</span>
-            <span className="text-zinc-600 hidden sm:inline">•</span>
-            <span className="text-zinc-400 hidden sm:inline">Cybersecurity &times; AI &times; Systems</span>
+            <span className="text-zinc-400">Cybersecurity &times; AI &times; Systems</span>
           </div>
         </div>
 

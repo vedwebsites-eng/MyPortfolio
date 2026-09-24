@@ -67,16 +67,16 @@ export const GuestbookSection: React.FC = () => {
         {/* Section Header */}
         <div className="flex items-center space-x-2 font-mono text-xs text-cyan-400 mb-3">
           <span className="text-zinc-600">//</span>
-          <span>03. CLOUD GUESTBOOK & COLLABORATION</span>
+          <span>03. GUESTBOOK</span>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
             <h2 className="text-3xl sm:text-4xl font-serif text-white font-normal tracking-tight">
-              Visitor Registry & Firestore Notes
+              Guestbook
             </h2>
             <p className="text-zinc-400 text-sm sm:text-base mt-2 font-sans font-light max-w-xl">
-              Leave a verified endorsement or collaboration note. Authenticated via Google Sign-In and persisted live in Firebase Firestore.
+              Leave a note. Signed in with Google, stored live.
             </p>
           </div>
 

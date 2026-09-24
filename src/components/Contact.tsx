@@ -11,7 +11,6 @@ import {
   Send,
   Sparkles,
   Terminal,
-  Building2,
   Lock,
 } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
@@ -24,7 +23,6 @@ interface ContactProps {
 
 export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
   const [copiedPersonalEmail, setCopiedPersonalEmail] = useState(false);
-  const [copiedWorkEmail, setCopiedWorkEmail] = useState(false);
   const [copiedPgp, setCopiedPgp] = useState(false);
 
   // Mode toggle: 'gmail-api' (Primary) vs 'mailto-quick'
@@ -33,7 +31,6 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
   // Quick Dispatch Form State (Fallback)
   const [senderName, setSenderName] = useState('');
   const [senderContact, setSenderContact] = useState('');
-  const [targetDestination, setTargetDestination] = useState(PERSONAL_INFO.personalEmail);
   const [message, setMessage] = useState('');
   const [dispatchStatus, setDispatchStatus] = useState<'idle' | 'transmitting' | 'sent'>('idle');
 
@@ -41,14 +38,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
     navigator.clipboard.writeText(PERSONAL_INFO.personalEmail);
     setCopiedPersonalEmail(true);
     setTimeout(() => setCopiedPersonalEmail(false), 2000);
-    if (onNotify) onNotify('Copied vedsp02@gmail.com to clipboard');
-  };
-
-  const handleCopyWorkEmail = () => {
-    navigator.clipboard.writeText(PERSONAL_INFO.workEmail);
-    setCopiedWorkEmail(true);
-    setTimeout(() => setCopiedWorkEmail(false), 2000);
-    if (onNotify) onNotify('Copied team.primenationhq@gmail.com to clipboard');
+    if (onNotify) onNotify(`Copied ${PERSONAL_INFO.personalEmail} to clipboard`);
   };
 
   const handleCopyPgp = () => {
@@ -69,7 +59,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
       const body = encodeURIComponent(
         `From: ${senderName || 'Anonymous'} (${senderContact || 'Not specified'})\n\nMessage:\n${message}`
       );
-      window.open(`mailto:${targetDestination}?subject=${subject}&body=${body}`, '_blank');
+      window.open(`mailto:${PERSONAL_INFO.personalEmail}?subject=${subject}&body=${body}`, '_blank');
     }, 600);
   };
 
@@ -82,7 +72,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
         {/* Section Index */}
         <div className="flex items-center space-x-2 font-mono text-xs text-emerald-400 mb-3">
           <span className="text-zinc-600">//</span>
-          <span>04. TRANSMISSION CHANNELS</span>
+          <span>04. CONTACT</span>
         </div>
 
         {/* Serif Heading in Playfair Display */}
@@ -91,11 +81,10 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
             id="contact-heading"
             className="text-3xl sm:text-5xl font-serif text-white font-normal tracking-tight"
           >
-            Initiate Contact & Collaboration
+            Contact
           </h2>
           <p className="text-zinc-400 text-sm sm:text-base mt-2 font-sans font-light">
-            Whether you are discussing bug bounty research, looking to collaborate on autonomous AI
-            systems, or exploring engineering initiatives with Prime Nation — dispatches are monitored.
+            Bug bounty research, AI systems, or Prime Nation — reach out.
           </p>
         </div>
 
@@ -110,7 +99,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
               <div className="flex items-center justify-between font-mono text-xs text-zinc-400">
                 <span className="flex items-center space-x-2 text-zinc-300">
                   <Mail className="w-4 h-4 text-emerald-400" />
-                  <span className="font-semibold text-white">PERSONAL & RESEARCH</span>
+                  <span className="font-semibold text-white">EMAIL</span>
                 </span>
                 <span className="text-emerald-400">DIRECT</span>
               </div>
@@ -145,57 +134,6 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
                   <a
                     href={`mailto:${PERSONAL_INFO.personalEmail}`}
                     className="px-2.5 py-1.5 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 flex items-center space-x-1 transition-colors"
-                  >
-                    <span>Write</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Work / Corporate Email Card */}
-            <div
-              id="contact-work-email-card"
-              className="p-5 rounded-xl bg-[#0d1017] border border-white/10 hover:border-cyan-500/30 transition-all space-y-3"
-            >
-              <div className="flex items-center justify-between font-mono text-xs text-zinc-400">
-                <span className="flex items-center space-x-2 text-zinc-300">
-                  <Building2 className="w-4 h-4 text-cyan-400" />
-                  <span className="font-semibold text-white">WORK & ENTERPRISE</span>
-                </span>
-                <span className="text-cyan-400">PRIME NATION</span>
-              </div>
-
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-                <div>
-                  <a
-                    href={`mailto:${PERSONAL_INFO.workEmail}`}
-                    className="font-mono text-sm sm:text-base text-zinc-200 hover:text-cyan-300 transition-colors break-all"
-                  >
-                    {PERSONAL_INFO.workEmail}
-                  </a>
-                  <div className="text-[11px] text-zinc-500 font-sans mt-0.5">
-                    Official inbox for software contracts & sponsorships
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-2 font-mono text-xs flex-shrink-0">
-                  <button
-                    onClick={handleCopyWorkEmail}
-                    className="px-2.5 py-1.5 rounded bg-zinc-800 text-zinc-300 hover:text-white flex items-center space-x-1.5 transition-colors cursor-pointer"
-                    title="Copy to clipboard"
-                  >
-                    {copiedWorkEmail ? (
-                      <Check className="w-3.5 h-3.5 text-cyan-400" />
-                    ) : (
-                      <Copy className="w-3.5 h-3.5" />
-                    )}
-                    <span>{copiedWorkEmail ? 'Copied' : 'Copy'}</span>
-                  </button>
-
-                  <a
-                    href={`mailto:${PERSONAL_INFO.workEmail}`}
-                    className="px-2.5 py-1.5 rounded bg-cyan-500/10 text-cyan-400 hover:bg-cyan-500/20 flex items-center space-x-1 transition-colors"
                   >
                     <span>Write</span>
                     <ExternalLink className="w-3 h-3" />
@@ -336,22 +274,6 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
                     <span className="text-white font-semibold">FALLBACK DISPATCH TERMINAL</span>
                   </div>
                   <span className="text-zinc-500 text-[11px]">MAILTO CLIENT</span>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-zinc-400 text-[11px] block">// TARGET DESTINATION</label>
-                  <select
-                    value={targetDestination}
-                    onChange={(e) => setTargetDestination(e.target.value)}
-                    className="w-full bg-[#080b0f] border border-white/10 rounded px-3 py-2 text-zinc-200 text-xs focus:outline-none focus:border-emerald-500/50 cursor-pointer"
-                  >
-                    <option value={PERSONAL_INFO.personalEmail}>
-                      Personal & Research ({PERSONAL_INFO.personalEmail})
-                    </option>
-                    <option value={PERSONAL_INFO.workEmail}>
-                      Work & Enterprise ({PERSONAL_INFO.workEmail})
-                    </option>
-                  </select>
                 </div>
 
                 <div className="space-y-1">

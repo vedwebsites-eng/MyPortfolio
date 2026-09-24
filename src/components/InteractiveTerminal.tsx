@@ -556,7 +556,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
                   <Terminal className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="text-white font-mono text-xs font-medium">Interactive CLI Shell (Minimized)</div>
+                  <div className="text-white font-mono text-xs font-medium">Terminal (Minimized)</div>
                   <div className="text-zinc-500 text-[11px] font-mono">Drawn into floating circle dock on the bottom right</div>
                 </div>
               </div>
@@ -750,15 +750,15 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
       <div className="max-w-2xl mx-auto">
         <div className="flex items-center space-x-2 font-mono text-xs text-cyan-400 mb-2">
           <span className="text-zinc-600">//</span>
-          <span>03. INTERACTIVE COMMAND LINE</span>
+          <span>03. TERMINAL</span>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-5">
           <div>
             <h2 className="text-2xl sm:text-3xl font-serif text-white font-normal tracking-tight">
-              Direct System Shell
+              Terminal
             </h2>
             <p className="text-zinc-400 text-xs sm:text-sm mt-0.5 font-sans font-light">
-              Explore my background, project telemetry, and security notes directly through the terminal.
+              Ask about background, projects, or security notes.
             </p>
           </div>
           <div className="font-mono text-[11px] text-zinc-500 hidden sm:block">

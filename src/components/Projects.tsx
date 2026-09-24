@@ -35,7 +35,7 @@ export const Projects: React.FC = () => {
   const [inkwellFont, setInkwellFont] = useState<'serif' | 'mono' | 'sans'>('serif');
   const [activeHighlight, setActiveHighlight] = useState<'yellow' | 'mint' | 'pink' | 'sky'>('yellow');
 
-  // RootCount Interactive Episode Selector
+  // RootCause Interactive Episode Selector
   const [activeEpisode, setActiveEpisode] = useState(0);
   const episodes = [
     {
@@ -102,7 +102,7 @@ export const Projects: React.FC = () => {
         {/* Section Header */}
         <div className="flex items-center space-x-2 font-mono text-xs text-emerald-400 mb-3">
           <span className="text-zinc-600">//</span>
-          <span>02. FEATURED PROJECTS</span>
+          <span>02. PROJECTS</span>
         </div>
 
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16">
@@ -111,10 +111,10 @@ export const Projects: React.FC = () => {
               id="projects-heading"
               className="text-3xl sm:text-5xl font-serif text-white font-normal tracking-tight"
             >
-              Crafted Systems & Dissections
+              Projects
             </h2>
             <p className="text-zinc-400 text-sm sm:text-base mt-2 font-sans font-light max-w-2xl">
-              Three signature initiatives blending cybersecurity principles, intelligent agents, and distraction-free software ergonomics.
+              Security, AI, and software — built and shipped.
             </p>
           </div>
           <div className="font-mono text-xs text-zinc-500 py-1.5">
@@ -156,7 +156,7 @@ export const Projects: React.FC = () => {
               {/* Left Column: Info & Specs */}
               <div className="lg:col-span-6 space-y-4">
                 <h3 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight text-glow-orange">
-                  AETHOS — Gamified OS with AI Coach "Ace"
+                  AETHOS
                 </h3>
                 <p className="text-zinc-300 font-space text-sm sm:text-base leading-relaxed font-light">
                   A personal operating system wrapped in a dark cyberpunk aesthetic. AETHOS gamifies tasks,
@@ -370,7 +370,7 @@ export const Projects: React.FC = () => {
                 {/* Left Column: Info & Specs */}
                 <div className="lg:col-span-6 space-y-4">
                   <h3 className="text-2xl sm:text-3xl font-serif italic text-stone-900 font-normal tracking-tight">
-                    Inkwell — Notes Crafted for Visual Bliss
+                    Inkwell
                   </h3>
                   <p className="text-stone-800 font-lora text-sm sm:text-base leading-relaxed">
                     A markdown authoring engine built to make thoughts look undeniably elegant on digital paper.
@@ -496,17 +496,17 @@ export const Projects: React.FC = () => {
           </div>
 
           {/* ========================================================== */}
-          {/* PROJECT 3: ROOTCOUNT CARD (Dark Terminal, In The Grind) */}
+          {/* PROJECT 3: ROOTCAUSE CARD (Dark Terminal, In The Grind) */}
           {/* ========================================================== */}
           <div
-            id="project-rootcount"
+            id="project-rootcause"
             className="rounded-2xl bg-[#080b10] border border-cyan-500/25 hover:border-cyan-500/50 transition-all p-6 sm:p-8 shadow-xl relative overflow-hidden"
           >
             {/* Top Badge & Category */}
             <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-6 border-b border-white/5 font-mono text-xs">
               <div className="flex items-center space-x-2">
                 <span className="px-2.5 py-1 rounded bg-cyan-500/10 text-cyan-400 font-semibold tracking-wide border border-cyan-500/30">
-                  ROOTCOUNT
+                  ROOTCAUSE
                 </span>
                 <span className="text-zinc-600">•</span>
                 <span className="text-zinc-400">Faceless Tech & Cyber Media</span>
@@ -525,7 +525,7 @@ export const Projects: React.FC = () => {
               {/* Left Column: Info & Specs */}
               <div className="lg:col-span-6 space-y-4">
                 <h3 className="text-2xl sm:text-3xl font-serif text-white font-normal">
-                  RootCount — Faceless Tech & Exploit Shorts
+                  RootCause
                 </h3>
 
                 {/* Explicit one-line subtext */}

@@ -209,7 +209,7 @@ export default function App() {
         {/* About & Story Section */}
         <About />
 
-        {/* Projects Section (Themed per-card: AETHOS, INKWELL paper insert, ROOTCOUNT In The Grind) */}
+        {/* Projects Section (Themed per-card: AETHOS, INKWELL paper insert, ROOTCAUSE In The Grind) */}
         <Projects />
 
         {/* Embedded Interactive CLI Shell */}

@@ -198,14 +198,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
             onClick={() => setMobileMenuOpen(false)}
             className="block text-zinc-300 hover:text-emerald-400 py-1.5"
           >
-            <span className="text-zinc-600 mr-2">//01.</span>About / Story
+            <span className="text-zinc-600 mr-2">//01.</span>About
           </a>
           <a
             href="#projects"
             onClick={() => setMobileMenuOpen(false)}
             className="block text-zinc-300 hover:text-emerald-400 py-1.5"
           >
-            <span className="text-zinc-600 mr-2">//02.</span>Projects (Aethos, RootCause, Inkwell)
+            <span className="text-zinc-600 mr-2">//02.</span>Projects
           </a>
           <a
             href="#terminal"
@@ -215,14 +215,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
             }}
             className="block text-zinc-300 hover:text-cyan-400 py-1.5"
           >
-            <span className="text-zinc-600 mr-2">//03.</span>Interactive CLI
+            <span className="text-zinc-600 mr-2">//03.</span>Terminal
           </a>
           <a
             href="#contact"
             onClick={() => setMobileMenuOpen(false)}
             className="block text-zinc-300 hover:text-emerald-400 py-1.5"
           >
-            <span className="text-zinc-600 mr-2">//04.</span>Contact / Connect
+            <span className="text-zinc-600 mr-2">//04.</span>Contact
           </a>
           <div className="pt-2 flex items-center space-x-3">
             <button

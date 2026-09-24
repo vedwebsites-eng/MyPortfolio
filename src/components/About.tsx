@@ -14,7 +14,7 @@ export const About: React.FC = () => {
         {/* Section Index & Subtitle */}
         <div className="flex items-center space-x-2 font-mono text-xs text-emerald-400 mb-3">
           <span className="text-zinc-600">//</span>
-          <span>01. BACKGROUND & ETHOS</span>
+          <span>01. ABOUT</span>
         </div>
 
         {/* Serif Header in Playfair Display */}
@@ -22,7 +22,7 @@ export const About: React.FC = () => {
           id="about-heading"
           className="text-3xl sm:text-5xl font-serif text-white font-normal tracking-tight mb-8"
         >
-          Curiosity, Exploits, and the Builder's Discipline
+          About
         </h2>
 
         {/* Narrative & Story Grid */}
