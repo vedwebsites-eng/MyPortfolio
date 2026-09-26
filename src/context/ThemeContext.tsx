@@ -30,10 +30,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [isTransitioning, setIsTransitioning] = useState(false);
 
+  const transitionTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+
   // Apply theme classes and data-theme to <html>
-  const applyThemeToDOM = useCallback((newTheme: Theme) => {
+  const applyThemeToDOM = useCallback((newTheme: Theme, animate = true) => {
     const root = document.documentElement;
-    root.classList.add('theme-transitioning');
     
     if (newTheme === 'light') {
       root.classList.remove('dark');
@@ -51,13 +52,19 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       // ignore
     }
 
-    setIsTransitioning(true);
-    const timer = setTimeout(() => {
-      root.classList.remove('theme-transitioning');
-      setIsTransitioning(false);
-    }, 500);
+    if (animate) {
+      root.classList.add('theme-transitioning');
+      setIsTransitioning(true);
 
-    return () => clearTimeout(timer);
+      if (transitionTimerRef.current) {
+        clearTimeout(transitionTimerRef.current);
+      }
+
+      transitionTimerRef.current = setTimeout(() => {
+        root.classList.remove('theme-transitioning');
+        setIsTransitioning(false);
+      }, 400);
+    }
   }, []);
 
   // Update theme with smooth transition
@@ -69,11 +76,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (typeof document !== 'undefined' && 'startViewTransition' in document) {
         (document as any).startViewTransition(() => {
           setThemeState(newTheme);
-          applyThemeToDOM(newTheme);
+          applyThemeToDOM(newTheme, true);
         });
       } else {
         setThemeState(newTheme);
-        applyThemeToDOM(newTheme);
+        applyThemeToDOM(newTheme, true);
       }
     },
     [theme, applyThemeToDOM]
@@ -83,9 +90,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
 
-  // Initial sync on mount
+  // Initial sync on mount without transition animation
   useEffect(() => {
-    applyThemeToDOM(theme);
+    applyThemeToDOM(theme, false);
+
+    return () => {
+      if (transitionTimerRef.current) {
+        clearTimeout(transitionTimerRef.current);
+      }
+    };
   }, []);
 
   return (

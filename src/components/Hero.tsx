@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, Shield, Cpu, ArrowDown, ExternalLink, Mail, Github, Sparkles, MapPin, Compass } from 'lucide-react';
+import { Terminal, Shield, Cpu, ArrowDown, ExternalLink, Github, MapPin, Compass } from 'lucide-react';
 import { PERSONAL_INFO, TERMINAL_ROTATING_TITLES } from '../data/portfolioData';
 
 interface HeroProps {
@@ -7,8 +7,8 @@ interface HeroProps {
   onOpenResume: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
-  // Typing effect state
+// Isolated typing prompt sub-component to prevent re-rendering the whole Hero tree on every typed key
+const HeroTypingPrompt: React.FC = React.memo(() => {
   const [titleIndex, setTitleIndex] = useState(0);
   const [currentText, setCurrentText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -45,9 +45,18 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
   }, [currentText, isDeleting, titleIndex, typingSpeed]);
 
   return (
+    <div className="pl-3 sm:pl-6 text-zinc-200 min-h-[3.25rem] h-auto py-1 flex items-start sm:items-center flex-wrap break-words leading-relaxed">
+      <span className="text-cyan-300 font-medium">"{currentText}"</span>
+      <span className="inline-block w-2 h-4 ml-1 bg-emerald-400 animate-cursor-blink flex-shrink-0" />
+    </div>
+  );
+});
+
+export const Hero: React.FC<HeroProps> = React.memo(({ onOpenTerminal, onOpenResume }) => {
+  return (
     <section
       id="hero"
-      className="relative min-h-[92vh] flex flex-col justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-radial-fade"
+      className="relative min-h-[clamp(32rem,calc(100vh-4rem),56rem)] flex flex-col justify-center py-[clamp(2.5rem,6vh,5rem)] px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-radial-fade"
     >
       {/* Subtle background grid pattern */}
       <div className="absolute inset-0 bg-grid-pattern pointer-events-none opacity-60" />
@@ -71,7 +80,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <h1
               id="hero-name-title"
-              className="text-4xl sm:text-6xl md:text-7xl font-serif tracking-tight text-white font-normal"
+              className="text-[clamp(2rem,5.5vw,4.5rem)] font-serif tracking-tight text-white font-normal break-words leading-[1.1]"
             >
               Vedant Sattegiri Patil
             </h1>
@@ -83,9 +92,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
             </span>
           </div>
 
-          <div className="flex items-center space-x-3 text-xs sm:text-sm font-mono text-zinc-400">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs sm:text-sm font-mono text-zinc-400">
             <span className="flex items-center space-x-1 text-zinc-300">
-              <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+              <MapPin className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
               <span>Pune, India</span>
             </span>
             <span className="text-zinc-600">•</span>
@@ -115,10 +124,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
               <span className="text-emerald-400 font-semibold select-none">vex@pune:~$</span>
               <span className="text-zinc-300">cat current_focus.txt</span>
             </div>
-            <div className="pl-4 sm:pl-6 text-zinc-200 min-h-[48px] sm:min-h-[32px] flex items-center">
-              <span className="text-cyan-300 font-medium">"{currentText}"</span>
-              <span className="inline-block w-2 h-4 ml-1 bg-emerald-400 animate-cursor-blink" />
-            </div>
+            <HeroTypingPrompt />
           </div>
         </div>
 
@@ -148,7 +154,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
           <a
             href="#projects"
             id="hero-btn-explore"
-            className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-md bg-emerald-500 text-zinc-950 font-semibold hover:bg-emerald-400 transition-colors shadow-lg shadow-emerald-950/40"
+            className="inline-flex items-center space-x-2 px-4 py-2.5 rounded-md bg-emerald-500 text-zinc-950 font-semibold hover:bg-emerald-400 transition-colors shadow-lg shadow-emerald-950/40 cursor-pointer"
           >
             <span>Explore Projects</span>
             <ArrowDown className="w-3.5 h-3.5" />
@@ -187,38 +193,38 @@ export const Hero: React.FC<HeroProps> = ({ onOpenTerminal, onOpenResume }) => {
         {/* Telemetry quick status bar */}
         <div
           id="hero-telemetry-grid"
-          className="mt-12 pt-6 border-t border-white/5 grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs"
+          className="mt-12 pt-6 border-t border-white/5 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 font-mono text-xs min-w-0"
         >
-          <div className="space-y-1">
+          <div className="space-y-1 min-w-0">
             <span className="text-zinc-500 block text-[10px] tracking-wider uppercase">// DISCIPLINE</span>
-            <span className="text-zinc-300 flex items-center space-x-1.5">
-              <Shield className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Cybersecurity</span>
+            <span className="text-zinc-300 flex items-center space-x-1.5 truncate">
+              <Shield className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0" />
+              <span className="truncate">Cybersecurity</span>
             </span>
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1 min-w-0">
             <span className="text-zinc-500 block text-[10px] tracking-wider uppercase">// INTELLIGENCE</span>
-            <span className="text-zinc-300 flex items-center space-x-1.5">
-              <Cpu className="w-3.5 h-3.5 text-cyan-400" />
-              <span>Autonomous AI</span>
+            <span className="text-zinc-300 flex items-center space-x-1.5 truncate">
+              <Cpu className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0" />
+              <span className="truncate">Autonomous AI</span>
             </span>
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1 min-w-0">
             <span className="text-zinc-500 block text-[10px] tracking-wider uppercase">// LOCATION</span>
-            <span className="text-zinc-300 flex items-center space-x-1.5">
-              <Compass className="w-3.5 h-3.5 text-amber-400" />
-              <span>Pune, MH (IN)</span>
+            <span className="text-zinc-300 flex items-center space-x-1.5 truncate">
+              <Compass className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+              <span className="truncate">Pune, MH (IN)</span>
             </span>
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-1 min-w-0">
             <span className="text-zinc-500 block text-[10px] tracking-wider uppercase">// ACTIVE_WORK</span>
-            <span className="text-emerald-400 font-medium">Bounties + Aethos</span>
+            <span className="text-emerald-400 font-medium truncate block">Bounties + Aethos</span>
           </div>
         </div>
       </div>
     </section>
   );
-};
+});

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Mail,
   Github,
@@ -21,9 +21,25 @@ interface ContactProps {
   onNotify?: (message: string, isError?: boolean) => void;
 }
 
-export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
+export const Contact: React.FC<ContactProps> = React.memo(({ onOpenResume, onNotify }) => {
   const [copiedPersonalEmail, setCopiedPersonalEmail] = useState(false);
+  const [copiedAltEmail, setCopiedAltEmail] = useState(false);
   const [copiedPgp, setCopiedPgp] = useState(false);
+
+  // Timer refs for memory leak prevention
+  const timerPersonalRef = useRef<NodeJS.Timeout | null>(null);
+  const timerAltRef = useRef<NodeJS.Timeout | null>(null);
+  const timerPgpRef = useRef<NodeJS.Timeout | null>(null);
+  const timerDispatchRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timerPersonalRef.current) clearTimeout(timerPersonalRef.current);
+      if (timerAltRef.current) clearTimeout(timerAltRef.current);
+      if (timerPgpRef.current) clearTimeout(timerPgpRef.current);
+      if (timerDispatchRef.current) clearTimeout(timerDispatchRef.current);
+    };
+  }, []);
 
   // Mode toggle: 'gmail-api' (Primary) vs 'mailto-quick'
   const [transmissionMode, setTransmissionMode] = useState<'gmail-api' | 'mailto-quick'>('gmail-api');
@@ -37,14 +53,24 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
   const handleCopyPersonalEmail = () => {
     navigator.clipboard.writeText(PERSONAL_INFO.personalEmail);
     setCopiedPersonalEmail(true);
-    setTimeout(() => setCopiedPersonalEmail(false), 2000);
+    if (timerPersonalRef.current) clearTimeout(timerPersonalRef.current);
+    timerPersonalRef.current = setTimeout(() => setCopiedPersonalEmail(false), 2000);
     if (onNotify) onNotify(`Copied ${PERSONAL_INFO.personalEmail} to clipboard`);
+  };
+
+  const handleCopyAltEmail = () => {
+    navigator.clipboard.writeText(PERSONAL_INFO.altEmail);
+    setCopiedAltEmail(true);
+    if (timerAltRef.current) clearTimeout(timerAltRef.current);
+    timerAltRef.current = setTimeout(() => setCopiedAltEmail(false), 2000);
+    if (onNotify) onNotify(`Copied ${PERSONAL_INFO.altEmail} to clipboard`);
   };
 
   const handleCopyPgp = () => {
     navigator.clipboard.writeText(PERSONAL_INFO.pgpFingerprint);
     setCopiedPgp(true);
-    setTimeout(() => setCopiedPgp(false), 2000);
+    if (timerPgpRef.current) clearTimeout(timerPgpRef.current);
+    timerPgpRef.current = setTimeout(() => setCopiedPgp(false), 2000);
     if (onNotify) onNotify('Copied PGP fingerprint to clipboard');
   };
 
@@ -53,7 +79,8 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
     if (!message.trim()) return;
 
     setDispatchStatus('transmitting');
-    setTimeout(() => {
+    if (timerDispatchRef.current) clearTimeout(timerDispatchRef.current);
+    timerDispatchRef.current = setTimeout(() => {
       setDispatchStatus('sent');
       const subject = encodeURIComponent(`Inquiry from ${senderName || 'Collaborator'} via Portfolio`);
       const body = encodeURIComponent(
@@ -88,13 +115,13 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           {/* Left Column: Direct Links & Official Channels */}
-          <div className="lg:col-span-5 space-y-4">
-            {/* Personal Email Card */}
+          <div className="lg:col-span-5 space-y-4 min-w-0">
+            {/* Email Card with Primary (Proton) and Secondary (Gmail) */}
             <div
               id="contact-personal-email-card"
-              className="p-5 rounded-xl bg-[#0d1017] border border-white/10 hover:border-emerald-500/30 transition-all space-y-3"
+              className="p-5 rounded-xl bg-[#0d1017] border border-white/10 hover:border-emerald-500/30 transition-all space-y-3.5"
             >
               <div className="flex items-center justify-between font-mono text-xs text-zinc-400">
                 <span className="flex items-center space-x-2 text-zinc-300">
@@ -104,8 +131,9 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
                 <span className="text-emerald-400">DIRECT</span>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-                <div>
+              {/* Primary Email (Proton) */}
+              <div className="flex flex-wrap items-start sm:items-center justify-between gap-2.5 pt-1">
+                <div className="min-w-0 max-w-full">
                   <a
                     href={`mailto:${PERSONAL_INFO.personalEmail}`}
                     className="font-mono text-sm sm:text-base text-zinc-200 hover:text-emerald-300 transition-colors break-all"
@@ -121,7 +149,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
                   <button
                     onClick={handleCopyPersonalEmail}
                     className="px-2.5 py-1.5 rounded bg-zinc-800 text-zinc-300 hover:text-white flex items-center space-x-1.5 transition-colors cursor-pointer"
-                    title="Copy to clipboard"
+                    title="Copy primary email to clipboard"
                   >
                     {copiedPersonalEmail ? (
                       <Check className="w-3.5 h-3.5 text-emerald-400" />
@@ -140,6 +168,42 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
                   </a>
                 </div>
               </div>
+
+              {/* Secondary Email (Gmail) */}
+              <div className="pt-2.5 border-t border-white/5 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div className="flex items-center space-x-2 min-w-0 max-w-full">
+                  <span className="font-mono text-[10px] uppercase text-zinc-500 tracking-wider flex-shrink-0">ALT:</span>
+                  <a
+                    href={`mailto:${PERSONAL_INFO.altEmail}`}
+                    className="font-mono text-xs text-zinc-400 hover:text-emerald-300 transition-colors break-all"
+                  >
+                    {PERSONAL_INFO.altEmail}
+                  </a>
+                </div>
+
+                <div className="flex items-center space-x-2 font-mono text-xs flex-shrink-0">
+                  <button
+                    onClick={handleCopyAltEmail}
+                    className="px-2 py-1 rounded bg-zinc-800/80 text-zinc-400 hover:text-white flex items-center space-x-1 transition-colors cursor-pointer text-[11px]"
+                    title="Copy alternate email"
+                  >
+                    {copiedAltEmail ? (
+                      <Check className="w-3 h-3 text-emerald-400" />
+                    ) : (
+                      <Copy className="w-3 h-3" />
+                    )}
+                    <span>{copiedAltEmail ? 'Copied' : 'Copy'}</span>
+                  </button>
+
+                  <a
+                    href={`mailto:${PERSONAL_INFO.altEmail}`}
+                    className="px-2 py-1 rounded bg-zinc-800/40 text-zinc-400 hover:text-emerald-300 flex items-center space-x-1 transition-colors text-[11px]"
+                  >
+                    <span>Write</span>
+                    <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                </div>
+              </div>
             </div>
 
             {/* GitHub Card */}
@@ -155,8 +219,8 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
                 <span className="text-zinc-500">OPEN-SOURCE</span>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-                <div>
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                <div className="min-w-0 max-w-full">
                   <div className="font-mono text-sm sm:text-base text-zinc-200">
                     @{PERSONAL_INFO.githubUsername}
                   </div>
@@ -169,7 +233,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
                   href={PERSONAL_INFO.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 font-mono text-xs transition-colors self-start sm:self-center"
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-purple-500/10 text-purple-300 hover:bg-purple-500/20 font-mono text-xs transition-colors"
                 >
                   <span>Explore GitHub</span>
                   <ExternalLink className="w-3 h-3" />
@@ -190,8 +254,8 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
                 <span className="text-zinc-500">UPDATED 2026</span>
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-                <div>
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                <div className="min-w-0 max-w-full">
                   <div className="text-zinc-200 text-sm font-sans">
                     Complete research disclosures, CTF rankings & tech stack.
                   </div>
@@ -199,7 +263,7 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
 
                 <button
                   onClick={onOpenResume}
-                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 font-mono text-xs transition-colors cursor-pointer self-start sm:self-center"
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 font-mono text-xs transition-colors cursor-pointer"
                 >
                   <span>Inspect CV</span>
                   <FileText className="w-3 h-3" />
@@ -229,33 +293,33 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
           </div>
 
           {/* Right Column: Gmail Transmission Center / Mail Terminal */}
-          <div className="lg:col-span-7 space-y-4">
+          <div className="lg:col-span-7 space-y-4 min-w-0 w-full">
             {/* Mode Switcher */}
-            <div className="flex items-center justify-between p-1.5 rounded-xl bg-[#0d1017] border border-white/10 font-mono text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 p-1.5 rounded-xl bg-[#0d1017] border border-white/10 font-mono text-xs">
               <button
                 type="button"
                 onClick={() => setTransmissionMode('gmail-api')}
-                className={`flex-1 py-2 px-3 rounded-lg flex items-center justify-center space-x-2 transition-all cursor-pointer ${
+                className={`py-2 px-3 rounded-lg flex items-center justify-center space-x-2 transition-all cursor-pointer ${
                   transmissionMode === 'gmail-api'
                     ? 'bg-emerald-500 text-zinc-950 font-bold shadow-lg shadow-emerald-950/50'
                     : 'text-zinc-400 hover:text-white'
                 }`}
               >
-                <Mail className="w-3.5 h-3.5" />
-                <span>Gmail API Console (Live)</span>
+                <Mail className="w-3.5 h-3.5 flex-shrink-0" />
+                <span className="truncate">Gmail API Console (Live)</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setTransmissionMode('mailto-quick')}
-                className={`flex-1 py-2 px-3 rounded-lg flex items-center justify-center space-x-2 transition-all cursor-pointer ${
+                className={`py-2 px-3 rounded-lg flex items-center justify-center space-x-2 transition-all cursor-pointer ${
                   transmissionMode === 'mailto-quick'
                     ? 'bg-zinc-800 text-white font-semibold'
                     : 'text-zinc-400 hover:text-white'
                 }`}
               >
-                <Terminal className="w-3.5 h-3.5" />
-                <span>Quick Mailto Dispatch</span>
+                <Terminal className="w-3.5 h-3.5 flex-shrink-0" />
+                <span className="truncate">Quick Mailto Dispatch</span>
               </button>
             </div>
 
@@ -347,4 +411,4 @@ export const Contact: React.FC<ContactProps> = ({ onOpenResume, onNotify }) => {
       </div>
     </section>
   );
-};
+});

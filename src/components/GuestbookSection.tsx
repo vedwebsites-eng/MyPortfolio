@@ -87,8 +87,12 @@ export const GuestbookSection: React.FC = () => {
                   <img
                     src={currentUser.photoURL}
                     alt={currentUser.displayName || 'User'}
+                    width={20}
+                    height={20}
+                    loading="lazy"
+                    decoding="async"
                     referrerPolicy="no-referrer"
-                    className="w-5 h-5 rounded-full"
+                    className="w-5 h-5 rounded-full object-cover flex-shrink-0"
                   />
                 ) : (
                   <UserIcon className="w-4 h-4 text-emerald-400" />
@@ -195,8 +199,12 @@ export const GuestbookSection: React.FC = () => {
                         <img
                           src={item.authorPhoto}
                           alt={item.authorName}
+                          width={20}
+                          height={20}
+                          loading="lazy"
+                          decoding="async"
                           referrerPolicy="no-referrer"
-                          className="w-5 h-5 rounded-full"
+                          className="w-5 h-5 rounded-full object-cover flex-shrink-0"
                         />
                       ) : (
                         <div className="w-5 h-5 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-[10px] font-mono">

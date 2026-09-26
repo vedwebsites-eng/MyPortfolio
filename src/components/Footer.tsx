@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ArrowUp, Shield, Github, Mail, Youtube, Check } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 
@@ -9,6 +9,13 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ onNavigate404 }) => {
   const [istTime, setIstTime] = useState<string>('');
   const [copiedPgp, setCopiedPgp] = useState<boolean>(false);
+  const copiedTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const updateTime = () => {
@@ -32,7 +39,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate404 }) => {
     if (PERSONAL_INFO.pgpFingerprint) {
       navigator.clipboard.writeText(PERSONAL_INFO.pgpFingerprint);
       setCopiedPgp(true);
-      setTimeout(() => setCopiedPgp(false), 1800);
+      if (copiedTimerRef.current) clearTimeout(copiedTimerRef.current);
+      copiedTimerRef.current = setTimeout(() => setCopiedPgp(false), 1800);
     }
   };
 

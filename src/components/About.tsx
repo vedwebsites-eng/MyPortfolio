@@ -103,8 +103,7 @@ export const About: React.FC = () => {
                 <span className="font-semibold text-sm font-serif text-white">RootCause Media</span>
               </div>
               <p className="text-zinc-400 leading-relaxed font-sans text-xs">
-                Creating high-density, faceless 60-second video breakdowns of critical zero-days, exploit
-                chains, and software internals for the next generation of engineers.
+                A faceless YouTube channel covering tech and cybersecurity topics in short-form video, currently in active production and launching soon.
               </p>
             </div>
           </div>

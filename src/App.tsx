@@ -184,7 +184,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#090b0e] text-[#d6d9e0] font-sans antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#090b0e] text-[#d6d9e0] font-sans antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
       {/* Monospace Terminal Boot Screen Transition (once per session, skippable) */}
       <TerminalBootScreen onComplete={() => setBootReady(true)} />
 
@@ -199,7 +199,7 @@ export default function App() {
       />
 
       {/* Main Content Layout */}
-      <main id="main-content">
+      <main id="main-content" className="w-full max-w-full overflow-x-hidden">
         {/* Hero Section */}
         <Hero
           onOpenTerminal={() => setIsTerminalModalOpen(true)}

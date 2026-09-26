@@ -64,11 +64,22 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   const [commandHistory, setCommandHistory] = useState<string[]>(['help']);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [redirectToast, setRedirectToast] = useState<string | null>(null);
 
   const terminalContainerRef = useRef<HTMLDivElement>(null);
   const terminalEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const konamiInjectedRef = useRef<boolean>(false);
+  const redirectTimer1Ref = useRef<NodeJS.Timeout | null>(null);
+  const redirectTimer2Ref = useRef<NodeJS.Timeout | null>(null);
+
+  // Clean up timers on unmount
+  useEffect(() => {
+    return () => {
+      if (redirectTimer1Ref.current) clearTimeout(redirectTimer1Ref.current);
+      if (redirectTimer2Ref.current) clearTimeout(redirectTimer2Ref.current);
+    };
+  }, []);
 
   // Trigger dev mode banner when isKonamiDevMode becomes true
   useEffect(() => {
@@ -214,7 +225,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
               <div><span className="text-cyan-300 font-semibold">rootcause</span> — YouTube channel details</div>
               <div><span className="text-cyan-300 font-semibold">inkwell</span> — Minimal note app specs</div>
               <div><span className="text-cyan-300 font-semibold">skills</span> — AppSec & AI arsenal</div>
-              <div><span className="text-cyan-300 font-semibold">contact</span> — Reach out via email/GitHub</div>
+              <div><span className="text-cyan-300 font-semibold">contact</span> — Jump to contact section</div>
               <div><span className="text-cyan-300 font-semibold">gmail</span> — Google Workspace email API</div>
               <div><span className="text-cyan-300 font-semibold">resume</span> — Open full curriculum vitae</div>
               <div><span className="text-cyan-300 font-semibold">theme</span> — Toggle dark/light mode transition</div>
@@ -270,7 +281,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
                 <span className="text-emerald-300 font-bold">[1] AETHOS</span> — Cyberpunk gamified OS with AI coach 'Ace' (React, TS, AI Agent)
               </div>
               <div>
-                <span className="text-cyan-300 font-bold">[2] RootCause</span> — Faceless tech & cybersecurity channel breaking down CVEs in 60s
+                <span className="text-cyan-300 font-bold">[2] RootCause</span> — Faceless tech & cybersecurity short-form video (in production)
               </div>
               <div>
                 <span className="text-amber-300 font-bold">[3] Inkwell</span> — Distraction-free typographic note engine (Editorial serif, zero lag)
@@ -298,10 +309,10 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
       case 'rootcause':
         resultOutput = (
           <div className="space-y-1 text-zinc-300">
-            <div className="text-cyan-400 font-semibold">RootCause // FACELESS CYBERSECURITY MEDIA</div>
-            <div>Focus: Byte-level exploit dissections & defensive software architecture</div>
-            <div>Pillars: CVE-2024-3094, Memory corruption, iOS zero-clicks, SSRF chains</div>
-            <div>Format: High-density 60s animated shorts for builders and hackers</div>
+            <div className="text-cyan-400 font-semibold">RootCause // FACELESS TECH & CYBER MEDIA</div>
+            <div>Format: Short-form video covering technology and cybersecurity concepts</div>
+            <div>Stack: Video Production &bull; Short-Form Content</div>
+            <div>Status: Slated for release soon (building in public)</div>
           </div>
         );
         break;
@@ -328,17 +339,27 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
         );
         break;
 
-      case 'contact':
+      case 'contact': {
+        setRedirectToast('Redirecting to Contact section...');
         resultOutput = (
-          <div className="space-y-1.5 text-zinc-300">
-            <div className="text-emerald-400 font-semibold">COMMUNICATION CHANNELS:</div>
-            <div>• <span className="text-emerald-300 font-medium">Personal & Research:</span> <a href={`mailto:${PERSONAL_INFO.personalEmail}`} className="text-cyan-300 underline">{PERSONAL_INFO.personalEmail}</a></div>
-            <div>• <span className="text-cyan-300 font-medium">Work & Enterprise:</span> <a href={`mailto:${PERSONAL_INFO.workEmail}`} className="text-cyan-300 underline">{PERSONAL_INFO.workEmail}</a></div>
-            <div>• <span className="text-purple-300 font-medium">GitHub:</span> <a href={PERSONAL_INFO.githubUrl} target="_blank" rel="noreferrer" className="text-cyan-300 underline">{PERSONAL_INFO.githubUrl}</a></div>
-            <div>• <span className="text-amber-300 font-medium">Gmail API Console:</span> Run <span className="text-emerald-300 font-semibold">'gmail'</span> to launch direct Workspace transmission.</div>
+          <div className="text-zinc-400 text-xs font-mono">
+            &gt; Redirecting to Contact section...
           </div>
         );
+        if (redirectTimer1Ref.current) clearTimeout(redirectTimer1Ref.current);
+        if (redirectTimer2Ref.current) clearTimeout(redirectTimer2Ref.current);
+        redirectTimer1Ref.current = setTimeout(() => {
+          setRedirectToast(null);
+          handleClose();
+          redirectTimer2Ref.current = setTimeout(() => {
+            const contactEl = document.getElementById('contact');
+            if (contactEl) {
+              contactEl.scrollIntoView({ behavior: 'smooth' });
+            }
+          }, 100);
+        }, 1000);
         break;
+      }
 
       case 'gmail':
         resultOutput = (
@@ -352,8 +373,8 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
             <div>• <span className="text-white">API Gateway:</span> Google Workspace Gmail REST API (v1)</div>
             <div>• <span className="text-white">Target Inboxes:</span></div>
             <div className="pl-3 space-y-0.5 text-[11px]">
-              <div>1. <span className="text-emerald-300">{PERSONAL_INFO.personalEmail}</span> (Personal & CVE Disclosures)</div>
-              <div>2. <span className="text-cyan-300">{PERSONAL_INFO.workEmail}</span> (Work & Enterprise Inquiries)</div>
+              <div>1. <span className="text-emerald-300">{PERSONAL_INFO.personalEmail}</span> (Primary & CVE Disclosures)</div>
+              <div>2. <span className="text-zinc-400">{PERSONAL_INFO.altEmail}</span> (Alternate Inbox)</div>
             </div>
             <div>• <span className="text-white">Security:</span> RFC 2822 formatting + Mandatory User Confirmation dialog</div>
             <div className="pt-1">
@@ -522,7 +543,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
       <button
         id="btn-restore-terminal"
         onClick={() => setIsMinimized(false)}
-        className="group relative flex items-center justify-center w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#080b0f] border-2 border-emerald-500/70 hover:border-emerald-400 text-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.4)] hover:shadow-[0_0_40px_rgba(16,185,129,0.7)] hover:scale-105 active:scale-95 transition-all cursor-pointer backdrop-blur-xl"
+        className="group relative flex items-center justify-center w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#080b0f]/95 border-2 border-emerald-500/70 hover:border-emerald-400 text-emerald-400 shadow-[0_0_24px_rgba(16,185,129,0.35)] hover:shadow-[0_0_36px_rgba(16,185,129,0.6)] hover:scale-105 active:scale-95 transition-all cursor-pointer backdrop-blur-sm"
         title="Restore Interactive CLI Shell (`)"
         aria-label="Restore Terminal"
       >
@@ -578,12 +599,23 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   const content = (
     <div
       ref={terminalContainerRef}
-      className={`flex flex-col bg-[#080b0f] text-zinc-300 font-mono text-xs shadow-2xl overflow-hidden transition-all duration-150 ${
+      className={`relative flex flex-col bg-[#080b0f] text-zinc-300 font-mono text-xs shadow-2xl overflow-hidden transition-all duration-150 ${
         isFullscreen
           ? 'w-screen h-screen rounded-none border-0'
           : 'w-full h-full rounded-xl border border-white/10'
       }`}
     >
+      {/* Redirect Toast / Popup inside Terminal */}
+      {redirectToast && (
+        <div
+          role="status"
+          className="absolute top-14 left-1/2 -translate-x-1/2 z-40 px-3.5 py-1.5 rounded bg-[#0d141e]/95 border border-emerald-500/50 text-emerald-300 font-mono text-[11px] shadow-[0_4px_20px_rgba(0,0,0,0.6)] flex items-center space-x-2 animate-in fade-in zoom-in-95 duration-150 backdrop-blur-md"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+          <span>{redirectToast}</span>
+        </div>
+      )}
+
       {/* Top Bar with Traffic Lights & Action Controls */}
       <div className="flex items-center justify-between px-3.5 sm:px-4 py-2.5 sm:py-3 bg-[#0d1017] border-b border-white/10 select-none">
         <div className="flex items-center space-x-2">
@@ -664,11 +696,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
       {/* Log Output Area (Fits screen comfortably) */}
       <div
         onClick={() => inputRef.current?.focus()}
-        className="flex-1 p-3.5 sm:p-4 overflow-y-auto space-y-3 font-mono text-xs leading-relaxed cursor-text"
-        style={{
-          minHeight: '160px',
-          maxHeight: isFullscreen ? 'calc(100vh - 160px)' : '240px',
-        }}
+        className="flex-1 min-h-[140px] p-3.5 sm:p-4 overflow-y-auto space-y-3 font-mono text-xs leading-relaxed cursor-text"
       >
         {history.map((item, idx) => (
           <div key={idx} className="space-y-1">
@@ -735,7 +763,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
           className={`transition-all duration-200 ${
             isFullscreen
               ? 'w-screen h-screen max-w-none max-h-none'
-              : 'w-[92vw] sm:w-[84vw] max-w-[560px] h-[440px] max-h-[76vh]'
+              : 'w-[94vw] sm:w-[86vw] max-w-[38rem] h-[clamp(26rem,65vh,34rem)] min-h-[20rem]'
           }`}
         >
           {content}
@@ -747,7 +775,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   // If embedded in the page
   return (
     <section id="terminal" className="py-16 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-[#090b0e]">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-2xl mx-auto w-full">
         <div className="flex items-center space-x-2 font-mono text-xs text-cyan-400 mb-2">
           <span className="text-zinc-600">//</span>
           <span>03. TERMINAL</span>
@@ -766,7 +794,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
           </div>
         </div>
 
-        <div className="w-full h-[420px] max-h-[74vh]">
+        <div className="w-full h-[clamp(26rem,65vh,34rem)] min-h-[20rem]">
           {content}
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Terminal } from 'lucide-react';
 
 interface TerminalBootScreenProps {
@@ -25,6 +25,7 @@ export const TerminalBootScreen: React.FC<TerminalBootScreenProps> = ({ onComple
   const [activeLogCount, setActiveLogCount] = useState(1);
   const [progress, setProgress] = useState(15);
   const [isFadingOut, setIsFadingOut] = useState(false);
+  const dismissTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const dismiss = () => {
     if (!visible || isFadingOut) return;
@@ -34,7 +35,8 @@ export const TerminalBootScreen: React.FC<TerminalBootScreenProps> = ({ onComple
       // Ignore storage errors in private browsing
     }
     setIsFadingOut(true);
-    setTimeout(() => {
+    if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
+    dismissTimerRef.current = setTimeout(() => {
       setVisible(false);
       onComplete();
     }, 280);
@@ -72,6 +74,7 @@ export const TerminalBootScreen: React.FC<TerminalBootScreenProps> = ({ onComple
     return () => {
       clearInterval(stepInterval);
       clearTimeout(autoDismissTimer);
+      if (dismissTimerRef.current) clearTimeout(dismissTimerRef.current);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [visible]);

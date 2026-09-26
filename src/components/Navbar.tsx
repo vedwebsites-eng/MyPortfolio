@@ -46,10 +46,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
   }, []);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const next = window.scrollY > 20;
+          setIsScrolled((prev) => (prev !== next ? next : prev));
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -58,8 +66,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
       id="main-navbar"
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
         isScrolled
-          ? 'bg-[#090b0e]/90 backdrop-blur-md shadow-lg shadow-black/40'
-          : 'bg-[#090b0e]/60 backdrop-blur-sm'
+          ? 'bg-[#090b0e]/95 backdrop-blur-sm shadow-lg shadow-black/40'
+          : 'bg-[#090b0e]/75 backdrop-blur-sm'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -187,7 +195,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
       {mobileMenuOpen && (
         <div
           id="mobile-nav-menu"
-          className="md:hidden border-b border-white/10 bg-[#0c0e12]/95 backdrop-blur-xl px-4 py-4 space-y-3 font-mono text-sm"
+          className="md:hidden border-b border-white/10 bg-[#0c0e12]/98 backdrop-blur-sm px-4 py-4 space-y-3 font-mono text-sm"
         >
           <div className="flex items-center justify-between pb-2 border-b border-white/5 text-xs text-zinc-500">
             <span>LOCATION: PUNE, INDIA</span>

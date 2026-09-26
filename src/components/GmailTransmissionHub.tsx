@@ -334,7 +334,7 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-lg mx-auto pt-4 text-left border-t border-white/5 text-zinc-400">
             <div className="p-3 rounded-lg bg-[#0d1117] space-y-1">
               <span className="text-emerald-400 font-semibold block text-[11px]">
-                PERSONAL INBOX
+                PERSONAL INBOX (PROTON)
               </span>
               <span className="text-white text-xs">{PERSONAL_INFO.personalEmail}</span>
               <p className="text-[10px] text-zinc-500 font-sans">
@@ -343,11 +343,11 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
             </div>
             <div className="p-3 rounded-lg bg-[#0d1117] space-y-1">
               <span className="text-cyan-400 font-semibold block text-[11px]">
-                WORK & COLLAB INBOX
+                GMAIL / ALTERNATE INBOX
               </span>
-              <span className="text-white text-xs">{PERSONAL_INFO.workEmail}</span>
+              <span className="text-white text-xs">{PERSONAL_INFO.altEmail}</span>
               <p className="text-[10px] text-zinc-500 font-sans">
-                For engineering contracts, corporate inquiries & Prime Nation.
+                Secondary inbox for collaborations, project inquiries & Google ecosystem.
               </p>
             </div>
           </div>
@@ -502,19 +502,19 @@ export const GmailTransmissionHub: React.FC<GmailTransmissionHubProps> = ({ onNo
 
                   <button
                     type="button"
-                    onClick={() => setDestinationEmail(PERSONAL_INFO.workEmail)}
+                    onClick={() => setDestinationEmail(PERSONAL_INFO.altEmail)}
                     className={`p-2.5 rounded-lg text-left transition-colors cursor-pointer ${
-                      destinationEmail === PERSONAL_INFO.workEmail
+                      destinationEmail === PERSONAL_INFO.altEmail
                         ? 'bg-cyan-500/10 text-white'
                         : 'bg-zinc-900/60 text-zinc-400 hover:text-zinc-200'
                     }`}
                   >
                     <div className="flex items-center justify-between text-[11px]">
-                      <span className="font-semibold text-cyan-400">Work & Enterprise</span>
-                      <span className="text-[10px] text-zinc-500">OFFICIAL</span>
+                      <span className="font-semibold text-cyan-400">Gmail Alternate</span>
+                      <span className="text-[10px] text-zinc-500">GMAIL</span>
                     </div>
                     <div className="text-xs text-zinc-300 font-mono mt-0.5">
-                      {PERSONAL_INFO.workEmail}
+                      {PERSONAL_INFO.altEmail}
                     </div>
                   </button>
                 </div>

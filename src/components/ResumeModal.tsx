@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { X, Download, Printer, Copy, Check, FileText, ExternalLink, Shield, Cpu, Code } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { X, Download, Printer, Copy, Check, FileText, ExternalLink, Shield, Cpu, Code, ArrowUp } from 'lucide-react';
 import { RESUME_DATA, PROJECTS, PERSONAL_INFO } from '../data/portfolioData';
 
 interface ResumeModalProps {
@@ -9,8 +9,27 @@ interface ResumeModalProps {
 
 export const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => {
   const [copied, setCopied] = useState(false);
+  const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
 
   if (!isOpen) return null;
+
+  const handleScrollToTop = () => {
+    const overlay = document.getElementById('resume-modal-overlay');
+    if (overlay) {
+      overlay.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    const content = document.getElementById('resume-modal-content');
+    const scrollableBody = content?.querySelector('.overflow-y-auto');
+    if (scrollableBody) {
+      scrollableBody.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   const handleCopy = () => {
     const plainText = `
@@ -28,7 +47,7 @@ ${RESUME_DATA.focusAreas.map((f) => `• ${f.title}: ${f.details}`).join('\n')}
 
 FEATURED PROJECTS:
 • AETHOS: Gamified self-improvement engine with AI coach Ace, dynamic XP curve, cyberpunk UI.
-• RootCause: Faceless technical media channel breaking down CVEs and zero-days in 60s.
+• RootCause: Faceless YouTube channel covering tech and cybersecurity in short-form video.
 • Inkwell: Distraction-free typographic note engine engineered with editorial aesthetics.
 
 EDUCATION:
@@ -40,7 +59,8 @@ ${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
 
     navigator.clipboard.writeText(plainText);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
   };
 
   const handlePrint = () => {
@@ -50,23 +70,23 @@ ${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
   return (
     <div
       id="resume-modal-overlay"
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md overflow-y-auto"
+      className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-sm overflow-y-auto"
       onClick={onClose}
     >
       <div
         id="resume-modal-content"
-        className="relative w-full max-w-3xl bg-[#0a0d12] border border-white/15 rounded-2xl shadow-2xl overflow-hidden my-8"
+        className="relative w-full max-w-3xl bg-[#0a0d12] border border-white/15 rounded-2xl shadow-2xl flex flex-col my-auto max-h-[calc(100vh-2rem)] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Top Control Bar */}
-        <div className="flex items-center justify-between px-5 py-3.5 bg-[#0e1219] border-b border-white/10 font-mono text-xs">
-          <div className="flex items-center space-x-2 text-zinc-300">
-            <FileText className="w-4 h-4 text-emerald-400" />
-            <span className="font-semibold text-white">vedant_sattegiri_patil_cv.pdf</span>
-            <span className="text-zinc-500 text-[10px]">[READ-ONLY]</span>
+        <div className="flex-shrink-0 flex items-center justify-between px-4 sm:px-6 py-3.5 bg-[#0e1219] border-b border-white/10 font-mono text-xs">
+          <div className="flex items-center space-x-2 text-zinc-300 min-w-0">
+            <FileText className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <span className="font-semibold text-white truncate">vedant_sattegiri_patil_cv.pdf</span>
+            <span className="text-zinc-500 text-[10px] hidden sm:inline">[READ-ONLY]</span>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 flex-shrink-0">
             <button
               onClick={handleCopy}
               className="inline-flex items-center space-x-1 px-2.5 py-1 rounded bg-zinc-800 text-zinc-300 hover:text-white border border-white/10 text-xs transition-colors cursor-pointer"
@@ -96,7 +116,7 @@ ${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
         </div>
 
         {/* Formatted CV Document Body */}
-        <div className="p-6 sm:p-10 max-h-[80vh] overflow-y-auto space-y-8 print:p-0 print:max-h-none print:text-black">
+        <div className="flex-1 min-h-0 p-5 sm:p-8 lg:p-10 overflow-y-auto space-y-8 print:p-0 print:max-h-none print:text-black">
           {/* Header */}
           <div className="border-b border-white/10 pb-6">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -185,6 +205,21 @@ ${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
             ))}
           </div>
 
+          {/* Certifications & Recognitions */}
+          <div className="space-y-3">
+            <div className="font-mono text-xs text-emerald-400 uppercase tracking-wider font-semibold">
+              // CERTIFICATIONS & RECOGNITION
+            </div>
+            <div className="space-y-1.5 font-mono text-xs text-zinc-300">
+              {RESUME_DATA.certificationsAndRankings.map((cert) => (
+                <div key={cert} className="flex items-start space-x-2">
+                  <span className="text-emerald-400 select-none">▸</span>
+                  <span>{cert}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Technical Skills Summary */}
           <div className="space-y-3">
             <div className="font-mono text-xs text-emerald-400 uppercase tracking-wider font-semibold">
@@ -210,10 +245,31 @@ ${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
             </div>
           </div>
 
-          {/* Cryptographic Signature Footer */}
-          <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between text-[11px] font-mono text-zinc-500">
-            <div>VERIFIED BY VEX RESEARCH KEY</div>
-            <div>PUNE, INDIA • CLASS OF 2027</div>
+          {/* Modal Footer */}
+          <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3 text-[11px] font-mono text-zinc-500">
+            <div>
+              {RESUME_DATA.name} • {RESUME_DATA.location}
+            </div>
+            <div className="flex items-center space-x-2">
+              <a
+                href="/resume.pdf"
+                download
+                className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-white/10 text-[11px] transition-colors cursor-pointer"
+                title="Download PDF"
+              >
+                <Download className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Download PDF</span>
+              </a>
+              <button
+                type="button"
+                onClick={handleScrollToTop}
+                className="p-1 rounded bg-zinc-800/80 hover:bg-zinc-700 text-zinc-400 hover:text-white border border-white/10 transition-colors cursor-pointer"
+                title="Scroll to top"
+                aria-label="Scroll to top"
+              >
+                <ArrowUp className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
