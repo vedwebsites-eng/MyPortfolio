@@ -37,7 +37,16 @@ export default function App() {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [isTerminalModalOpen, setIsTerminalModalOpen] = useState(false);
   const [isKonamiDevMode, setIsKonamiDevMode] = useState(false);
-  const [bootReady, setBootReady] = useState(false);
+  const [bootReady, setBootReady] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        return !!sessionStorage.getItem('vex_boot_completed');
+      } catch {
+        return false;
+      }
+    }
+    return false;
+  });
   const [notification, setNotification] = useState<{ message: string; isError?: boolean } | null>(null);
 
   const konamiBufferRef = React.useRef<string[]>([]);
@@ -186,11 +195,11 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#090b0e] text-[#d6d9e0] font-sans antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
-      {/* Intro Lyrics Sequence & Persistent Audio Player */}
-      <IntroLyrics trackSrc="/track.mp3" />
-
       {/* Monospace Terminal Boot Screen Transition (once per session, skippable) */}
       <TerminalBootScreen onComplete={() => setBootReady(true)} />
+
+      {/* Intro Lyrics Sequence & Persistent Audio Player (plays after boot sequence completes) */}
+      {bootReady && <IntroLyrics trackSrc="/track.mp3" />}
 
       <ThemeTransitionWave />
       {/* Scroll Depth Monospace Progress Bar */}
