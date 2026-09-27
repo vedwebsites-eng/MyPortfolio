@@ -17,6 +17,7 @@ import { ResumeModal } from './components/ResumeModal';
 import { NotFound } from './components/NotFound';
 import { ThemeTransitionWave } from './components/ThemeTransitionWave';
 import { TerminalBootScreen } from './components/TerminalBootScreen';
+import { IntroLyrics } from './components/IntroLyrics';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 
 const KONAMI_CODE = [
@@ -185,6 +186,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#090b0e] text-[#d6d9e0] font-sans antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
+      {/* Intro Lyrics Sequence & Persistent Audio Player */}
+      <IntroLyrics trackSrc="/track.mp3" />
+
       {/* Monospace Terminal Boot Screen Transition (once per session, skippable) */}
       <TerminalBootScreen onComplete={() => setBootReady(true)} />
 
