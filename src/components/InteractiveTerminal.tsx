@@ -72,6 +72,8 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   const konamiInjectedRef = useRef<boolean>(false);
   const redirectTimer1Ref = useRef<NodeJS.Timeout | null>(null);
   const redirectTimer2Ref = useRef<NodeJS.Timeout | null>(null);
+  const isInitialHistoryRef = useRef<boolean>(true);
+  const hasUserScrolledRef = useRef<boolean>(false);
 
   // Clean up timers on unmount
   useEffect(() => {
@@ -195,7 +197,47 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
     }
   };
 
+  // Track user scroll activity so we only auto-focus when scrolled via user action
   useEffect(() => {
+    const handleScroll = () => {
+      hasUserScrolledRef.current = true;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Focus input when modal opens or when terminal scrolls into view via user action
+  useEffect(() => {
+    if (isModal) {
+      inputRef.current?.focus({ preventScroll: true });
+      return;
+    }
+
+    const elem = terminalContainerRef.current;
+    if (!elem || typeof IntersectionObserver === 'undefined') return;
+
+    let hasFocusedFromScroll = false;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && hasUserScrolledRef.current && !hasFocusedFromScroll) {
+            hasFocusedFromScroll = true;
+            inputRef.current?.focus({ preventScroll: true });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(elem);
+    return () => observer.disconnect();
+  }, [isModal]);
+
+  useEffect(() => {
+    if (isInitialHistoryRef.current) {
+      isInitialHistoryRef.current = false;
+      return;
+    }
     terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [history]);
 
@@ -599,6 +641,11 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   const content = (
     <div
       ref={terminalContainerRef}
+      onClick={(e) => {
+        if (!(e.target instanceof HTMLButtonElement || e.target instanceof HTMLAnchorElement)) {
+          inputRef.current?.focus({ preventScroll: true });
+        }
+      }}
       className={`relative flex flex-col bg-[#080b0f] text-zinc-300 font-mono text-xs shadow-2xl overflow-hidden transition-all duration-150 ${
         isFullscreen
           ? 'w-screen h-screen rounded-none border-0'
@@ -695,7 +742,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
 
       {/* Log Output Area (Fits screen comfortably) */}
       <div
-        onClick={() => inputRef.current?.focus()}
+        onClick={() => inputRef.current?.focus({ preventScroll: true })}
         className="flex-1 min-h-[140px] p-3.5 sm:p-4 overflow-y-auto space-y-3 font-mono text-xs leading-relaxed cursor-text"
       >
         {history.map((item, idx) => (
@@ -737,7 +784,6 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
           onKeyDown={handleKeyDown}
           placeholder="Type command ('help', 'projects', 'whoami', 'fullscreen')..."
           className="flex-1 bg-transparent text-white focus:outline-none text-xs font-mono placeholder:text-zinc-600"
-          autoFocus
         />
         <button
           onClick={() => handleCommand(input)}
