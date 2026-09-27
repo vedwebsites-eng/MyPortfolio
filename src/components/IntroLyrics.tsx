@@ -11,12 +11,12 @@ export interface LyricLine {
  * Timestamps (in seconds) match real audio file playback.
  */
 export const DEFAULT_LYRICS: LyricLine[] = [
-  { time: 0, text: "hey, I'm Vedant" },
-  { time: 1.2, text: "somewhere from the world" },
-  { time: 2.5, text: "welcome in" },
-  { time: 3.7, text: "I like to build cool stuff" },
-  { time: 5.0, text: "and yes" },
-  { time: 5.8, text: "this is who I am" },
+  { time: 0,    text: "hey, I'm Vedant" },
+  { time: 2.2,  text: "somewhere from the world" },
+  { time: 4.4,  text: "welcome in" },
+  { time: 6.6,  text: "I like to build cool stuff" },
+  { time: 8.8,  text: "and yes" },
+  { time: 10.9, text: "this is who I am" },
 ];
 
 export interface IntroLyricsProps {
@@ -175,9 +175,9 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
         setIsLineExiting(false);
       }
 
-      // Finish/migrate to corner when currentTime reaches last lyric time + 1.5s buffer
-      const lastLyricTime = lyrics[lyrics.length - 1]?.time ?? 5.8;
-      if (currentTime >= lastLyricTime + 1.5) {
+      // Finish/migrate to corner when currentTime reaches last lyric time + 1.1s buffer (~12.0s)
+      const lastLyricTime = lyrics[lyrics.length - 1]?.time ?? 10.9;
+      if (currentTime >= lastLyricTime + 1.1) {
         hasCompletedRef.current = true;
         finishIntro(false);
       }
