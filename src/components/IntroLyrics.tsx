@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause, Volume2 } from 'lucide-react';
 
 export interface LyricLine {
   time: number; // in seconds
@@ -8,7 +8,7 @@ export interface LyricLine {
 
 /**
  * Swappable placeholder lyrics timeline array.
- * Adjust timestamps (in seconds) and text lines as needed.
+ * Timestamps (in seconds) match real audio file playback.
  */
 export const DEFAULT_LYRICS: LyricLine[] = [
   { time: 0, text: "init sequence" },
@@ -50,102 +50,173 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
   const [isMigrating, setIsMigrating] = useState<boolean>(false);
   const [currentLineIndex, setCurrentLineIndex] = useState<number>(0);
   const [isLineExiting, setIsLineExiting] = useState<boolean>(false);
+  const [needsTapToPlay, setNeedsTapToPlay] = useState<boolean>(false);
 
   // Persistent badge state
   const [isBadgeVisible, setIsBadgeVisible] = useState<boolean>(hasPlayed);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
-
-  // Clear all pending intro timeouts
-  const clearAllTimeouts = useCallback(() => {
-    timeoutsRef.current.forEach(clearTimeout);
-    timeoutsRef.current = [];
-  }, []);
+  const hasCompletedRef = useRef<boolean>(false);
 
   // Finish intro sequence and migrate stage to bottom-left corner badge
-  const finishIntro = useCallback(() => {
-    clearAllTimeouts();
-
-    // Set session storage flag to prevent repeating in same session
-    try {
-      sessionStorage.setItem('introPlayed', 'true');
-    } catch {
-      // Ignore private browsing storage errors
-    }
-
-    // Trigger lyric stage migration & overlay fade-out (~0.9s duration)
-    setIsMigrating(true);
-    setIsOverlayFading(true);
-    setIsBadgeVisible(true);
-
-    const unmountTimer = setTimeout(() => {
-      setIsOverlayMounted(false);
-      if (onComplete) {
-        onComplete();
+  const finishIntro = useCallback(
+    (immediate = false) => {
+      // Set session storage flag to prevent repeating in same session
+      try {
+        sessionStorage.setItem('introPlayed', 'true');
+      } catch {
+        // Ignore private browsing storage errors
       }
-    }, 900);
-    timeoutsRef.current.push(unmountTimer);
-  }, [clearAllTimeouts, onComplete]);
 
-  // Main intro timeline runner
+      if (immediate) {
+        setIsOverlayMounted(false);
+        setIsBadgeVisible(true);
+        setIsMigrating(false);
+        setIsOverlayFading(false);
+        if (onComplete) {
+          onComplete();
+        }
+        return;
+      }
+
+      // Trigger lyric stage migration & overlay fade-out (~0.9s duration)
+      setIsMigrating(true);
+      setIsOverlayFading(true);
+      setIsBadgeVisible(true);
+
+      setTimeout(() => {
+        setIsOverlayMounted(false);
+        if (onComplete) {
+          onComplete();
+        }
+      }, 900);
+    },
+    [onComplete]
+  );
+
+  // Immediate skip action: pauses audio if playing and jumps straight to finished state
+  const handleSkip = useCallback(() => {
+    const audio = audioRef.current;
+    if (audio) {
+      audio.pause();
+    }
+    setIsPlaying(false);
+    hasCompletedRef.current = true;
+    finishIntro(true);
+  }, [finishIntro]);
+
+  // User gesture handler when browser blocks initial autoplay
+  const handleTapToBegin = useCallback(() => {
+    setNeedsTapToPlay(false);
+    const audio = audioRef.current;
+    if (audio) {
+      audio
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch((err) => {
+          console.warn('Playback failed after tap:', err);
+        });
+    }
+  }, []);
+
+  // 1. On mount: attempt autoplay. If blocked by browser policy, show tap prompt.
   useEffect(() => {
     if (hasPlayed) {
       setIsBadgeVisible(true);
       return;
     }
 
-    clearAllTimeouts();
+    const audio = audioRef.current;
+    if (!audio) return;
 
-    // Schedule each line's pop-in and slide-up exit
-    lyrics.forEach((line, idx) => {
-      // Line appearance timer
-      const enterTimer = setTimeout(() => {
-        setCurrentLineIndex(idx);
-        setIsLineExiting(false);
-      }, line.time * 1000);
-      timeoutsRef.current.push(enterTimer);
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise
+        .then(() => {
+          setNeedsTapToPlay(false);
+          setIsPlaying(true);
+        })
+        .catch((err) => {
+          console.log('Autoplay prevented by browser policy, tap prompt enabled:', err?.message || err);
+          setNeedsTapToPlay(true);
+        });
+    }
+  }, [hasPlayed]);
 
-      // Line slide-up exit transition (200ms before next line)
-      if (idx < lyrics.length - 1) {
-        const nextLineTime = lyrics[idx + 1].time;
-        const exitDelay = Math.max(0, nextLineTime * 1000 - 220);
-        const exitTimer = setTimeout(() => {
-          setIsLineExiting(true);
-        }, exitDelay);
-        timeoutsRef.current.push(exitTimer);
+  // 2. Audio-driven lyric synchronizer: listens to timeupdate & frame ticks
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || hasPlayed) return;
+
+    const handleTimeCheck = () => {
+      if (hasCompletedRef.current) return;
+      const currentTime = audio.currentTime;
+
+      // Identify currently active line: the last lyric whose time <= audio.currentTime
+      let activeIdx = 0;
+      for (let i = 0; i < lyrics.length; i++) {
+        if (lyrics[i].time <= currentTime) {
+          activeIdx = i;
+        } else {
+          break;
+        }
       }
-    });
 
-    // Calculate total sequence time (~6.7s for default timeline)
-    const lastLineTime = lyrics[lyrics.length - 1]?.time ?? 5.6;
-    const finishDelay = (lastLineTime + 1.1) * 1000;
+      setCurrentLineIndex(activeIdx);
 
-    const finishTimer = setTimeout(() => {
-      finishIntro();
-    }, finishDelay);
-    timeoutsRef.current.push(finishTimer);
+      // Slide-up exit transition starts ~220ms before the next line's timestamp
+      if (activeIdx < lyrics.length - 1) {
+        const nextTime = lyrics[activeIdx + 1].time;
+        setIsLineExiting(currentTime >= nextTime - 0.22);
+      } else {
+        setIsLineExiting(false);
+      }
 
-    // Escape key listener to allow instant skip
+      // Finish/migrate to corner when currentTime reaches last lyric time + 1.5s buffer
+      const lastLyricTime = lyrics[lyrics.length - 1]?.time ?? 5.6;
+      if (currentTime >= lastLyricTime + 1.5) {
+        hasCompletedRef.current = true;
+        finishIntro(false);
+      }
+    };
+
+    // Standard audio timeupdate event listener
+    audio.addEventListener('timeupdate', handleTimeCheck);
+
+    // Frame-accurate poll while audio is playing for sub-millisecond animation trigger precision
+    let rafId: number;
+    const frameLoop = () => {
+      if (!audio.paused && !hasCompletedRef.current) {
+        handleTimeCheck();
+      }
+      rafId = requestAnimationFrame(frameLoop);
+    };
+    rafId = requestAnimationFrame(frameLoop);
+
+    return () => {
+      audio.removeEventListener('timeupdate', handleTimeCheck);
+      cancelAnimationFrame(rafId);
+    };
+  }, [lyrics, hasPlayed, finishIntro]);
+
+  // 3. Escape key listener for instant skip
+  useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        finishIntro();
+      if (e.key === 'Escape' && isOverlayMounted) {
+        handleSkip();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleSkip, isOverlayMounted]);
 
-    return () => {
-      clearAllTimeouts();
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [hasPlayed, lyrics, finishIntro, clearAllTimeouts]);
-
-  // Playback control toggler
+  // Playback control toggler for persistent badge
   const togglePlay = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
 
-    // Guard: if trackSrc is empty or undefined, play() is a no-op
     if (!trackSrc) {
       return;
     }
@@ -157,8 +228,7 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
       audio.pause();
     } else {
       audio.play().catch((err) => {
-        // Handle playback errors or missing files gracefully
-        console.warn('Audio playback not ready or file missing:', err);
+        console.warn('Audio playback failed:', err);
         setIsPlaying(false);
       });
     }
@@ -218,7 +288,7 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
       <audio
         ref={audioRef}
         src={trackSrc}
-        preload="metadata"
+        preload="auto"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         onEnded={() => setIsPlaying(false)}
@@ -230,9 +300,10 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
         <div
           role="dialog"
           aria-label="Site Intro Sequence"
+          onClick={needsTapToPlay ? handleTapToBegin : undefined}
           className={`fixed inset-0 z-50 flex items-center justify-center select-none overflow-hidden transition-opacity duration-700 ${
             isOverlayFading ? 'opacity-0 pointer-events-none' : 'opacity-100'
-          }`}
+          } ${needsTapToPlay ? 'cursor-pointer' : ''}`}
           style={{
             backgroundColor: 'rgba(6, 8, 11, 0.55)',
             backdropFilter: 'blur(22px) saturate(140%)',
@@ -247,13 +318,16 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
               <span className="tracking-widest uppercase text-emerald-400 font-semibold text-[11px]">
-                AUDIO_STAGE // INIT
+                AUDIO_STAGE // SYNC
               </span>
             </div>
 
-            {/* Skip intro button */}
+            {/* Skip intro button (pauses audio & jumps straight to finished badge state) */}
             <button
-              onClick={finishIntro}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSkip();
+              }}
               type="button"
               className="text-[11px] font-mono text-zinc-400 hover:text-emerald-300 px-3 py-1.5 rounded-md border border-white/10 hover:border-emerald-500/40 bg-[#06080b]/60 backdrop-blur-sm transition-all cursor-pointer"
             >
@@ -304,6 +378,20 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
                 />
               ))}
             </div>
+
+            {/* Minimal Tap-to-Begin Prompt when autoplay is blocked by browser policy */}
+            {needsTapToPlay && (
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleTapToBegin();
+                }}
+                className="mt-8 flex items-center space-x-2.5 px-4 py-2 rounded-full border border-emerald-500/40 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 font-mono text-xs uppercase tracking-wider cursor-pointer shadow-[0_0_18px_rgba(52,211,153,0.25)] hover:shadow-[0_0_24px_rgba(52,211,153,0.4)] transition-all animate-pulse"
+              >
+                <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>[ TAP TO BEGIN AUDIO & SYNC ]</span>
+              </div>
+            )}
           </div>
         </div>
       )}
