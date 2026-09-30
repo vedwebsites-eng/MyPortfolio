@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-serif: "Playfair Display", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -66,6 +68,17 @@ html.theme-transitioning nav {
   transition: background-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
               border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
               color 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Theme-aware Selection Styling */
+::selection {
+  background-color: rgba(16, 185, 129, 0.35);
+  color: #a7f3d0;
+}
+
+html.light ::selection {
+  background-color: rgba(30, 41, 59, 0.22);
+  color: #0f172a;
 }
 
 /* Default Dark Theme Baseline */
@@ -237,6 +250,148 @@ html.light #terminal .bg-\[\#0a0d12\] {
 html.light #btn-restore-terminal {
   background-color: #ffffff !important;
   box-shadow: 0 4px 20px rgba(5, 150, 105, 0.25) !important;
+}
+
+/* ==========================================================================
+   AETHOS Card: Intentionally Dark Showcase Card (Preserved in all themes)
+   ========================================================================== */
+#project-aethos,
+html.light #project-aethos {
+  background-color: #050505 !important;
+  color: #f1f5f9 !important;
+  border-color: rgba(255, 69, 0, 0.45) !important;
+}
+
+#project-aethos h3,
+#project-aethos .text-white,
+html.light #project-aethos h3,
+html.light #project-aethos .text-white {
+  color: #ffffff !important;
+}
+
+#project-aethos p,
+#project-aethos .text-zinc-200,
+#project-aethos .text-zinc-300,
+html.light #project-aethos p,
+html.light #project-aethos .text-zinc-200,
+html.light #project-aethos .text-zinc-300 {
+  color: #cbd5e1 !important;
+}
+
+#project-aethos .text-zinc-400,
+html.light #project-aethos .text-zinc-400 {
+  color: #94a3b8 !important;
+}
+
+#project-aethos .text-zinc-500,
+html.light #project-aethos .text-zinc-500 {
+  color: #71717a !important;
+}
+
+#project-aethos .bg-\[\#090b10\],
+html.light #project-aethos .bg-\[\#090b10\] {
+  background-color: #090b10 !important;
+}
+
+#project-aethos .bg-\[\#111111\],
+html.light #project-aethos .bg-\[\#111111\] {
+  background-color: #111111 !important;
+}
+
+#project-aethos .bg-white\/\[0\.04\],
+html.light #project-aethos .bg-white\/\[0\.04\] {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+#project-aethos .bg-white\/\[0\.02\],
+html.light #project-aethos .bg-white\/\[0\.02\] {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+#project-aethos .border-white\/10,
+html.light #project-aethos .border-white\/10 {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+#project-aethos .border-white\/5,
+html.light #project-aethos .border-white\/5 {
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* ==========================================================================
+   ROOTCAUSE Project Card (Light Mode Theme Flip)
+   ========================================================================== */
+html.light #project-rootcause {
+  background-color: #ffffff !important;
+  border-color: rgba(6, 182, 212, 0.35) !important;
+  box-shadow: 0 4px 20px -2px rgba(6, 182, 212, 0.1) !important;
+}
+
+html.light #project-rootcause .bg-\[\#080b10\],
+html.light #project-rootcause .bg-\[\#06080d\] {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light #project-rootcause .bg-\[\#0a0e16\] {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light #project-rootcause .bg-zinc-900 {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+/* ==========================================================================
+   Resume Modal (Light Mode High Contrast)
+   ========================================================================== */
+html.light #resume-modal-content {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+html.light #resume-modal-content .bg-\[\#0e1219\],
+html.light #resume-modal-content .bg-\[\#0a0d12\] {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light #resume-modal-content .bg-zinc-900\/50,
+html.light #resume-modal-content .bg-zinc-800 {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+html.light #resume-modal-content .bg-black\/40 {
+  background-color: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+/* ==========================================================================
+   Guestbook & Footer in Light Mode
+   ========================================================================== */
+html.light #guestbook {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light #guestbook .bg-\[\#0b0e14\],
+html.light #guestbook .bg-\[\#0a0d14\],
+html.light #guestbook .bg-\[\#090c12\],
+html.light #guestbook .bg-\[\#06080c\] {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light #main-footer {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  color: #64748b !important;
 }
 
 /* Grid & Radial Textures */

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Play, Pause, Volume2 } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
 export interface LyricLine {
   time: number; // in seconds
@@ -25,6 +25,25 @@ export interface IntroLyricsProps {
   lyrics?: LyricLine[];
   onComplete?: () => void;
 }
+
+const BADGE_SIZE = 150;
+const HALF_BADGE_SIZE = BADGE_SIZE / 2; // 75px: Exactly half the wheel can go outside the frame, never the full circle
+
+/**
+ * Calculates badge position clamped so up to half of the wheel (75px)
+ * can extend outside the viewport frame on any side, but never the full circle.
+ */
+const getClampedBadgePos = (x: number, y: number): { x: number; y: number } => {
+  if (typeof window === 'undefined') return { x, y };
+  const minX = -HALF_BADGE_SIZE;
+  const maxX = Math.max(minX, window.innerWidth - HALF_BADGE_SIZE);
+  const minY = -HALF_BADGE_SIZE;
+  const maxY = Math.max(minY, window.innerHeight - HALF_BADGE_SIZE);
+  return {
+    x: Math.max(minX, Math.min(maxX, x)),
+    y: Math.max(minY, Math.min(maxY, y)),
+  };
+};
 
 export const IntroLyrics: React.FC<IntroLyricsProps> = ({
   trackSrc,
@@ -55,6 +74,133 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
   // Persistent badge state
   const [isBadgeVisible, setIsBadgeVisible] = useState<boolean>(hasPlayed);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+
+  // Draggable badge position: allows up to half the wheel outside the frame, never the full circle
+  const [badgePos, setBadgePos] = useState<{ x: number; y: number }>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = sessionStorage.getItem('vex_badge_pos');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (typeof parsed.x === 'number' && typeof parsed.y === 'number') {
+            if (parsed.x === 24) {
+              return getClampedBadgePos(-HALF_BADGE_SIZE, window.innerHeight - 174);
+            }
+            return getClampedBadgePos(parsed.x, parsed.y);
+          }
+        }
+        // Default position: docked at bottom-left with half of the wheel out of the frame
+        return getClampedBadgePos(-HALF_BADGE_SIZE, window.innerHeight - 174);
+      } catch {
+        // ignore
+      }
+    }
+    return { x: -HALF_BADGE_SIZE, y: 550 };
+  });
+
+  const badgePosRef = useRef<{ x: number; y: number }>(badgePos);
+  useEffect(() => {
+    badgePosRef.current = badgePos;
+  }, [badgePos]);
+
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const dragInfoRef = useRef<{
+    startX: number;
+    startY: number;
+    initialX: number;
+    initialY: number;
+    hasMoved: boolean;
+  } | null>(null);
+  const justDraggedRef = useRef<boolean>(false);
+
+  // Keep badge within bounds (allowing up to half the circle outside the frame, never full) on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setBadgePos((prev) => getClampedBadgePos(prev.x, prev.y));
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return; // Only primary mouse button or touch
+    dragInfoRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      initialX: badgePos.x,
+      initialY: badgePos.y,
+      hasMoved: false,
+    };
+    try {
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragInfoRef.current) return;
+
+    const dx = e.clientX - dragInfoRef.current.startX;
+    const dy = e.clientY - dragInfoRef.current.startY;
+
+    // Distinguish click from drag: only treat as drag once moved > 5px
+    if (!dragInfoRef.current.hasMoved && Math.hypot(dx, dy) > 5) {
+      dragInfoRef.current.hasMoved = true;
+      setIsDragging(true);
+    }
+
+    if (dragInfoRef.current.hasMoved) {
+      const clamped = getClampedBadgePos(
+        dragInfoRef.current.initialX + dx,
+        dragInfoRef.current.initialY + dy
+      );
+      badgePosRef.current = clamped;
+      setBadgePos(clamped);
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!dragInfoRef.current) return;
+
+    try {
+      (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+
+    if (dragInfoRef.current.hasMoved) {
+      justDraggedRef.current = true;
+      setTimeout(() => {
+        justDraggedRef.current = false;
+      }, 120);
+
+      // Persist badge position in sessionStorage
+      try {
+        sessionStorage.setItem('vex_badge_pos', JSON.stringify(badgePosRef.current));
+      } catch {
+        // ignore
+      }
+    }
+
+    dragInfoRef.current = null;
+    setIsDragging(false);
+  };
+
+  const handlePointerCancel = (e: React.PointerEvent<HTMLDivElement>) => {
+    handlePointerUp(e);
+  };
+
+  // Mute / Unmute audio toggle
+  const toggleMute = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (justDraggedRef.current) return;
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.muted = !audio.muted;
+    setIsMuted(audio.muted);
+  };
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const hasCompletedRef = useRef<boolean>(false);
@@ -216,6 +362,11 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
   // Playback control toggler for persistent badge
   const togglePlay = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
+
+    // Guard: ignore click if user just completed a drag movement
+    if (justDraggedRef.current) {
+      return;
+    }
 
     if (!trackSrc) {
       return;
@@ -396,98 +547,112 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
         </div>
       )}
 
-      {/* Persistent "Now Playing" Badge at Bottom-Left */}
+      {/* Persistent "Now Playing" Full Circular Badge (150px, Draggable) */}
       <div
-        className={`fixed bottom-6 left-0 z-40 transition-all duration-700 ease-out select-none ${
+        className={`fixed z-40 select-none ${
           isBadgeVisible
-            ? 'opacity-100 translate-x-0 scale-100 pointer-events-auto'
-            : 'opacity-0 -translate-x-10 scale-75 pointer-events-none'
+            ? 'opacity-100 scale-100 pointer-events-auto'
+            : 'opacity-0 scale-75 pointer-events-none'
         }`}
+        style={{
+          left: 0,
+          top: 0,
+          transform: `translate3d(${badgePos.x}px, ${badgePos.y}px, 0)`,
+          transition: isDragging
+            ? 'none'
+            : 'opacity 700ms ease-out, transform 200ms ease-out',
+        }}
         aria-label="Now Playing Audio Badge"
       >
-        {/*
-          Clipped wrapper:
-          Circle (150px) clipped to show only its right half
-          (border-radius: 0 100px 100px 0 on an overflow-hidden wrapper)
-        */}
+        {/* Full 150px rounded container */}
         <div
-          className="relative w-[75px] h-[150px] overflow-hidden bg-[#06080b]/90 backdrop-blur-md border-y border-r border-emerald-500/30 shadow-[0_0_24px_rgba(0,0,0,0.8)]"
-          style={{
-            borderRadius: '0 100px 100px 0',
-          }}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerCancel}
+          onClick={togglePlay}
+          title={isDragging ? undefined : "Drag to reposition • Controls centered"}
+          className={`relative w-[150px] h-[150px] rounded-full overflow-hidden bg-[#06080b]/90 backdrop-blur-md border border-emerald-500/30 shadow-[0_0_28px_rgba(0,0,0,0.8)] touch-none transition-shadow ${
+            isDragging
+              ? 'cursor-grabbing shadow-[0_0_36px_rgba(52,211,153,0.4)] ring-1 ring-emerald-500/50'
+              : 'cursor-grab hover:shadow-[0_0_30px_rgba(52,211,153,0.25)]'
+          }`}
         >
-          {/*
-            Full 150px circle shifted left by 75px so only its right half is visible.
-            Center of circle is at x = 0 (the screen edge).
-          */}
+          {/* Concentric subtle groove rings */}
+          <div className="absolute inset-0 rounded-full bg-[#06080b] border border-white/5 pointer-events-none" />
+          <div className="absolute inset-2.5 rounded-full border border-emerald-500/10 pointer-events-none" />
+          <div className="absolute inset-6 rounded-full border border-white/5 pointer-events-none" />
+          <div className="absolute inset-10 rounded-full border border-emerald-500/10 pointer-events-none" />
+
+          {/* Spinning SVG text container */}
           <div
-            className="absolute top-0 w-[150px] h-[150px]"
+            className="absolute inset-0 vinyl-spinning-disc pointer-events-none"
             style={{
-              left: '-75px',
+              animationPlayState: isPlaying ? 'running' : 'paused',
             }}
           >
-            {/* Concentric subtle groove rings */}
-            <div className="absolute inset-0 rounded-full bg-[#06080b] border border-white/5 pointer-events-none" />
-            <div className="absolute inset-3 rounded-full border border-emerald-500/10 pointer-events-none" />
-            <div className="absolute inset-7 rounded-full border border-white/5 pointer-events-none" />
-            <div className="absolute inset-11 rounded-full border border-emerald-500/10 pointer-events-none" />
-
-            {/*
-              Spinning SVG disc containing circular <textPath>.
-              Spinning via CSS animation (6s linear infinite) with animation-play-state paused until playback starts.
-            */}
-            <div
-              className="absolute inset-0 vinyl-spinning-disc pointer-events-none"
-              style={{
-                animationPlayState: isPlaying ? 'running' : 'paused',
-              }}
+            <svg
+              viewBox="0 0 150 150"
+              className="w-full h-full"
+              aria-hidden="true"
             >
-              <svg
-                viewBox="0 0 150 150"
-                className="w-full h-full"
-                aria-hidden="true"
-              >
-                <defs>
-                  {/*
-                    Circular path with radius 53px centered at (75, 75).
-                    Circumference ≈ 333px.
-                  */}
-                  <path
-                    id="intro-now-playing-circle-path"
-                    d="M 75, 75 m -53, 0 a 53,53 0 1,1 106,0 a 53,53 0 1,1 -106,0"
-                    fill="none"
-                  />
-                </defs>
-                <text className="font-mono text-[9px] font-bold tracking-[0.22em] fill-emerald-400 uppercase select-none">
-                  <textPath
-                    href="#intro-now-playing-circle-path"
-                    startOffset="0%"
-                  >
-                    • NOW PLAYING • {trackName} • NOW PLAYING • {trackName} •
-                  </textPath>
-                </text>
-              </svg>
-            </div>
+              <defs>
+                {/* Full 360° circular path with radius 54px centered at (75, 75). Circumference ≈ 339.3px */}
+                <path
+                  id="intro-now-playing-circle-path"
+                  d="M 75, 75 m -54, 0 a 54,54 0 1,1 108,0 a 54,54 0 1,1 -108,0"
+                  fill="none"
+                />
+              </defs>
+              <text className="font-mono text-[8.5px] font-bold tracking-[0.16em] fill-emerald-400 uppercase select-none">
+                <textPath
+                  href="#intro-now-playing-circle-path"
+                  startOffset="0%"
+                >
+                  • NOW PLAYING • {trackName} • NOW PLAYING • {trackName} • NOW PLAYING • {trackName}
+                </textPath>
+              </text>
+            </svg>
           </div>
 
-          {/*
-            Circular Play/Pause Button:
-            Centered on the badge's visible arc.
-            Toggles play/pause on the <audio> element and syncs with spinning disc animation.
-          */}
-          <button
-            onClick={togglePlay}
-            type="button"
-            title={isPlaying ? 'Pause Track' : 'Play Track'}
-            aria-label={isPlaying ? 'Pause Track' : 'Play Track'}
-            className="absolute top-1/2 left-[28px] -translate-x-1/2 -translate-y-1/2 z-20 w-8 h-8 rounded-full bg-[#0b1017] border border-emerald-500/50 hover:border-emerald-300 text-emerald-400 hover:text-emerald-300 flex items-center justify-center shadow-[0_0_12px_rgba(52,211,153,0.3)] hover:shadow-[0_0_18px_rgba(52,211,153,0.5)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
-          >
-            {isPlaying ? (
-              <Pause className="w-3.5 h-3.5 fill-current" />
-            ) : (
-              <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
-            )}
-          </button>
+          {/* Centered Controls Hub: Play/Pause and Mute Buttons */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center justify-center space-x-1.5 p-1 rounded-full bg-[#0b1017]/95 border border-emerald-500/40 shadow-[0_0_16px_rgba(52,211,153,0.3)]">
+            {/* Play/Pause Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                togglePlay(e);
+              }}
+              type="button"
+              title={isPlaying ? 'Pause Track' : 'Play Track'}
+              aria-label={isPlaying ? 'Pause Track' : 'Play Track'}
+              className="w-7 h-7 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 hover:text-emerald-300 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
+            >
+              {isPlaying ? (
+                <Pause className="w-3.5 h-3.5 fill-current" />
+              ) : (
+                <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+              )}
+            </button>
+
+            {/* Mute/Unmute Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleMute(e);
+              }}
+              type="button"
+              title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
+              aria-label={isMuted ? 'Unmute Audio' : 'Mute Audio'}
+              className="w-7 h-7 rounded-full bg-zinc-800/80 hover:bg-zinc-700/80 text-zinc-300 hover:text-emerald-400 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
+            >
+              {isMuted ? (
+                <VolumeX className="w-3.5 h-3.5 text-rose-400" />
+              ) : (
+                <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </>
