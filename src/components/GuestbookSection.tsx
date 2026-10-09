@@ -83,7 +83,7 @@ export const GuestbookSection: React.FC = () => {
 
           <div className="flex items-center space-x-3">
             {currentUser ? (
-              <div className="flex items-center space-x-2.5 bg-zinc-900/90 border border-white/10 px-3 py-1.5 rounded-xl text-xs font-mono">
+              <div className="flex items-center space-x-2.5 bg-zinc-900/90 border border-white/10 px-3 py-1.5 rounded-xl text-xs font-mono min-h-[44px]">
                 {currentUser.photoURL ? (
                   <img
                     src={currentUser.photoURL}
@@ -103,8 +103,9 @@ export const GuestbookSection: React.FC = () => {
                 </span>
                 <button
                   onClick={signOutFirebase}
-                  className="text-zinc-500 hover:text-zinc-300 ml-1 cursor-pointer"
+                  className="text-zinc-400 hover:text-zinc-200 ml-1 cursor-pointer min-w-[44px] min-h-[44px] flex items-center justify-center -mr-2"
                   title="Sign out"
+                  aria-label="Sign out"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                 </button>
@@ -112,7 +113,7 @@ export const GuestbookSection: React.FC = () => {
             ) : (
               <button
                 onClick={signInWithGoogle}
-                className="flex items-center space-x-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3.5 py-1.5 rounded-xl text-xs font-mono transition-colors cursor-pointer"
+                className="flex items-center space-x-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-mono transition-colors cursor-pointer"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 <span>Google Sign-In</span>
@@ -137,16 +138,16 @@ export const GuestbookSection: React.FC = () => {
                 className="w-full bg-[#06080c] border border-white/10 rounded-xl p-3 text-xs sm:text-sm text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-cyan-500/60 font-sans"
               />
               <div className="flex items-center justify-between pt-1">
-                <span className="text-[11px] font-mono text-zinc-500">
+                <span className="text-[11px] font-mono text-zinc-400">
                   STORED SECURELY IN FIRESTORE
                 </span>
                 <button
                   type="submit"
                   disabled={!newMessage.trim() || isSubmitting}
-                  className={`px-4 py-2 rounded-xl text-xs font-mono font-semibold flex items-center space-x-2 transition-all ${
+                  className={`px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-mono font-semibold flex items-center space-x-2 transition-all ${
                     newMessage.trim() && !isSubmitting
                       ? 'bg-emerald-500 text-black hover:bg-emerald-400 cursor-pointer shadow-lg shadow-emerald-500/20'
-                      : 'bg-zinc-800 text-zinc-600 cursor-not-allowed'
+                      : 'bg-zinc-800 text-zinc-400 cursor-not-allowed'
                   }`}
                 >
                   <Send className="w-3.5 h-3.5" />
@@ -167,7 +168,7 @@ export const GuestbookSection: React.FC = () => {
               </div>
               <button
                 onClick={signInWithGoogle}
-                className="px-4 py-2.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs font-mono flex items-center space-x-2 transition-all cursor-pointer"
+                className="px-4 py-2.5 min-h-[44px] rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-xs font-mono flex items-center space-x-2 transition-all cursor-pointer"
               >
                 <LogIn className="w-4 h-4 text-cyan-400" />
                 <span>Sign in with Google</span>

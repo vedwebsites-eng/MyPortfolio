@@ -587,12 +587,12 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
   const minimizedCircleWidget = (
     <div
       id="terminal-minimized-bubble"
-      className="fixed bottom-6 right-6 z-50 animate-in fade-in zoom-in-95 duration-200"
+      className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-40 animate-in fade-in zoom-in-95 duration-200"
     >
       <button
         id="btn-restore-terminal"
         onClick={() => setIsMinimized(false)}
-        className="group relative flex items-center justify-center w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#080b0f]/95 border-2 border-emerald-500/70 hover:border-emerald-400 text-emerald-400 shadow-[0_0_24px_rgba(16,185,129,0.35)] hover:shadow-[0_0_36px_rgba(16,185,129,0.6)] hover:scale-105 active:scale-95 transition-all cursor-pointer backdrop-blur-sm"
+        className="group relative flex items-center justify-center w-14 h-14 min-w-[44px] min-h-[44px] rounded-full bg-[#080b0f]/95 border-2 border-emerald-500/70 hover:border-emerald-400 text-emerald-400 shadow-[0_0_24px_rgba(16,185,129,0.35)] hover:shadow-[0_0_36px_rgba(16,185,129,0.6)] hover:scale-105 active:scale-95 transition-all cursor-pointer backdrop-blur-sm"
         title="Restore Interactive CLI Shell (`)"
         aria-label="Restore Terminal"
       >
@@ -699,12 +699,12 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
           </span>
         </div>
 
-        {/* Right Action Icons: Minimize, Fullscreen API, Clear, Close */}
+        {/* Right Action Icons: Minimize, Fullscreen API, Clear, Close (min 44px tap targets) */}
         <div className="flex items-center space-x-1 text-zinc-400">
           {/* Minimize button */}
           <button
             onClick={handleMinimize}
-            className="p-1 rounded hover:bg-white/5 hover:text-zinc-200 transition-colors cursor-pointer"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded hover:bg-white/5 hover:text-zinc-200 transition-colors cursor-pointer"
             title="Minimize to side circle"
             aria-label="Minimize"
           >
@@ -714,7 +714,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
           {/* Full Screen Toggle button via Fullscreen API */}
           <button
             onClick={toggleFullscreen}
-            className="p-1 rounded hover:bg-white/5 hover:text-emerald-300 transition-colors cursor-pointer"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded hover:bg-white/5 hover:text-emerald-300 transition-colors cursor-pointer"
             title={isFullscreen ? "Exit Fullscreen (Esc)" : "Full Screen (Fullscreen API)"}
             aria-label="Toggle Fullscreen"
           >
@@ -728,7 +728,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
           {/* Clear button */}
           <button
             onClick={() => handleCommand('clear')}
-            className="p-1 rounded hover:bg-white/5 hover:text-zinc-200 transition-colors cursor-pointer"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded hover:bg-white/5 hover:text-zinc-200 transition-colors cursor-pointer"
             title="Clear terminal"
             aria-label="Clear terminal"
           >
@@ -738,7 +738,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
           {/* Close button */}
           <button
             onClick={handleClose}
-            className="p-1 rounded hover:bg-rose-500/20 hover:text-rose-300 transition-colors cursor-pointer ml-1"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded hover:bg-rose-500/20 hover:text-rose-300 transition-colors cursor-pointer ml-1"
             title="Close terminal"
             aria-label="Close"
           >
@@ -773,7 +773,7 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
           <button
             key={chip}
             onClick={() => handleCommand(chip)}
-            className="px-2 py-0.5 rounded bg-zinc-900/90 text-zinc-400 hover:text-emerald-300 hover:border-emerald-500/30 border border-white/5 text-[11px] transition-all cursor-pointer"
+            className="min-h-[44px] px-2.5 py-1.5 rounded bg-zinc-900/90 text-zinc-400 hover:text-emerald-300 hover:border-emerald-500/30 border border-white/5 text-[11px] transition-all cursor-pointer inline-flex items-center"
           >
             {chip}
           </button>
@@ -790,12 +790,13 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Type command ('help', 'projects', 'whoami', 'fullscreen')..."
-          className="flex-1 bg-transparent text-white focus:outline-none text-xs font-mono placeholder:text-zinc-600"
+          className="flex-1 bg-transparent text-white focus:outline-none text-xs font-mono placeholder:text-zinc-500"
         />
         <button
           onClick={() => handleCommand(input)}
-          className="text-zinc-400 hover:text-emerald-400 p-1 cursor-pointer transition-colors ml-2"
+          className="min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-400 hover:text-emerald-400 cursor-pointer transition-colors ml-1"
           title="Submit command"
+          aria-label="Submit command"
         >
           <CornerDownLeft className="w-3.5 h-3.5" />
         </button>

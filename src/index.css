@@ -44,6 +44,8 @@
    ========================================================================== */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 html,
@@ -53,6 +55,29 @@ body,
   max-width: 100%;
   width: 100%;
   box-sizing: border-box;
+}
+
+/* WCAG AA 4.5:1 Contrast Enforcement */
+html:not(.light) .text-zinc-500,
+.dark .text-zinc-500 {
+  color: #a1a1aa; /* 5.8:1 contrast against #090b0e */
+}
+
+html:not(.light) .text-zinc-600,
+.dark .text-zinc-600 {
+  color: #94a3b8; /* 5.5:1 contrast against #090b0e */
+}
+
+.text-stone-500 {
+  color: #57534e; /* >5.2:1 contrast on paper */
+}
+
+html.light .text-zinc-500 {
+  color: #4b5563; /* >7.0:1 contrast on light bg */
+}
+
+html.light .text-zinc-600 {
+  color: #374151; /* >9.0:1 contrast on light bg */
 }
 
 ::view-transition-old(root),

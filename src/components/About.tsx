@@ -70,7 +70,7 @@ export const About: React.FC = () => {
 
           {/* Current Focus Cards: 3 Pillars */}
           <div className="lg:col-span-5 space-y-4 font-mono text-xs">
-            <div className="text-zinc-500 uppercase tracking-wider text-[11px] pb-1 border-b border-white/5">
+            <div className="text-zinc-400 uppercase tracking-wider text-[11px] pb-1 border-b border-white/5">
               // CURRENT RESEARCH FOCUS
             </div>
 
@@ -119,15 +119,15 @@ export const About: React.FC = () => {
               <h3 className="text-2xl font-serif text-white font-normal mt-1">Disciplines & Capabilities</h3>
             </div>
 
-            {/* Tab Switches */}
+            {/* Tab Switches (44px min tap targets) */}
             <div className="flex items-center space-x-1.5 bg-zinc-900/90 p-1 rounded-lg border border-white/10 font-mono text-xs">
               {SKILL_CATEGORIES.map((cat, idx) => (
                 <button
                   key={cat.title}
                   onClick={() => setActiveSkillTab(idx)}
-                  className={`px-3 py-1.5 rounded transition-all cursor-pointer ${
+                  className={`px-3.5 py-2 min-h-[44px] flex items-center justify-center rounded transition-all cursor-pointer ${
                     activeSkillTab === idx
-                      ? 'bg-zinc-800 text-emerald-400 shadow-sm border border-emerald-500/30'
+                      ? 'bg-zinc-800 text-emerald-400 shadow-sm border border-emerald-500/30 font-medium'
                       : 'text-zinc-400 hover:text-zinc-200'
                   }`}
                 >
@@ -148,7 +148,7 @@ export const About: React.FC = () => {
                   {SKILL_CATEGORIES[activeSkillTab].title}
                 </span>
               </div>
-              <span className="text-zinc-500 hidden sm:inline">
+              <span className="text-zinc-400 hidden sm:inline">
                 {SKILL_CATEGORIES[activeSkillTab].description}
               </span>
             </div>
@@ -167,7 +167,7 @@ export const About: React.FC = () => {
                       {skill.proficiency}
                     </span>
                   </div>
-                  <p className="text-[11px] font-mono text-zinc-500 group-hover:text-zinc-400 transition-colors leading-relaxed">
+                  <p className="text-[11px] font-mono text-zinc-400 group-hover:text-zinc-300 transition-colors leading-relaxed">
                     {skill.note}
                   </p>
                 </div>

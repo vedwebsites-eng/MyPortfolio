@@ -86,7 +86,7 @@ export const Projects: React.FC = React.memo(() => {
               Security, AI, and software — built and shipped.
             </p>
           </div>
-          <div className="font-mono text-xs text-zinc-500 py-1.5">
+          <div className="font-mono text-xs text-zinc-400 py-1.5">
             FILTER: 3 SIGNATURE WORKS
           </div>
         </div>
@@ -188,7 +188,7 @@ export const Projects: React.FC = React.memo(() => {
                     </div>
                     <button
                       onClick={handleResetAethos}
-                      className="text-zinc-500 hover:text-zinc-300 flex items-center space-x-1 transition-colors cursor-pointer"
+                      className="text-zinc-400 hover:text-zinc-200 flex items-center space-x-1.5 transition-colors cursor-pointer min-h-[44px] min-w-[44px] px-2 py-1"
                       title="Reset values"
                     >
                       <RotateCcw className="w-3 h-3" />
@@ -245,9 +245,9 @@ export const Projects: React.FC = React.memo(() => {
                     <button
                       onClick={handleCompleteQuest}
                       disabled={aethosQuestDone}
-                      className={`w-full py-2.5 px-3 rounded text-xs font-semibold flex items-center justify-center space-x-2 transition-all cursor-pointer font-space ${
+                      className={`w-full min-h-[44px] py-2.5 px-3 rounded text-xs font-semibold flex items-center justify-center space-x-2 transition-all cursor-pointer font-space ${
                         aethosQuestDone
-                          ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed border border-white/5'
+                          ? 'bg-zinc-800 text-zinc-400 cursor-not-allowed border border-white/5'
                           : 'bg-[#FF4500]/20 hover:bg-[#FF4500]/30 text-amber-200 border border-[#FF4500]/40 shadow-lg shadow-[#FF4500]/10'
                       }`}
                     >
@@ -285,15 +285,16 @@ export const Projects: React.FC = React.memo(() => {
                   </span>
                 </div>
 
-                {/* Highlighter Swatches as irregular-border-radius chips */}
-                <div className="flex flex-wrap items-center gap-1.5 min-w-0">
+                {/* Highlighter Swatches as irregular-border-radius chips (min 44px tap targets) */}
+                <div className="flex flex-wrap items-center gap-1 min-w-0">
                   <span className="text-[11px] font-mono text-stone-500 mr-1">SWATCHES:</span>
                   <button
                     onClick={() => setActiveHighlight('yellow')}
-                    className={`cursor-pointer transition-transform ${
+                    className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center cursor-pointer transition-transform ${
                       activeHighlight === 'yellow' ? 'scale-110 ring-2 ring-amber-400 ring-offset-1' : 'opacity-80'
                     }`}
                     title="Pastel Yellow Highlighter"
+                    aria-label="Yellow highlighter"
                   >
                     <span className="px-2 py-0.5 text-[10px] font-mono bg-[#fef08a] text-amber-950 rounded-[3px_7px_4px_6px] shadow-sm">
                       yellow
@@ -301,10 +302,11 @@ export const Projects: React.FC = React.memo(() => {
                   </button>
                   <button
                     onClick={() => setActiveHighlight('mint')}
-                    className={`cursor-pointer transition-transform ${
+                    className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center cursor-pointer transition-transform ${
                       activeHighlight === 'mint' ? 'scale-110 ring-2 ring-emerald-400 ring-offset-1' : 'opacity-80'
                     }`}
                     title="Pastel Mint Highlighter"
+                    aria-label="Mint highlighter"
                   >
                     <span className="px-2 py-0.5 text-[10px] font-mono bg-[#bbf7d0] text-emerald-950 rounded-[6px_3px_5px_4px] shadow-sm">
                       mint
@@ -312,10 +314,11 @@ export const Projects: React.FC = React.memo(() => {
                   </button>
                   <button
                     onClick={() => setActiveHighlight('pink')}
-                    className={`cursor-pointer transition-transform ${
+                    className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center cursor-pointer transition-transform ${
                       activeHighlight === 'pink' ? 'scale-110 ring-2 ring-rose-400 ring-offset-1' : 'opacity-80'
                     }`}
                     title="Pastel Pink Highlighter"
+                    aria-label="Pink highlighter"
                   >
                     <span className="px-2 py-0.5 text-[10px] font-mono bg-[#fbcfe8] text-rose-950 rounded-[4px_6px_3px_7px] shadow-sm">
                       pink
@@ -323,10 +326,11 @@ export const Projects: React.FC = React.memo(() => {
                   </button>
                   <button
                     onClick={() => setActiveHighlight('sky')}
-                    className={`cursor-pointer transition-transform ${
+                    className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center cursor-pointer transition-transform ${
                       activeHighlight === 'sky' ? 'scale-110 ring-2 ring-sky-400 ring-offset-1' : 'opacity-80'
                     }`}
                     title="Pastel Sky Highlighter"
+                    aria-label="Sky highlighter"
                   >
                     <span className="px-2 py-0.5 text-[10px] font-mono bg-[#bae6fd] text-sky-950 rounded-[5px_3px_6px_4px] shadow-sm">
                       sky
@@ -403,25 +407,28 @@ export const Projects: React.FC = React.memo(() => {
                       <div className="flex items-center space-x-1 bg-stone-100 p-0.5 rounded border border-stone-200 flex-shrink-0">
                         <button
                           onClick={() => setInkwellFont('serif')}
-                          className={`px-2 py-0.5 rounded text-[10px] cursor-pointer transition-colors ${
-                            inkwellFont === 'serif' ? 'bg-stone-900 text-stone-100 font-medium' : 'text-stone-600'
+                          className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-2.5 py-1 rounded text-[10px] cursor-pointer transition-colors ${
+                            inkwellFont === 'serif' ? 'bg-stone-900 text-stone-100 font-medium' : 'text-stone-700 hover:text-stone-900'
                           }`}
+                          aria-label="Serif font"
                         >
                           Serif
                         </button>
                         <button
                           onClick={() => setInkwellFont('mono')}
-                          className={`px-2 py-0.5 rounded text-[10px] cursor-pointer transition-colors ${
-                            inkwellFont === 'mono' ? 'bg-stone-900 text-stone-100 font-medium' : 'text-stone-600'
+                          className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-2.5 py-1 rounded text-[10px] cursor-pointer transition-colors ${
+                            inkwellFont === 'mono' ? 'bg-stone-900 text-stone-100 font-medium' : 'text-stone-700 hover:text-stone-900'
                           }`}
+                          aria-label="Mono font"
                         >
                           Mono
                         </button>
                         <button
                           onClick={() => setInkwellFont('sans')}
-                          className={`px-2 py-0.5 rounded text-[10px] cursor-pointer transition-colors ${
-                            inkwellFont === 'sans' ? 'bg-stone-900 text-stone-100 font-medium' : 'text-stone-600'
+                          className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-2.5 py-1 rounded text-[10px] cursor-pointer transition-colors ${
+                            inkwellFont === 'sans' ? 'bg-stone-900 text-stone-100 font-medium' : 'text-stone-700 hover:text-stone-900'
                           }`}
+                          aria-label="Sans font"
                         >
                           Sans
                         </button>
@@ -518,19 +525,19 @@ export const Projects: React.FC = React.memo(() => {
                   ))}
                 </div>
 
-                {/* Links / Teaser */}
-                <div className="pt-4 flex items-center space-x-4 font-mono text-xs">
+                {/* Links / Teaser (44px min tap target) */}
+                <div className="pt-4 flex flex-wrap items-center gap-4 font-mono text-xs">
                   <a
                     href={PERSONAL_INFO.youtubeUrl || "https://youtube.com/@RootCauseTech"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-1.5 text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer"
+                    className="inline-flex items-center space-x-1.5 text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer min-h-[44px] py-2"
                   >
                     <Play className="w-4 h-4 fill-cyan-400" />
                     <span>Watch Channel Teaser</span>
-                    <ExternalLink className="w-3 h-3 text-zinc-500" />
+                    <ExternalLink className="w-3 h-3 text-zinc-400" />
                   </a>
-                  <span className="text-zinc-500">LAUNCHING Q3 2026</span>
+                  <span className="text-zinc-400">LAUNCHING Q3 2026</span>
                 </div>
               </div>
 
@@ -569,7 +576,7 @@ export const Projects: React.FC = React.memo(() => {
                   </div>
 
                   {/* Metrics footer */}
-                  <div className="flex items-center justify-between text-[11px] text-zinc-500 pt-1">
+                  <div className="flex items-center justify-between text-[11px] text-zinc-400 pt-1">
                     <span>FORMAT: SHORT-FORM VIDEO</span>
                     <span className="text-cyan-400 font-mono">LAUNCHING SOON</span>
                   </div>

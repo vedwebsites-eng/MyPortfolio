@@ -35,10 +35,13 @@ const HALF_BADGE_SIZE = BADGE_SIZE / 2; // 75px: Exactly half the wheel can go o
  */
 const getClampedBadgePos = (x: number, y: number): { x: number; y: number } => {
   if (typeof window === 'undefined') return { x, y };
-  const minX = -HALF_BADGE_SIZE;
-  const maxX = Math.max(minX, window.innerWidth - HALF_BADGE_SIZE);
-  const minY = -HALF_BADGE_SIZE;
-  const maxY = Math.max(minY, window.innerHeight - HALF_BADGE_SIZE);
+  const isMobile = window.innerWidth < 640;
+  // On mobile, keep completely inside viewport to eliminate any horizontal scrolling
+  // Keep safely away from the browser scrollbar and right-hand edge
+  const minX = isMobile ? 12 : -HALF_BADGE_SIZE;
+  const maxX = isMobile ? Math.max(12, window.innerWidth - BADGE_SIZE - 16) : Math.max(minX, window.innerWidth - BADGE_SIZE - 24);
+  const minY = 16;
+  const maxY = Math.max(minY, window.innerHeight - BADGE_SIZE - 20);
   return {
     x: Math.max(minX, Math.min(maxX, x)),
     y: Math.max(minY, Math.min(maxY, y)),
@@ -90,13 +93,13 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
             return getClampedBadgePos(parsed.x, parsed.y);
           }
         }
-        // Default position: docked at bottom-left with half of the wheel out of the frame
-        return getClampedBadgePos(-HALF_BADGE_SIZE, window.innerHeight - 174);
+        const isMobile = window.innerWidth < 640;
+        return getClampedBadgePos(isMobile ? 12 : -HALF_BADGE_SIZE, window.innerHeight - 174);
       } catch {
         // ignore
       }
     }
-    return { x: -HALF_BADGE_SIZE, y: 550 };
+    return { x: 12, y: 550 };
   });
 
   const badgePosRef = useRef<{ x: number; y: number }>(badgePos);
@@ -480,7 +483,7 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
                 handleSkip();
               }}
               type="button"
-              className="text-[11px] font-mono text-zinc-400 hover:text-emerald-300 px-3 py-1.5 rounded-md border border-white/10 hover:border-emerald-500/40 bg-[#06080b]/60 backdrop-blur-sm transition-all cursor-pointer"
+              className="text-[11px] font-mono text-zinc-400 hover:text-emerald-300 px-3.5 py-2 min-h-[44px] inline-flex items-center rounded-md border border-white/10 hover:border-emerald-500/40 bg-[#06080b]/60 backdrop-blur-sm transition-all cursor-pointer"
             >
               [ESC / SKIP]
             </button>
@@ -615,7 +618,7 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
             </svg>
           </div>
 
-          {/* Centered Controls Hub: Play/Pause and Mute Buttons */}
+          {/* Centered Controls Hub: Play/Pause and Mute Buttons (min 44px tap targets) */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex items-center justify-center space-x-1.5 p-1 rounded-full bg-[#0b1017]/95 border border-emerald-500/40 shadow-[0_0_16px_rgba(52,211,153,0.3)]">
             {/* Play/Pause Button */}
             <button
@@ -626,12 +629,12 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
               type="button"
               title={isPlaying ? 'Pause Track' : 'Play Track'}
               aria-label={isPlaying ? 'Pause Track' : 'Play Track'}
-              className="w-7 h-7 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 hover:text-emerald-300 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 hover:text-emerald-300 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
             >
               {isPlaying ? (
-                <Pause className="w-3.5 h-3.5 fill-current" />
+                <Pause className="w-4 h-4 fill-current" />
               ) : (
-                <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+                <Play className="w-4 h-4 fill-current ml-0.5" />
               )}
             </button>
 
@@ -644,12 +647,12 @@ export const IntroLyrics: React.FC<IntroLyricsProps> = ({
               type="button"
               title={isMuted ? 'Unmute Audio' : 'Mute Audio'}
               aria-label={isMuted ? 'Unmute Audio' : 'Mute Audio'}
-              className="w-7 h-7 rounded-full bg-zinc-800/80 hover:bg-zinc-700/80 text-zinc-300 hover:text-emerald-400 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
+              className="w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-zinc-800/80 hover:bg-zinc-700/80 text-zinc-300 hover:text-emerald-400 flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
             >
               {isMuted ? (
-                <VolumeX className="w-3.5 h-3.5 text-rose-400" />
+                <VolumeX className="w-4 h-4 text-rose-400" />
               ) : (
-                <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
+                <Volume2 className="w-4 h-4 text-emerald-400" />
               )}
             </button>
           </div>

@@ -105,16 +105,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
         <a
           href="#"
           id="nav-logo-link"
-          className="group flex items-center font-mono text-xs sm:text-sm tracking-tight text-zinc-300 hover:text-white transition-colors"
+          className="group flex items-center font-mono text-xs sm:text-sm tracking-tight text-zinc-300 hover:text-white transition-colors min-h-[44px]"
         >
           <span className="text-emerald-400 font-semibold">vex</span>
-          <span className="text-zinc-600">@</span>
-          <span className="text-zinc-400 group-hover:text-zinc-200 transition-colors">pune</span>
-          <span className="text-zinc-600">:</span>
+          <span className="text-zinc-400">@</span>
+          <span className="text-zinc-300 group-hover:text-zinc-100 transition-colors">pune</span>
+          <span className="text-zinc-400">:</span>
           <span className="text-cyan-400 font-mono">~$</span>
         </a>
 
-        {/* Center: Desktop Navigation Links (text-sm, py-2 px-3 with scroll-spy) */}
+        {/* Center: Desktop Navigation Links (text-sm, py-2 px-3 with scroll-spy, 44px tap targets) */}
         <nav className="hidden md:flex items-center space-x-1 lg:space-x-2 font-mono">
           {NAV_LINKS.map((link) => {
             const isActive = activeSection === link.id;
@@ -124,13 +124,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
                 href={`#${link.id}`}
                 id={`nav-link-${link.id}`}
                 onClick={(e) => scrollToSection(e, link.id)}
-                className={`relative text-sm font-mono py-2 px-3 rounded-md transition-colors ${
+                className={`relative text-sm font-mono py-2 px-3 min-h-[44px] inline-flex items-center rounded-md transition-colors ${
                   isActive
                     ? 'text-white font-medium'
                     : 'text-zinc-400 hover:text-emerald-400'
                 }`}
               >
-                <span className="text-zinc-600 mr-1">{link.num}</span>
+                <span className="text-zinc-400 mr-1">{link.num}</span>
                 <span>{link.label}</span>
                 {isActive && (
                   <span
@@ -144,8 +144,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
         </nav>
 
         {/* Right: Filled emerald resume button then ThemeToggle */}
-        <div className="flex items-center space-x-3">
-          {/* Resume Download & Modal Trigger - Single filled emerald button */}
+        <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* Resume Download & Modal Trigger - Single filled emerald button (44px tap target) */}
           <button
             id="btn-nav-resume"
             onClick={(e) => {
@@ -154,7 +154,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
               onOpenResume();
             }}
             title="Download CV as PDF and view resume"
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs sm:text-sm font-mono font-medium bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-colors cursor-pointer shadow-sm shadow-emerald-500/20 active:scale-[0.98]"
+            className="inline-flex items-center justify-center space-x-1.5 px-3.5 py-2 min-h-[44px] rounded-md text-xs sm:text-sm font-mono font-medium bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-colors cursor-pointer shadow-sm shadow-emerald-500/20 active:scale-[0.98]"
           >
             <FileText className="w-3.5 h-3.5" />
             <span>resume.pdf</span>
@@ -163,14 +163,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
           {/* Dark / Light Mode Transition Toggle */}
           <ThemeToggle id="btn-nav-theme-toggle" />
 
-          {/* Mobile menu toggle */}
+          {/* Mobile menu toggle (44px tap target) */}
           <button
             id="btn-mobile-menu-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-zinc-400 hover:text-white rounded"
+            className="md:hidden p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-300 hover:text-white rounded"
             aria-label="Toggle Navigation Menu"
           >
-            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
@@ -179,7 +179,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
       {mobileMenuOpen && (
         <div
           id="mobile-nav-menu"
-          className="md:hidden border-b border-white/10 bg-[#0c0e12]/98 backdrop-blur-sm px-4 py-4 space-y-2 font-mono text-sm"
+          className="md:hidden border-b border-white/10 bg-[#0c0e12]/98 backdrop-blur-sm px-4 py-4 space-y-2 font-mono text-sm max-w-full overflow-hidden"
         >
           {NAV_LINKS.map((link) => {
             const isActive = activeSection === link.id;
@@ -191,13 +191,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
                   setMobileMenuOpen(false);
                   scrollToSection(e, link.id);
                 }}
-                className={`block relative py-2 px-3 rounded transition-colors ${
+                className={`block relative py-2.5 px-3 min-h-[44px] flex items-center rounded transition-colors ${
                   isActive
                     ? 'text-white font-medium bg-white/[0.04]'
                     : 'text-zinc-300 hover:text-emerald-400'
                 }`}
               >
-                <span className="text-zinc-600 mr-2">{link.num}</span>
+                <span className="text-zinc-400 mr-2">{link.num}</span>
                 <span>{link.label}</span>
                 {isActive && (
                   <span
@@ -215,12 +215,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume }) => {
                 downloadResumePdf('vedant_sattegiri_patil_cv.pdf');
                 onOpenResume();
               }}
-              className="flex-1 flex items-center justify-center space-x-2 py-2 rounded bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-medium text-xs font-mono transition-colors"
+              className="flex-1 flex items-center justify-center space-x-2 py-2.5 min-h-[44px] rounded bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-medium text-xs font-mono transition-colors"
             >
               <FileText className="w-3.5 h-3.5" />
               <span>resume.pdf</span>
             </button>
-            <ThemeToggle id="btn-mobile-theme-toggle" showLabel className="py-2" />
+            <ThemeToggle id="btn-mobile-theme-toggle" showLabel className="py-2.5 min-h-[44px]" />
           </div>
         </div>
       )}

@@ -54,14 +54,14 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate404, onOpenTerminal })
   return (
     <footer
       id="main-footer"
-      className="py-10 px-4 sm:px-6 lg:px-8 bg-[#06080b] border-t border-white/5 font-mono text-xs text-zinc-500"
+      className="py-10 px-4 sm:px-6 lg:px-8 bg-[#06080b] border-t border-white/5 font-mono text-xs text-zinc-400"
     >
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Main Row: branding+status+clock | sitemap | socials+back-to-top */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Left: Branding & Status + Live PUN IST Clock */}
           <div className="space-y-1.5 text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start space-x-2 text-zinc-300">
+            <div className="flex items-center justify-center md:justify-start space-x-2 text-zinc-200">
               <span className="w-2 h-2 rounded-full bg-emerald-400" />
               <span className="font-semibold text-white">Vedant Sattegiri Patil</span>
               <span className="text-emerald-400">&lt;VEX&gt;</span>
@@ -74,51 +74,51 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate404, onOpenTerminal })
                 </span>
                 <span>SYSTEM ONLINE</span>
               </span>
-              <span className="text-zinc-600">//</span>
+              <span className="text-zinc-500">//</span>
               <div
                 id="footer-pune-clock"
-                className="inline-flex items-center space-x-1.5 text-zinc-400 text-[11px] tabular-nums"
+                className="inline-flex items-center space-x-1.5 text-zinc-300 text-[11px] tabular-nums"
                 title="Live Pune, India clock (IST)"
               >
-                <span className="text-zinc-500 font-semibold">PUN</span>
+                <span className="text-zinc-400 font-semibold">PUN</span>
                 <span className="text-emerald-400 font-medium">{istTime || '--:--:--'} IST</span>
               </div>
             </div>
           </div>
 
-          {/* Center: Sitemap Nav with guestbook, small cli link, & 404 Preview */}
-          <nav aria-label="Footer Sitemap" className="flex items-center flex-wrap justify-center gap-x-3 gap-y-1 text-xs uppercase tracking-wider text-zinc-400">
-            <a href="#about" className="hover:text-emerald-400 transition-colors">
+          {/* Center: Sitemap Nav with guestbook, small cli link, & 404 Preview (min-h-[44px] tap targets) */}
+          <nav aria-label="Footer Sitemap" className="flex items-center flex-wrap justify-center gap-x-2 sm:gap-x-3 gap-y-1 text-xs uppercase tracking-wider text-zinc-400">
+            <a href="#about" className="hover:text-emerald-400 transition-colors min-h-[44px] py-2 px-1.5 inline-flex items-center">
               about
             </a>
-            <span className="text-zinc-700">•</span>
-            <a href="#projects" className="hover:text-emerald-400 transition-colors">
+            <span className="text-zinc-600">•</span>
+            <a href="#projects" className="hover:text-emerald-400 transition-colors min-h-[44px] py-2 px-1.5 inline-flex items-center">
               projects
             </a>
-            <span className="text-zinc-700">•</span>
-            <a href="#guestbook" className="hover:text-cyan-400 transition-colors">
+            <span className="text-zinc-600">•</span>
+            <a href="#guestbook" className="hover:text-cyan-400 transition-colors min-h-[44px] py-2 px-1.5 inline-flex items-center">
               guestbook
             </a>
-            <span className="text-zinc-700">•</span>
-            <a href="#contact" className="hover:text-emerald-400 transition-colors">
+            <span className="text-zinc-600">•</span>
+            <a href="#contact" className="hover:text-emerald-400 transition-colors min-h-[44px] py-2 px-1.5 inline-flex items-center">
               contact
             </a>
-            <span className="text-zinc-700">•</span>
+            <span className="text-zinc-600">•</span>
             <button
               type="button"
               onClick={onOpenTerminal}
-              className="text-zinc-400 hover:text-cyan-400 transition-colors cursor-pointer normal-case font-mono inline-flex items-center space-x-1"
+              className="text-zinc-400 hover:text-cyan-400 transition-colors cursor-pointer normal-case font-mono inline-flex items-center space-x-1 min-h-[44px] py-2 px-1.5"
               title="Open Interactive Terminal (⌘K or `)"
             >
-              <Terminal className="w-3 h-3 text-cyan-400" />
+              <Terminal className="w-3.5 h-3.5 text-cyan-400" />
               <span>cli</span>
             </button>
             {onNavigate404 && (
               <>
-                <span className="text-zinc-700">•</span>
+                <span className="text-zinc-600">•</span>
                 <button
                   onClick={onNavigate404}
-                  className="text-zinc-500 hover:text-emerald-400 transition-colors cursor-pointer normal-case"
+                  className="text-zinc-400 hover:text-emerald-400 transition-colors cursor-pointer normal-case min-h-[44px] py-2 px-1.5 inline-flex items-center"
                   title="Preview Custom 404 Page"
                 >
                   [404]
@@ -127,13 +127,13 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate404, onOpenTerminal })
             )}
           </nav>
 
-          {/* Right: Social icons, PGP copy & back to top */}
-          <div className="flex items-center space-x-3.5">
+          {/* Right: Social icons, PGP copy & back to top (min 44x44px tap targets) */}
+          <div className="flex items-center space-x-1 sm:space-x-1.5">
             <a
               href={PERSONAL_INFO.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-1 text-zinc-400 hover:text-white transition-colors"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/[0.05] transition-colors"
               title="GitHub"
               aria-label="GitHub"
             >
@@ -143,7 +143,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate404, onOpenTerminal })
               href={PERSONAL_INFO.youtubeUrl || 'https://youtube.com'}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-1 text-zinc-400 hover:text-rose-400 transition-colors"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2.5 rounded-lg text-zinc-400 hover:text-rose-400 hover:bg-white/[0.05] transition-colors"
               title="RootCause on YouTube"
               aria-label="RootCause on YouTube"
             >
@@ -151,7 +151,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate404, onOpenTerminal })
             </a>
             <a
               href={`mailto:${PERSONAL_INFO.email}`}
-              className="p-1 text-zinc-400 hover:text-emerald-400 transition-colors"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2.5 rounded-lg text-zinc-400 hover:text-emerald-400 hover:bg-white/[0.05] transition-colors"
               title="Email"
               aria-label="Email"
             >
@@ -159,7 +159,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate404, onOpenTerminal })
             </a>
             <button
               onClick={handleCopyPgp}
-              className={`p-1 rounded transition-colors cursor-pointer ${
+              className={`min-w-[44px] min-h-[44px] flex items-center justify-center p-2.5 rounded-lg transition-colors cursor-pointer hover:bg-white/[0.05] ${
                 copiedPgp ? 'text-emerald-400' : 'text-zinc-400 hover:text-emerald-400'
               }`}
               title={copiedPgp ? 'PGP Fingerprint Copied!' : 'Copy PGP Fingerprint'}
@@ -169,7 +169,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate404, onOpenTerminal })
             </button>
             <button
               onClick={scrollToTop}
-              className="p-1.5 rounded bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white hover:border-emerald-500/30 transition-all cursor-pointer ml-1"
+              className="min-w-[44px] min-h-[44px] flex items-center justify-center p-2.5 rounded-lg bg-zinc-900 border border-white/10 text-zinc-400 hover:text-white hover:border-emerald-500/30 transition-all cursor-pointer ml-1"
               title="Return to top of page"
               aria-label="Return to top"
             >
@@ -179,7 +179,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate404, onOpenTerminal })
         </div>
 
         {/* Bottom Row: Separated by top border */}
-        <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-zinc-500 text-center sm:text-left">
+        <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-zinc-400 text-center sm:text-left">
           <div>
             &copy; {currentYear} Vedant Sattegiri Patil. All rights reserved.
           </div>

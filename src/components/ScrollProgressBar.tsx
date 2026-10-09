@@ -96,20 +96,20 @@ export const ScrollProgressBar: React.FC = React.memo(() => {
         />
       </div>
 
-      {/* Floating Monospace Terminal Telemetry Badge */}
+      {/* Floating Monospace Terminal Telemetry Badge - Centered to prevent any overlap with Navbar controls */}
       <div
         ref={telemetryBoxRef}
         id="scroll-depth-telemetry"
-        className="absolute top-[2.5px] right-4 sm:right-8 opacity-0 -translate-y-1 pointer-events-none transition-all duration-200"
+        className="absolute top-[2.5px] left-1/2 -translate-x-1/2 opacity-0 -translate-y-1 pointer-events-none transition-all duration-200"
       >
-        <div className="font-mono text-[10px] text-zinc-400 bg-[#06080b] border-x border-b border-white/10 px-2 py-0.5 rounded-b-md flex items-center space-x-1.5 shadow-lg select-none">
+        <div className="font-mono text-[10px] text-zinc-300 bg-[#06080b]/95 border-x border-b border-white/10 px-2.5 py-0.5 rounded-b-md flex items-center space-x-1.5 shadow-lg select-none">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-          <span className="text-zinc-500">//</span>
-          <span className="text-zinc-400">DEPTH:</span>
+          <span className="text-zinc-400">//</span>
+          <span className="text-zinc-300">DEPTH:</span>
           <span ref={percentTextRef} className="text-emerald-300 font-semibold tabular-nums">
             00%
           </span>
-          <span className="text-zinc-600">|</span>
+          <span className="text-zinc-400">|</span>
           <span ref={eofBadgeRef} className="text-cyan-400/90 text-[9px] uppercase tracking-wider">
             STREAM
           </span>
