@@ -24,7 +24,7 @@
 
 ## About
 
-Portfolio of **Vedant Sattegiri Patil** , a student builder from Pune, India, working across cybersecurity, AI and software. The site is built like a terminal session: a boot sequence, a working command line, and a guestbook, wrapped in a clean, responsive layout.
+Portfolio of **Vedant Sattegiri Patil**, a student builder from Pune, India, working across cybersecurity, AI and software. The site is built like a terminal session: a boot sequence, a working command line, and a guestbook, wrapped in a clean, responsive layout.
 
 ## Features
 
@@ -44,7 +44,7 @@ Portfolio of **Vedant Sattegiri Patil** , a student builder from Pune, India, wo
 | --- | --- |
 | [AETHOS](https://github.com/vedwebsites-eng/AETHOSGAMMA) | Gamified self-improvement app: XP levels, habits, journaling and an AI coach |
 | [Inkwell](https://github.com/vedwebsites-eng/INKWELL) | Distraction-free typographic note engine |
-| [RootCause]((https://www.youtube.com/@imrootcause)) | Faceless tech and cybersecurity short-form video channel |
+| [RootCause](https://www.youtube.com/@imrootcause) | Faceless tech and cybersecurity short-form video channel |
 
 ## Tech stack
 
@@ -105,8 +105,9 @@ Firebase web config lives in `firebase-applet-config.json`. These values are pub
 ## Contact
 
 - Email: veddoesai@proton.me
+- Website: [vedantbuilds.vercel.app](https://vedantbuilds.vercel.app)
 - GitHub: [@vedwebsites-eng](https://github.com/vedwebsites-eng)
-- YouTube: [RootCause]((https://www.youtube.com/@imrootcause))
+- YouTube: [RootCause](https://www.youtube.com/@imrootcause)
 
 ## License
 
