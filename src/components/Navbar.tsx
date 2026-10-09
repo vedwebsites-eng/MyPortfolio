@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Terminal, FileText, Menu, X, Mail } from 'lucide-react';
+import { Terminal, FileText, Menu, X } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
-import { initAuth } from '../services/gmailAuth';
-import { User } from 'firebase/auth';
 import { ThemeToggle } from './ThemeToggle';
+import { downloadResumePdf } from '../utils/pdfGenerator';
 
 interface NavbarProps {
   onOpenResume: () => void;
@@ -11,46 +10,17 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) => {
-  const [timeString, setTimeString] = useState('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [authUser, setAuthUser] = useState<User | null>(null);
+  const [activeSection, setActiveSection] = useState<string>('');
 
-  // Live Pune (IST) clock
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      // Format to IST
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone: 'Asia/Kolkata',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
-      };
-      const formatted = new Intl.DateTimeFormat('en-GB', options).format(now);
-      setTimeString(`${formatted} IST`);
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
-    const unsubscribe = initAuth(
-      (user) => setAuthUser(user),
-      () => setAuthUser(null)
-    );
-    return () => unsubscribe();
-  }, []);
-
+  // Track scroll depth for navbar blur styling
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          const next = window.scrollY > 20;
+          const next = window.scrollY > 15;
           setIsScrolled((prev) => (prev !== next ? next : prev));
           ticking = false;
         });
@@ -61,189 +31,173 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenResume, onOpenTerminal }) 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Section observer to highlight the link of the section currently in view
+  useEffect(() => {
+    const sections = ['about', 'projects', 'guestbook', 'contact'];
+    const handleSectionSpy = () => {
+      const scrollPos = window.scrollY + 160;
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const el = document.getElementById(sections[i]);
+        if (el && el.offsetTop <= scrollPos) {
+          setActiveSection(sections[i]);
+          return;
+        }
+      }
+      if (window.scrollY < 120) {
+        setActiveSection('');
+      }
+    };
+
+    window.addEventListener('scroll', handleSectionSpy, { passive: true });
+    handleSectionSpy();
+    return () => window.removeEventListener('scroll', handleSectionSpy);
+  }, []);
+
+  const navLinks = [
+    { id: 'about', label: 'About', href: '#about' },
+    { id: 'projects', label: 'Projects', href: '#projects' },
+    { id: 'guestbook', label: 'Guestbook', href: '#guestbook' },
+    { id: 'contact', label: 'Contact', href: '#contact' },
+  ];
+
   return (
     <header
       id="main-navbar"
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 border-b ${
         isScrolled
-          ? 'bg-[#090b0e]/95 backdrop-blur-sm shadow-lg shadow-black/40'
-          : 'bg-[#090b0e]/75 backdrop-blur-sm'
+          ? 'bg-white/95 dark:bg-[#090b0e]/95 backdrop-blur-md shadow-sm border-slate-200/80 dark:border-white/10'
+          : 'bg-white/80 dark:bg-[#090b0e]/80 backdrop-blur-sm border-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Left: Terminal Prompt / Logo */}
+        {/* Left: Name as plain text logo (sans-serif font, no prompt, no pulsing dot) */}
         <a
           href="#"
           id="nav-logo-link"
-          className="group flex items-center space-x-2.5 font-mono text-xs sm:text-sm tracking-tight text-zinc-300 hover:text-white transition-colors"
+          className="font-sans font-bold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
         >
-          <span className="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-pulse" />
-          <span className="text-emerald-400 font-semibold">vex</span>
-          <span className="text-zinc-600">@</span>
-          <span className="text-zinc-400 group-hover:text-zinc-200 transition-colors">pune</span>
-          <span className="text-zinc-600">:</span>
-          <span className="text-cyan-400 font-mono">~$</span>
-          <span className="hidden md:inline-block text-xs px-2.5 py-1 ml-2 text-emerald-400/90 font-mono">
-            student-builder
-          </span>
+          {PERSONAL_INFO.name}
         </a>
 
-        {/* Center: Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-6 text-xs font-mono">
-          <a
-            href="#about"
-            id="nav-link-about"
-            className="text-zinc-400 hover:text-emerald-400 transition-colors py-1 hover:translate-y-[-1px]"
-          >
-            <span className="text-zinc-600 mr-1">//01.</span>about
-          </a>
-          <a
-            href="#projects"
-            id="nav-link-projects"
-            className="text-zinc-400 hover:text-emerald-400 transition-colors py-1 hover:translate-y-[-1px]"
-          >
-            <span className="text-zinc-600 mr-1">//02.</span>projects
-          </a>
-          <a
-            href="#terminal"
-            id="nav-link-terminal"
-            className="text-zinc-400 hover:text-cyan-400 transition-colors py-1 hover:translate-y-[-1px]"
-          >
-            <span className="text-zinc-600 mr-1">//03.</span>cli
-          </a>
-          <a
-            href="#contact"
-            id="nav-link-contact"
-            className="text-zinc-400 hover:text-emerald-400 transition-colors py-1 hover:translate-y-[-1px]"
-          >
-            <span className="text-zinc-600 mr-1">//04.</span>contact
-          </a>
+        {/* Center: Plain readable text links (About, Projects, Guestbook, Contact) */}
+        <nav
+          aria-label="Primary Navigation"
+          className="hidden md:flex items-center space-x-1 sm:space-x-2 text-sm font-sans"
+        >
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.id;
+            return (
+              <a
+                key={link.id}
+                href={link.href}
+                id={`nav-link-${link.id}`}
+                className={`px-3 py-1.5 rounded-md font-medium transition-colors ${
+                  isActive
+                    ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 font-semibold'
+                    : 'text-slate-600 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                }`}
+              >
+                {link.label}
+              </a>
+            );
+          })}
         </nav>
 
-        {/* Right: Real-time clock & Action CTAs */}
+        {/* Right side: Terminal secondary icon, one clear Resume button, and ThemeToggle */}
         <div className="flex items-center space-x-2 sm:space-x-3">
-          {/* Pune IST Live Clock - Generous padding, no box */}
-          <div
-            id="pune-live-clock"
-            className="hidden lg:flex items-center space-x-2.5 text-xs font-mono text-zinc-300 px-4 py-2"
-            title="Current time in Pune, India"
-          >
-            <span className="text-zinc-500">PUN</span>
-            <span className="text-emerald-400 font-medium tracking-wide">{timeString || '00:00:00 IST'}</span>
-          </div>
-
-          {/* Gmail API Trigger / Status - Clean unboxed styling with ample padding */}
-          <a
-            href="#contact"
-            id="btn-nav-gmail"
-            className={`inline-flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-mono transition-colors cursor-pointer ${
-              authUser
-                ? 'text-emerald-300 hover:text-emerald-200'
-                : 'text-zinc-300 hover:text-emerald-400'
-            }`}
-            title={authUser ? `Gmail connected: ${authUser.email}` : 'Gmail API Console'}
-          >
-            <Mail className={`w-3.5 h-3.5 ${authUser ? 'text-emerald-400' : 'text-zinc-400'}`} />
-            <span className="hidden sm:inline">
-              {authUser ? 'gmail.online' : 'gmail'}
-            </span>
-            {authUser && (
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            )}
-          </a>
-
-          {/* Terminal CLI Quick Trigger - Clean unboxed styling with ample padding */}
+          {/* Small secondary Terminal icon button */}
           <button
             id="btn-quick-terminal"
             onClick={onOpenTerminal}
-            className="hidden sm:inline-flex items-center space-x-2 px-3 py-2 rounded-md text-xs font-mono text-zinc-300 hover:text-emerald-400 transition-colors cursor-pointer group"
-            title="Open Interactive Terminal Drawer (⌘K or `)"
+            type="button"
+            className="p-2 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 dark:text-zinc-400 dark:hover:text-white dark:hover:bg-white/5 transition-colors cursor-pointer"
+            title="Open Interactive Terminal (⌘K)"
+            aria-label="Open Interactive Terminal"
           >
-            <Terminal className="w-3.5 h-3.5 text-emerald-400" />
-            <span>cli</span>
-            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-zinc-400 group-hover:text-emerald-400 group-hover:border-emerald-500/30 transition-colors">
-              ⌘K
-            </span>
+            <Terminal className="w-4 h-4" />
           </button>
 
-          {/* Resume Modal Trigger - Clean unboxed styling with ample padding */}
+          {/* One clear Resume button */}
           <button
             id="btn-nav-resume"
-            onClick={onOpenResume}
-            className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-md text-xs font-mono text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              downloadResumePdf('vedant_sattegiri_patil_cv.pdf');
+              onOpenResume();
+            }}
+            title="Download and view Resume"
+            className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg text-sm font-sans font-medium bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm transition-colors cursor-pointer"
           >
             <FileText className="w-3.5 h-3.5" />
-            <span>resume.pdf</span>
+            <span>Resume</span>
           </button>
 
-          {/* Dark / Light Mode Transition Toggle */}
+          {/* ThemeToggle */}
           <ThemeToggle id="btn-nav-theme-toggle" />
 
-          {/* Mobile menu toggle */}
+          {/* Mobile hamburger menu toggle */}
           <button
             id="btn-mobile-menu-toggle"
+            type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-zinc-400 hover:text-white rounded"
-            aria-label="Toggle Navigation Menu"
+            className="md:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5 cursor-pointer"
+            aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile dropdown menu */}
+      {/* Mobile dropdown menu with big tap-friendly links (min 44px height) */}
       {mobileMenuOpen && (
         <div
           id="mobile-nav-menu"
-          className="md:hidden border-b border-white/10 bg-[#0c0e12]/98 backdrop-blur-sm px-4 py-4 space-y-3 font-mono text-sm"
+          className="md:hidden border-b border-slate-200 dark:border-white/10 bg-white/98 dark:bg-[#0c0e12]/98 backdrop-blur-md px-4 py-4 space-y-2 font-sans text-base shadow-lg"
         >
-          <div className="flex items-center justify-between pb-2 border-b border-white/5 text-xs text-zinc-500">
-            <span>LOCATION: PUNE, INDIA</span>
-            <span className="text-emerald-400">{timeString}</span>
-          </div>
-          <a
-            href="#about"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-zinc-300 hover:text-emerald-400 py-1.5"
-          >
-            <span className="text-zinc-600 mr-2">//01.</span>About
-          </a>
-          <a
-            href="#projects"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-zinc-300 hover:text-emerald-400 py-1.5"
-          >
-            <span className="text-zinc-600 mr-2">//02.</span>Projects
-          </a>
-          <a
-            href="#terminal"
-            onClick={() => {
-              setMobileMenuOpen(false);
-              onOpenTerminal();
-            }}
-            className="block text-zinc-300 hover:text-cyan-400 py-1.5"
-          >
-            <span className="text-zinc-600 mr-2">//03.</span>Terminal
-          </a>
-          <a
-            href="#contact"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-zinc-300 hover:text-emerald-400 py-1.5"
-          >
-            <span className="text-zinc-600 mr-2">//04.</span>Contact
-          </a>
-          <div className="pt-2 flex items-center space-x-3">
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.id;
+            return (
+              <a
+                key={link.id}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`flex items-center min-h-[44px] px-3.5 py-2.5 rounded-lg text-base font-medium transition-colors ${
+                  isActive
+                    ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 font-semibold'
+                    : 'text-slate-700 dark:text-zinc-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'
+                }`}
+              >
+                {link.label}
+              </a>
+            );
+          })}
+
+          <div className="pt-2 border-t border-slate-200 dark:border-white/10 flex items-center gap-3">
             <button
+              type="button"
               onClick={() => {
                 setMobileMenuOpen(false);
+                downloadResumePdf('vedant_sattegiri_patil_cv.pdf');
                 onOpenResume();
               }}
-              className="flex-1 flex items-center justify-center space-x-2 py-2 rounded bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono"
+              className="flex-1 flex items-center justify-center space-x-2 min-h-[44px] px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm transition-colors cursor-pointer"
             >
-              <FileText className="w-3.5 h-3.5" />
-              <span>View Resume</span>
+              <FileText className="w-4 h-4" />
+              <span>Download Resume</span>
             </button>
-            <ThemeToggle id="btn-mobile-theme-toggle" showLabel className="py-2" />
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenTerminal();
+              }}
+              className="min-h-[44px] px-3 py-2.5 rounded-lg border border-slate-200 dark:border-white/10 text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-white/5 flex items-center justify-center transition-colors cursor-pointer"
+              title="Terminal"
+              aria-label="Terminal"
+            >
+              <Terminal className="w-4 h-4" />
+            </button>
           </div>
         </div>
       )}

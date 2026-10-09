@@ -62,21 +62,19 @@ export const GuestbookSection: React.FC = () => {
   };
 
   return (
-    <section id="guestbook" className="py-20 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-[#07090d]">
+    <section id="guestbook" className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-b border-slate-200 dark:border-white/5 bg-white dark:bg-[#07090d]">
       <div className="max-w-5xl mx-auto">
         {/* Section Header */}
-        <div className="flex items-center space-x-2 font-mono text-xs text-cyan-400 mb-3">
-          <span className="text-zinc-600">//</span>
-          <span>03. GUESTBOOK</span>
-        </div>
-
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
-            <h2 className="text-3xl sm:text-4xl font-serif text-white font-normal tracking-tight">
+            <div className="font-mono text-xs text-emerald-600 dark:text-emerald-400 uppercase tracking-wider font-semibold mb-2">
+              // GUESTBOOK
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-sans font-bold text-slate-900 dark:text-white tracking-tight">
               Guestbook
             </h2>
-            <p className="text-zinc-400 text-sm sm:text-base mt-2 font-sans font-light max-w-xl">
-              Leave a note. Signed in with Google, stored live.
+            <p className="text-slate-600 dark:text-zinc-300 text-base mt-2 font-sans max-w-xl">
+              Leave a public message or note. Authenticated via Google, stored live in Firestore.
             </p>
           </div>
 

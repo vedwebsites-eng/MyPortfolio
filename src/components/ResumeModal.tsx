@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Download, Printer, Copy, Check, FileText, ExternalLink, Shield, Cpu, Code, ArrowUp } from 'lucide-react';
+import { X, Download, Copy, Check, FileText, ArrowUp } from 'lucide-react';
 import { RESUME_DATA, PROJECTS, PERSONAL_INFO } from '../data/portfolioData';
+import { downloadResumePdf } from '../utils/pdfGenerator';
 
 interface ResumeModalProps {
   isOpen: boolean;
@@ -9,6 +10,8 @@ interface ResumeModalProps {
 
 export const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => {
   const [copied, setCopied] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadSuccess, setDownloadSuccess] = useState(false);
   const copyTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -18,6 +21,22 @@ export const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => 
   }, []);
 
   if (!isOpen) return null;
+
+  const handleDownload = async () => {
+    setIsDownloading(true);
+    setDownloadSuccess(false);
+    try {
+      const ok = await downloadResumePdf('vedant_sattegiri_patil_cv.pdf');
+      if (ok) {
+        setDownloadSuccess(true);
+        setTimeout(() => setDownloadSuccess(false), 3500);
+      }
+    } catch (err) {
+      console.error('Download error:', err);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const handleScrollToTop = () => {
     const overlay = document.getElementById('resume-modal-overlay');
@@ -33,17 +52,19 @@ export const ResumeModal: React.FC<ResumeModalProps> = ({ isOpen, onClose }) => 
 
   const handleCopy = () => {
     const plainText = `
-${RESUME_DATA.name} (${RESUME_DATA.handle})
-${RESUME_DATA.title}
-Location: ${RESUME_DATA.location}
-Email: ${RESUME_DATA.email}
-GitHub: ${RESUME_DATA.github}
+Vedant Sattegiri Patil
+Student-Builder & Security Researcher
+Location: Pune, Maharashtra, India
+Email: veddoesai@proton.me
+GitHub: https://github.com/vedwebsites-eng
 
 SUMMARY:
-${RESUME_DATA.summary}
+15-year-old self-taught builder and security researcher based in Pune. Blending an offensive cybersecurity mindset with modern AI system development and software engineering. Passionate about uncovering edge-case vulnerabilities, creating developer tooling, and educating builders through high-signal technical content.
 
 RESEARCH & INITIATIVES:
-${RESUME_DATA.focusAreas.map((f) => `• ${f.title}: ${f.details}`).join('\n')}
+• Bug Bounty Research & Vulnerability Hunting: Active research on web applications, finding logic bugs, access control failures (IDORs), and misconfigurations. Focus on automated recon tooling.
+• Autonomous AI Tooling & Local Intelligence: Building agentic workflows that turn unstructured instructions into deterministic multi-step tool execution. Integrating Gemini & local LLMs.
+• Technical Media & Content (RootCause): Creator and producer of RootCause, producing short-form video content covering technology and cybersecurity concepts.
 
 FEATURED PROJECTS:
 • AETHOS: Gamified self-improvement engine with AI coach Ace, dynamic XP curve, cyberpunk UI.
@@ -54,17 +75,16 @@ EDUCATION:
 • Pune High School (Secondary Education / Class 10), Pune, India
 
 HONORS & HIGHLIGHTS:
-${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
+• 3x Bug Bounty Programs, HackerOne — valid vulnerability disclosed
+• 3x AI Workshops completed under Vaibhav Sisinty (Outskill)
+• Anthropic Certified — Claude, Claude Code, Claude Cowork
+• CCNA (Networking) — in progress
     `.trim();
 
     navigator.clipboard.writeText(plainText);
     setCopied(true);
     if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
     copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handlePrint = () => {
-    window.print();
   };
 
   return (
@@ -97,12 +117,27 @@ ${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
             </button>
 
             <button
-              onClick={handlePrint}
-              className="inline-flex items-center space-x-1 px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-300 hover:bg-emerald-500/25 border border-emerald-500/30 text-xs transition-colors cursor-pointer"
-              title="Print or Save as PDF"
+              onClick={handleDownload}
+              disabled={isDownloading}
+              className="inline-flex items-center space-x-1 px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-500/40 text-xs transition-colors cursor-pointer font-medium disabled:opacity-50"
+              title="Download CV as PDF to local computer"
             >
-              <Printer className="w-3.5 h-3.5" />
-              <span>Print / PDF</span>
+              {isDownloading ? (
+                <>
+                  <span className="w-3.5 h-3.5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+                  <span>Saving PDF...</span>
+                </>
+              ) : downloadSuccess ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Downloaded!</span>
+                </>
+              ) : (
+                <>
+                  <Download className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Download as PDF</span>
+                </>
+              )}
             </button>
 
             <button
@@ -121,7 +156,7 @@ ${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
           <div className="border-b border-white/10 pb-6">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-serif text-white font-normal">
+                <h1 className="text-2xl sm:text-3xl font-sans font-bold text-white">
                   Vedant Sattegiri Patil
                 </h1>
                 <div className="font-mono text-xs text-emerald-400 mt-1">
@@ -136,7 +171,7 @@ ${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
                     href={PERSONAL_INFO.githubUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-cyan-400 hover:underline"
+                    className="text-emerald-400 hover:underline"
                   >
                     github.com/{PERSONAL_INFO.githubUsername}
                   </a>
@@ -144,7 +179,7 @@ ${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
               </div>
             </div>
 
-            <p className="mt-4 text-zinc-300 font-sans text-sm leading-relaxed font-light">
+            <p className="mt-4 text-zinc-300 font-sans text-sm sm:text-base leading-relaxed">
               {RESUME_DATA.summary}
             </p>
           </div>
@@ -157,8 +192,8 @@ ${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
             <div className="space-y-3">
               {RESUME_DATA.focusAreas.map((area) => (
                 <div key={area.title} className="space-y-1">
-                  <div className="text-sm font-semibold text-white font-serif">{area.title}</div>
-                  <p className="text-zinc-400 text-xs font-sans leading-relaxed">{area.details}</p>
+                  <div className="text-sm font-semibold text-white font-sans">{area.title}</div>
+                  <p className="text-zinc-300 text-sm font-sans leading-relaxed">{area.details}</p>
                 </div>
               ))}
             </div>
@@ -173,10 +208,10 @@ ${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
               {PROJECTS.map((proj) => (
                 <div key={proj.id} className="p-3.5 rounded-lg bg-zinc-900/50 border border-white/5 space-y-1.5">
                   <div className="flex items-baseline justify-between">
-                    <span className="font-serif text-sm font-semibold text-white">{proj.title}</span>
+                    <span className="font-sans text-sm font-semibold text-white">{proj.title}</span>
                     <span className="font-mono text-[11px] text-zinc-500">{proj.category}</span>
                   </div>
-                  <p className="text-xs text-zinc-300 font-sans">{proj.description}</p>
+                  <p className="text-sm text-zinc-300 font-sans leading-relaxed">{proj.description}</p>
                   <div className="flex flex-wrap gap-1 pt-1">
                     {proj.techStack.map((tech) => (
                       <span key={tech} className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-black/40 text-zinc-400 border border-white/5">
@@ -194,21 +229,18 @@ ${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
             <div className="font-mono text-xs text-emerald-400 uppercase tracking-wider font-semibold">
               // EDUCATION
             </div>
-            {RESUME_DATA.education.map((edu) => (
-              <div key={edu.institution} className="space-y-1">
-                <div className="flex justify-between text-xs font-mono">
-                  <span className="text-white font-medium">{edu.institution}</span>
-                  <span className="text-zinc-500">{edu.period}</span>
-                </div>
-                <p className="text-zinc-400 text-xs font-sans">{edu.notes}</p>
+            <div className="space-y-1.5 font-mono text-xs text-zinc-300">
+              <div className="flex items-start space-x-2">
+                <span className="text-emerald-400 select-none">▸</span>
+                <span>Pune High School (Secondary Education / Class 10), Pune, India</span>
               </div>
-            ))}
+            </div>
           </div>
 
-          {/* Certifications & Recognitions */}
+          {/* Honors & Highlights */}
           <div className="space-y-3">
             <div className="font-mono text-xs text-emerald-400 uppercase tracking-wider font-semibold">
-              // CERTIFICATIONS & RECOGNITION
+              // HONORS & HIGHLIGHTS
             </div>
             <div className="space-y-1.5 font-mono text-xs text-zinc-300">
               {RESUME_DATA.certificationsAndRankings.map((cert) => (
@@ -251,15 +283,30 @@ ${RESUME_DATA.certificationsAndRankings.map((c) => `• ${c}`).join('\n')}
               {RESUME_DATA.name} • {RESUME_DATA.location}
             </div>
             <div className="flex items-center space-x-2">
-              <a
-                href="/resume.pdf"
-                download
-                className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-white/10 text-[11px] transition-colors cursor-pointer"
-                title="Download PDF"
+              <button
+                type="button"
+                onClick={handleDownload}
+                disabled={isDownloading}
+                className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 hover:text-white border border-emerald-500/30 text-[11px] font-medium transition-colors cursor-pointer disabled:opacity-50"
+                title="Download CV as PDF to local computer"
               >
-                <Download className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Download PDF</span>
-              </a>
+                {isDownloading ? (
+                  <>
+                    <span className="w-3.5 h-3.5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+                    <span>Saving PDF...</span>
+                  </>
+                ) : downloadSuccess ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Saved to Computer</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Download PDF</span>
+                  </>
+                )}
+              </button>
               <button
                 type="button"
                 onClick={handleScrollToTop}

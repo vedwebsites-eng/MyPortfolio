@@ -19,6 +19,16 @@ async function startServer() {
     });
   });
 
+  // Direct file download route for the resume with explicit attachment headers
+  app.get(["/resume.pdf", "/api/download-resume", "/api/resume.pdf"], (_req, res) => {
+    const filePath = path.join(process.cwd(), "public", "resume.pdf");
+    res.download(filePath, "vedant_sattegiri_patil_cv.pdf", (err) => {
+      if (err && !res.headersSent) {
+        res.status(404).send("Resume file not found");
+      }
+    });
+  });
+
   // Vite middleware for dev / static serving for production
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

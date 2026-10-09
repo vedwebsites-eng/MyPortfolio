@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Terminal, Send, CornerDownLeft, Sparkles, X, Maximize2, Minimize2, Trash2, Minus } from 'lucide-react';
 import { PERSONAL_INFO, PROJECTS } from '../data/portfolioData';
 import { useTheme } from '../context/ThemeContext';
+import { downloadResumePdf } from '../utils/pdfGenerator';
 
 interface InteractiveTerminalProps {
   isModal?: boolean;
@@ -432,11 +433,17 @@ export const InteractiveTerminal: React.FC<InteractiveTerminalProps> = ({
         break;
 
       case 'resume':
+        downloadResumePdf('vedant_sattegiri_patil_cv.pdf');
         if (onOpenResume) {
           onOpenResume();
-          resultOutput = <div className="text-emerald-400">Opening Curriculum Vitae modal...</div>;
+          resultOutput = (
+            <div className="space-y-1 text-emerald-400 font-mono text-xs">
+              <div>✓ Downloading vedant_sattegiri_patil_cv.pdf to local machine...</div>
+              <div className="text-zinc-400 text-[11px]">Opening Curriculum Vitae modal viewer.</div>
+            </div>
+          );
         } else {
-          resultOutput = <div className="text-zinc-300">Resume viewer dispatched. Scroll to resume section.</div>;
+          resultOutput = <div className="text-emerald-400">✓ Downloading vedant_sattegiri_patil_cv.pdf to local machine...</div>;
         }
         break;
 

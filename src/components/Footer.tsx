@@ -53,52 +53,45 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate404 }) => {
   return (
     <footer
       id="main-footer"
-      className="py-10 px-4 sm:px-6 lg:px-8 bg-[#06080b] border-t border-white/5 font-mono text-xs text-zinc-500"
+      className="py-12 px-4 sm:px-6 lg:px-8 bg-slate-50 dark:bg-[#06080b] border-t border-slate-200 dark:border-white/5 font-sans text-sm text-slate-600 dark:text-zinc-400"
     >
       <div className="max-w-5xl mx-auto space-y-6">
-        {/* Main Row: branding+status+clock | sitemap | socials+back-to-top */}
+        {/* Main Row: branding | sitemap | socials+back-to-top */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Left: Branding & Status + Live IST Clock */}
-          <div className="space-y-1.5 text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start space-x-2 text-zinc-300">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
-              <span className="font-semibold text-white">Vedant Sattegiri Patil</span>
-              <span className="text-emerald-400">&lt;VEX&gt;</span>
+          {/* Left: Branding */}
+          <div className="space-y-1 text-center md:text-left">
+            <div className="flex items-center justify-center md:justify-start space-x-2 text-slate-900 dark:text-white font-semibold">
+              <span>Vedant Sattegiri Patil</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-mono text-xs font-normal">&lt;VEX&gt;</span>
             </div>
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-0.5">
-              <span className="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-semibold tracking-wider">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
-                </span>
-                <span>SYSTEM ONLINE</span>
-              </span>
-              <span className="text-zinc-600">//</span>
-              <span className="text-zinc-400 text-[11px] tabular-nums">
-                IST: <span className="text-emerald-400 font-medium">{istTime || '--:--:--'}</span>
-              </span>
-            </div>
+            <p className="text-xs text-slate-500 dark:text-zinc-400">
+              Student developer & security researcher based in Pune, India
+            </p>
           </div>
 
-          {/* Center: Sitemap Nav & 404 Preview */}
-          <nav aria-label="Footer Sitemap" className="flex items-center space-x-3 text-xs uppercase tracking-wider text-zinc-400">
-            <a href="#about" className="hover:text-emerald-400 transition-colors">
-              about
+          {/* Center: Sitemap Nav */}
+          <nav aria-label="Footer Sitemap" className="flex items-center space-x-4 text-sm font-medium text-slate-600 dark:text-zinc-300">
+            <a href="#about" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+              About
             </a>
-            <span className="text-zinc-700">•</span>
-            <a href="#projects" className="hover:text-emerald-400 transition-colors">
-              projects
+            <span className="text-slate-300 dark:text-zinc-700">•</span>
+            <a href="#projects" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+              Projects
             </a>
-            <span className="text-zinc-700">•</span>
-            <a href="#contact" className="hover:text-emerald-400 transition-colors">
-              contact
+            <span className="text-slate-300 dark:text-zinc-700">•</span>
+            <a href="#guestbook" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+              Guestbook
+            </a>
+            <span className="text-slate-300 dark:text-zinc-700">•</span>
+            <a href="#contact" className="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+              Contact
             </a>
             {onNavigate404 && (
               <>
-                <span className="text-zinc-700">•</span>
+                <span className="text-slate-300 dark:text-zinc-700">•</span>
                 <button
                   onClick={onNavigate404}
-                  className="text-zinc-500 hover:text-emerald-400 transition-colors cursor-pointer normal-case"
+                  className="text-slate-400 hover:text-emerald-600 dark:text-zinc-500 dark:hover:text-emerald-400 transition-colors cursor-pointer text-xs font-mono"
                   title="Preview Custom 404 Page"
                 >
                   [404]

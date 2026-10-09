@@ -93,42 +93,39 @@ export const Contact: React.FC<ContactProps> = React.memo(({ onOpenResume, onNot
   return (
     <section
       id="contact"
-      className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-[#080b0f] relative"
+      className="py-20 sm:py-28 px-4 sm:px-6 lg:px-8 border-b border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#080b0f] relative"
     >
       <div className="max-w-6xl mx-auto">
         {/* Section Index */}
-        <div className="flex items-center space-x-2 font-mono text-xs text-emerald-400 mb-3">
-          <span className="text-zinc-600">//</span>
-          <span>04. CONTACT</span>
-        </div>
-
-        {/* Serif Heading in Playfair Display */}
-        <div className="max-w-3xl mb-12">
+        <div className="mb-8">
+          <div className="font-mono text-xs text-emerald-600 dark:text-emerald-400 uppercase tracking-wider font-semibold mb-2">
+            // CONTACT
+          </div>
           <h2
             id="contact-heading"
-            className="text-3xl sm:text-5xl font-serif text-white font-normal tracking-tight"
+            className="text-3xl sm:text-5xl font-sans font-bold text-slate-900 dark:text-white tracking-tight"
           >
-            Contact
+            Get In Touch
           </h2>
-          <p className="text-zinc-400 text-sm sm:text-base mt-2 font-sans font-light">
-            Bug bounty research, AI systems, or Prime Nation — reach out.
+          <p className="text-slate-600 dark:text-zinc-300 text-base sm:text-lg mt-3 font-sans max-w-2xl">
+            Vulnerability research, AI tooling, engineering collaborations, or general questions — let's connect.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Direct Links & Official Channels */}
           <div className="lg:col-span-5 space-y-4 min-w-0">
             {/* Email Card with Primary (Proton) and Secondary (Gmail) */}
             <div
               id="contact-personal-email-card"
-              className="p-5 rounded-xl bg-[#0d1017] border border-white/10 hover:border-emerald-500/30 transition-all space-y-3.5"
+              className="p-6 rounded-xl bg-white dark:bg-[#0d1017] border border-slate-200 dark:border-white/10 hover:border-emerald-500/40 transition-all space-y-4 shadow-sm"
             >
-              <div className="flex items-center justify-between font-mono text-xs text-zinc-400">
-                <span className="flex items-center space-x-2 text-zinc-300">
-                  <Mail className="w-4 h-4 text-emerald-400" />
-                  <span className="font-semibold text-white">EMAIL</span>
+              <div className="flex items-center justify-between font-mono text-xs text-slate-500 dark:text-zinc-400">
+                <span className="flex items-center space-x-2 text-slate-900 dark:text-zinc-300">
+                  <Mail className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <span className="font-semibold text-slate-900 dark:text-white font-sans text-sm">EMAIL</span>
                 </span>
-                <span className="text-emerald-400">DIRECT</span>
+                <span className="text-emerald-600 dark:text-emerald-400 font-semibold">DIRECT</span>
               </div>
 
               {/* Primary Email (Proton) */}

@@ -161,10 +161,10 @@ export const RESUME_DATA = {
     '15-year-old self-taught builder and security researcher based in Pune. Blending an offensive cybersecurity mindset with modern AI system development and software engineering. Passionate about uncovering edge-case vulnerabilities, creating developer tooling, and educating builders through high-signal technical content.',
   education: [
     {
-      institution: 'Pune High School (Class 10 / Secondary Education)',
-      period: '2023 - Present',
-      location: 'Pune, MH, India',
-      notes: 'Balancing rigorous academic curriculum with independent deep-dive research into computer science, cybersecurity, and applied AI systems.',
+      institution: 'Pune High School (Secondary Education / Class 10), Pune, India',
+      period: 'Pune, India',
+      location: 'Pune, Maharashtra, India',
+      notes: 'Secondary Education / Class 10, Pune, India',
     },
   ],
   focusAreas: [
