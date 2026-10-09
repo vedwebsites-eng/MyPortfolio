@@ -15,17 +15,17 @@ const THEME_STORAGE_KEY = 'vex-portfolio-theme';
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window === 'undefined') return 'light';
+    if (typeof window === 'undefined') return 'dark';
     try {
       const saved = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
       if (saved === 'dark' || saved === 'light') return saved;
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        return 'dark';
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        return 'light';
       }
     } catch {
       // ignore storage access error
     }
-    return 'light';
+    return 'dark';
   });
 
   const [isTransitioning, setIsTransitioning] = useState(false);

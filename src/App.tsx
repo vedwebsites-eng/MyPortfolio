@@ -19,7 +19,7 @@ import { ThemeTransitionWave } from './components/ThemeTransitionWave';
 import { TerminalBootScreen } from './components/TerminalBootScreen';
 import { IntroLyrics } from './components/IntroLyrics';
 import { CursorGlow } from './components/CursorGlow';
-import { CheckCircle, AlertCircle, Play, Pause } from 'lucide-react';
+import { CheckCircle, AlertCircle } from 'lucide-react';
 
 const KONAMI_CODE = [
   'ArrowUp',
@@ -49,22 +49,6 @@ export default function App() {
     return false;
   });
   const [notification, setNotification] = useState<{ message: string; isError?: boolean } | null>(null);
-  const [isPlayingMusic, setIsPlayingMusic] = useState(false);
-  const audioRef = React.useRef<HTMLAudioElement | null>(null);
-
-  const toggleMusic = () => {
-    if (!audioRef.current) return;
-    if (isPlayingMusic) {
-      audioRef.current.pause();
-      setIsPlayingMusic(false);
-    } else {
-      audioRef.current.play().then(() => {
-        setIsPlayingMusic(true);
-      }).catch(() => {
-        setIsPlayingMusic(false);
-      });
-    }
-  };
 
   const konamiBufferRef = React.useRef<string[]>([]);
   const konamiTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
@@ -216,39 +200,14 @@ export default function App() {
       {/* Interactive Cursor Glow & Mosaic Light Effect (Desktop/Mouse only) */}
       <CursorGlow />
 
-      {/* Optional background audio element (off by default, no autoplay) */}
-      <audio
-        ref={audioRef}
-        src="/track.mp3"
-        loop
-        preload="none"
-        onEnded={() => setIsPlayingMusic(false)}
-      />
+      {/* Monospace Terminal Boot Screen Transition (once per session, skippable) */}
+      <TerminalBootScreen onComplete={() => setBootReady(true)} />
 
-      {/* Small optional music toggle button (off by default) */}
-      <aside aria-label="Music player" className="fixed bottom-4 left-4 z-40">
-        <button
-          type="button"
-          onClick={toggleMusic}
-          aria-label={isPlayingMusic ? 'Pause music' : 'Play music'}
-          className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs font-sans font-medium bg-white/95 dark:bg-zinc-900/95 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-white/10 hover:border-emerald-500/40 shadow-md backdrop-blur transition-all cursor-pointer"
-        >
-          {isPlayingMusic ? (
-            <>
-              <Pause className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-              <span>Pause music</span>
-            </>
-          ) : (
-            <>
-              <Play className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-              <span>Play music</span>
-            </>
-          )}
-        </button>
-      </aside>
+      {/* Intro Lyrics Sequence & Persistent Audio Player (plays after boot sequence completes) */}
+      {bootReady && <IntroLyrics trackSrc="/track.mp3" />}
 
       <ThemeTransitionWave />
-      {/* Scroll Depth Progress Bar */}
+      {/* Scroll Depth Monospace Progress Bar */}
       <ScrollProgressBar />
 
       {/* Top Fixed Navigation */}
