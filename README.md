@@ -13,7 +13,12 @@
 ![Firebase](https://img.shields.io/badge/Firebase-Auth%20%2B%20Firestore-FFCA28?logo=firebase&logoColor=black)
 ![License](https://img.shields.io/badge/License-Apache%202.0-green)
 
-![Portfolio preview](<img width="736" height="407" alt="portfolio" src="https://github.com/user-attachments/assets/c1328f85-6a35-4f75-be20-83017061b157" />)
+
+**MAIN MOTTO**
+
+
+
+<img width="700" height="400" alt="portfolio" src="https://github.com/user-attachments/assets/843bae24-0009-4e5b-bcff-6ba59b400623" />
 
 </div>
 
