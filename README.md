@@ -44,7 +44,7 @@ Portfolio of **Vedant Sattegiri Patil** , a student builder from Pune, India, wo
 | --- | --- |
 | [AETHOS](https://github.com/vedwebsites-eng/AETHOSGAMMA) | Gamified self-improvement app: XP levels, habits, journaling and an AI coach |
 | [Inkwell](https://github.com/vedwebsites-eng/INKWELL) | Distraction-free typographic note engine |
-| [RootCause](https://youtube.com/@RootCauseTech) | Faceless tech and cybersecurity short-form video channel |
+| [RootCause]((https://www.youtube.com/@imrootcause)) | Faceless tech and cybersecurity short-form video channel |
 
 ## Tech stack
 
@@ -106,7 +106,7 @@ Firebase web config lives in `firebase-applet-config.json`. These values are pub
 
 - Email: veddoesai@proton.me
 - GitHub: [@vedwebsites-eng](https://github.com/vedwebsites-eng)
-- YouTube: [RootCause](https://youtube.com/@RootCauseTech)
+- YouTube: [RootCause]((https://www.youtube.com/@imrootcause))
 
 ## License
 
