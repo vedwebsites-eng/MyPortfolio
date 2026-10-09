@@ -13,13 +13,13 @@
 ![Firebase](https://img.shields.io/badge/Firebase-Auth%20%2B%20Firestore-FFCA28?logo=firebase&logoColor=black)
 ![License](https://img.shields.io/badge/License-Apache%202.0-green)
 
-![Portfolio preview](public/og-image.png)
+![Portfolio preview](<img width="736" height="407" alt="portfolio" src="https://github.com/user-attachments/assets/c1328f85-6a35-4f75-be20-83017061b157" />)
 
 </div>
 
 ## About
 
-Portfolio of **Vedant Sattegiri Patil (VEX)**, a student builder from Pune, India, working across cybersecurity, AI and software. The site is built like a terminal session: a boot sequence, a working command line, and a guestbook, wrapped in a clean, responsive layout.
+Portfolio of **Vedant Sattegiri Patil** , a student builder from Pune, India, working across cybersecurity, AI and software. The site is built like a terminal session: a boot sequence, a working command line, and a guestbook, wrapped in a clean, responsive layout.
 
 ## Features
 
