@@ -62,20 +62,21 @@ export const GuestbookSection: React.FC = () => {
   };
 
   return (
-    <section id="guestbook" className="py-20 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-[#07090d]">
-      <div className="max-w-5xl mx-auto">
-        {/* Section Header */}
-        <div className="flex items-center space-x-2 font-mono text-xs text-cyan-400 mb-3">
-          <span className="text-zinc-600">//</span>
-          <span>03. GUESTBOOK</span>
-        </div>
-
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+    <section id="guestbook" className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-[#07090d] scroll-mt-24">
+      <div className="max-w-6xl mx-auto">
+        {/* Section Header Block */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
           <div>
-            <h2 className="text-3xl sm:text-4xl font-serif text-white font-normal tracking-tight">
+            <div className="font-mono text-[13px] text-emerald-400 uppercase tracking-widest mb-3">
+              // 03. GUESTBOOK
+            </div>
+            <h2
+              id="guestbook-heading"
+              className="font-space font-bold text-[clamp(2rem,4vw,3rem)] leading-tight text-white tracking-tight"
+            >
               Guestbook
             </h2>
-            <p className="text-zinc-400 text-sm sm:text-base mt-2 font-sans font-light max-w-xl">
+            <p className="text-[18px] text-zinc-400 max-w-2xl mt-3 font-sans font-light">
               Leave a note. Signed in with Google, stored live.
             </p>
           </div>

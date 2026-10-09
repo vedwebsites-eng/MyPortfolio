@@ -8,22 +8,24 @@ export const About: React.FC = () => {
   return (
     <section
       id="about"
-      className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/5 relative bg-[#090b0e]"
+      className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/5 relative bg-[#090b0e] scroll-mt-24"
     >
-      <div className="max-w-5xl mx-auto">
-        {/* Section Index & Subtitle */}
-        <div className="flex items-center space-x-2 font-mono text-xs text-emerald-400 mb-3">
-          <span className="text-zinc-600">//</span>
-          <span>01. ABOUT</span>
+      <div className="max-w-6xl mx-auto">
+        {/* Section Header Block */}
+        <div className="mb-12">
+          <div className="font-mono text-[13px] text-emerald-400 uppercase tracking-widest mb-3">
+            // 01. ABOUT
+          </div>
+          <h2
+            id="about-heading"
+            className="font-space font-bold text-[clamp(2rem,4vw,3rem)] leading-tight text-white tracking-tight"
+          >
+            About
+          </h2>
+          <p className="text-[18px] text-zinc-400 max-w-2xl mt-3 font-sans font-light">
+            15-year-old student-builder and security researcher based in Pune, India.
+          </p>
         </div>
-
-        {/* Serif Header in Playfair Display */}
-        <h2
-          id="about-heading"
-          className="text-3xl sm:text-5xl font-serif text-white font-normal tracking-tight mb-8"
-        >
-          About
-        </h2>
 
         {/* Narrative & Story Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">

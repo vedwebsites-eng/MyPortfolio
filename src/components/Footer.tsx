@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowUp, Shield, Github, Mail, Youtube, Check } from 'lucide-react';
+import { ArrowUp, Shield, Github, Mail, Youtube, Check, Terminal } from 'lucide-react';
 import { PERSONAL_INFO } from '../data/portfolioData';
 
 interface FooterProps {
   onNavigate404?: () => void;
+  onOpenTerminal?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigate404 }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavigate404, onOpenTerminal }) => {
   const [istTime, setIstTime] = useState<string>('');
   const [copiedPgp, setCopiedPgp] = useState<boolean>(false);
   const copiedTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -58,7 +59,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate404 }) => {
       <div className="max-w-5xl mx-auto space-y-6">
         {/* Main Row: branding+status+clock | sitemap | socials+back-to-top */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          {/* Left: Branding & Status + Live IST Clock */}
+          {/* Left: Branding & Status + Live PUN IST Clock */}
           <div className="space-y-1.5 text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start space-x-2 text-zinc-300">
               <span className="w-2 h-2 rounded-full bg-emerald-400" />
@@ -74,14 +75,19 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate404 }) => {
                 <span>SYSTEM ONLINE</span>
               </span>
               <span className="text-zinc-600">//</span>
-              <span className="text-zinc-400 text-[11px] tabular-nums">
-                IST: <span className="text-emerald-400 font-medium">{istTime || '--:--:--'}</span>
-              </span>
+              <div
+                id="footer-pune-clock"
+                className="inline-flex items-center space-x-1.5 text-zinc-400 text-[11px] tabular-nums"
+                title="Live Pune, India clock (IST)"
+              >
+                <span className="text-zinc-500 font-semibold">PUN</span>
+                <span className="text-emerald-400 font-medium">{istTime || '--:--:--'} IST</span>
+              </div>
             </div>
           </div>
 
-          {/* Center: Sitemap Nav & 404 Preview */}
-          <nav aria-label="Footer Sitemap" className="flex items-center space-x-3 text-xs uppercase tracking-wider text-zinc-400">
+          {/* Center: Sitemap Nav with guestbook, small cli link, & 404 Preview */}
+          <nav aria-label="Footer Sitemap" className="flex items-center flex-wrap justify-center gap-x-3 gap-y-1 text-xs uppercase tracking-wider text-zinc-400">
             <a href="#about" className="hover:text-emerald-400 transition-colors">
               about
             </a>
@@ -90,9 +96,23 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate404 }) => {
               projects
             </a>
             <span className="text-zinc-700">•</span>
+            <a href="#guestbook" className="hover:text-cyan-400 transition-colors">
+              guestbook
+            </a>
+            <span className="text-zinc-700">•</span>
             <a href="#contact" className="hover:text-emerald-400 transition-colors">
               contact
             </a>
+            <span className="text-zinc-700">•</span>
+            <button
+              type="button"
+              onClick={onOpenTerminal}
+              className="text-zinc-400 hover:text-cyan-400 transition-colors cursor-pointer normal-case font-mono inline-flex items-center space-x-1"
+              title="Open Interactive Terminal (⌘K or `)"
+            >
+              <Terminal className="w-3 h-3 text-cyan-400" />
+              <span>cli</span>
+            </button>
             {onNavigate404 && (
               <>
                 <span className="text-zinc-700">•</span>

@@ -93,24 +93,21 @@ export const Contact: React.FC<ContactProps> = React.memo(({ onOpenResume, onNot
   return (
     <section
       id="contact"
-      className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-[#080b0f] relative"
+      className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-[#080b0f] relative scroll-mt-24"
     >
       <div className="max-w-6xl mx-auto">
-        {/* Section Index */}
-        <div className="flex items-center space-x-2 font-mono text-xs text-emerald-400 mb-3">
-          <span className="text-zinc-600">//</span>
-          <span>04. CONTACT</span>
-        </div>
-
-        {/* Serif Heading in Playfair Display */}
-        <div className="max-w-3xl mb-12">
+        {/* Section Header Block */}
+        <div className="mb-12">
+          <div className="font-mono text-[13px] text-emerald-400 uppercase tracking-widest mb-3">
+            // 04. CONTACT
+          </div>
           <h2
             id="contact-heading"
-            className="text-3xl sm:text-5xl font-serif text-white font-normal tracking-tight"
+            className="font-space font-bold text-[clamp(2rem,4vw,3rem)] leading-tight text-white tracking-tight"
           >
             Contact
           </h2>
-          <p className="text-zinc-400 text-sm sm:text-base mt-2 font-sans font-light">
+          <p className="text-[18px] text-zinc-400 max-w-2xl mt-3 font-sans font-light">
             Bug bounty research, AI systems, or Prime Nation — reach out.
           </p>
         </div>

@@ -156,7 +156,7 @@ HONORS & HIGHLIGHTS:
           <div className="border-b border-white/10 pb-6">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-serif text-white font-normal">
+                <h1 className="text-2xl sm:text-3xl font-sans font-bold text-white">
                   Vedant Sattegiri Patil
                 </h1>
                 <div className="font-mono text-xs text-emerald-400 mt-1">
@@ -171,7 +171,7 @@ HONORS & HIGHLIGHTS:
                     href={PERSONAL_INFO.githubUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-cyan-400 hover:underline"
+                    className="text-emerald-400 hover:underline"
                   >
                     github.com/{PERSONAL_INFO.githubUsername}
                   </a>
@@ -179,7 +179,7 @@ HONORS & HIGHLIGHTS:
               </div>
             </div>
 
-            <p className="mt-4 text-zinc-300 font-sans text-sm leading-relaxed font-light">
+            <p className="mt-4 text-zinc-300 font-sans text-sm sm:text-base leading-relaxed">
               {RESUME_DATA.summary}
             </p>
           </div>
@@ -192,8 +192,8 @@ HONORS & HIGHLIGHTS:
             <div className="space-y-3">
               {RESUME_DATA.focusAreas.map((area) => (
                 <div key={area.title} className="space-y-1">
-                  <div className="text-sm font-semibold text-white font-serif">{area.title}</div>
-                  <p className="text-zinc-400 text-xs font-sans leading-relaxed">{area.details}</p>
+                  <div className="text-sm font-semibold text-white font-sans">{area.title}</div>
+                  <p className="text-zinc-300 text-sm font-sans leading-relaxed">{area.details}</p>
                 </div>
               ))}
             </div>
@@ -208,10 +208,10 @@ HONORS & HIGHLIGHTS:
               {PROJECTS.map((proj) => (
                 <div key={proj.id} className="p-3.5 rounded-lg bg-zinc-900/50 border border-white/5 space-y-1.5">
                   <div className="flex items-baseline justify-between">
-                    <span className="font-serif text-sm font-semibold text-white">{proj.title}</span>
+                    <span className="font-sans text-sm font-semibold text-white">{proj.title}</span>
                     <span className="font-mono text-[11px] text-zinc-500">{proj.category}</span>
                   </div>
-                  <p className="text-xs text-zinc-300 font-sans">{proj.description}</p>
+                  <p className="text-sm text-zinc-300 font-sans leading-relaxed">{proj.description}</p>
                   <div className="flex flex-wrap gap-1 pt-1">
                     {proj.techStack.map((tech) => (
                       <span key={tech} className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-black/40 text-zinc-400 border border-white/5">

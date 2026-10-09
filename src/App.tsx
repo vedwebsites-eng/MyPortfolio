@@ -247,7 +247,10 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <Footer onNavigate404={() => navigate('/404')} />
+      <Footer
+        onNavigate404={() => navigate('/404')}
+        onOpenTerminal={() => setIsTerminalModalOpen(true)}
+      />
 
       {/* Floating System Toast */}
       {notification && (

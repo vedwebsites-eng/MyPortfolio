@@ -67,24 +67,22 @@ export const Projects: React.FC = React.memo(() => {
   return (
     <section
       id="projects"
-      className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-[#090b0e] relative"
+      className="py-24 px-4 sm:px-6 lg:px-8 border-b border-white/5 bg-[#090b0e] relative scroll-mt-24"
     >
-      <div className="max-w-5xl mx-auto">
-        {/* Section Header */}
-        <div className="flex items-center space-x-2 font-mono text-xs text-emerald-400 mb-3">
-          <span className="text-zinc-600">//</span>
-          <span>02. PROJECTS</span>
-        </div>
-
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16">
+      <div className="max-w-6xl mx-auto">
+        {/* Section Header Block */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12">
           <div>
+            <div className="font-mono text-[13px] text-emerald-400 uppercase tracking-widest mb-3">
+              // 02. PROJECTS
+            </div>
             <h2
               id="projects-heading"
-              className="text-3xl sm:text-5xl font-serif text-white font-normal tracking-tight"
+              className="font-space font-bold text-[clamp(2rem,4vw,3rem)] leading-tight text-white tracking-tight"
             >
               Projects
             </h2>
-            <p className="text-zinc-400 text-sm sm:text-base mt-2 font-sans font-light max-w-2xl">
+            <p className="text-[18px] text-zinc-400 max-w-2xl mt-3 font-sans font-light">
               Security, AI, and software — built and shipped.
             </p>
           </div>
